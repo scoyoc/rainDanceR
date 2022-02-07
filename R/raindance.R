@@ -55,7 +55,7 @@ raindance <- function(my_wxdat){
   # my_wxdat = import_wxdat(file_list[1])
 
   if(unique(my_wxdat$data$Element) != "PRCP"){
-    stop("Data are not PRCP. Check data type.")
+    stop("Data are not PRCP. Check data.")
   }
 
   launch = dplyr::filter(my_wxdat$details, Details == "Launch Time")
