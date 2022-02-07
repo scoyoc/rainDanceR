@@ -44,10 +44,12 @@
 #' @examples
 #' \dontrun{
 #' library("rainDanceR")
-#' file.list <- list.files(path = "./inst/raw_data", pattern = ".csv",
+#'
+#' file.list <- list.files(path = "./inst/raw_data",
+#'                         pattern = ".csv",
 #'                         full.names = TRUE, recursive = FALSE)
 #' my_wxdat <- import_wxdat(file.list[2])
-#' raindance(my_wxdat)
+#' sundance(my_wxdat)
 #' }
 sundance <- function(my_wxdat){
   #-- QA check
