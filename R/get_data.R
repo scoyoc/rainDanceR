@@ -16,8 +16,8 @@
 #'
 #' \itemize{
 #'     \item RID: The unique record ID. The record ID
-#'         \code{\link[base:paste]{paste}}'s DateTime, PlotID, and
-#'         Element to create a unique record ID.
+#'         \code{\link[base:paste]{paste}}'s DateTime, PlotID, and Element to
+#'         create a unique record ID.
 #'     \item FileName: The name of the file the data came from.
 #'     \item PlotID: The unique plot identification number (e.g., A03 orI06).
 #'     \item DateTime: The date and time the data were collected at.

@@ -22,7 +22,9 @@
 #' This function returns a nine (9) column \code{\link[tibble:tibble]{tibble}}.
 #'
 #' \describe{
-#'     \item{\strong{RID}}{The Record ID created from the Plot ID and  Date.}
+#'     \item RID: The unique record ID. The record ID
+#'         \code{\link[base:paste]{paste}}'s Date and PlotID to  create a unique
+#'         record ID.
 #'     \item{\strong{PlotID}}{The unique ID number for the long-term monitoring
 #'         plot.}
 #'     \item{\strong{Date}}{The date the data were recorded.}
@@ -44,7 +46,7 @@
 #' library("rainDanceR")
 #' file.list <- list.files(path = "./inst/raw_data", pattern = ".csv",
 #'                         full.names = TRUE, recursive = FALSE)
-#' my_wxdat <- import_wxdat(file.list[1])
+#' my_wxdat <- import_wxdat(file.list[2])
 #' raindance(my_wxdat)
 #' }
 sundance <- function(my_wxdat){

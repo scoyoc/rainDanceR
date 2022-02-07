@@ -25,6 +25,9 @@
 #' This function returns a five column \code{\link[tibble:tibble]{tibble}}.
 #'
 #' \describe{
+#'     \item RID: The unique record ID. The record ID
+#'         \code{\link[base:paste]{paste}}'s DateTime and PlotID to create a
+#'         unique record ID.
 #'     \item{\strong{DateTime}}{The date and hour of the data. Hours are the from
 #'         0 min 00 sec to 59 min 59 sec. For example 2009-04-15 00:00:00 is
 #'         from 00:00:00 to 00:59:59 on April 15, 2009.}
