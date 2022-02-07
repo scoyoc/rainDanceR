@@ -33,7 +33,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' library("dataProcessor")
+#' library("rainDanceR")
 #' file_list <- list.files(path = system.file("extdata", package = "dataProcessor"),
 #'                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 #' my_file <- import_file(file.list[1])
