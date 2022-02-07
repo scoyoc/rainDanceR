@@ -4,7 +4,7 @@ This package imports data from Onset temperature, relative humidity, and precipi
 Data collected in the field using Onset loggers are exported to comma delimited files (*.csv) using the HOBOware application from Onset.
 This package imports the *.csv files into R.
 
-Version: 0.1.0
+Version: 0.0.1
 
 Depends: R (>= 4.0)
 
