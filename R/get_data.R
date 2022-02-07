@@ -34,9 +34,15 @@
 #' @examples
 #' \dontrun{
 #' library("rainDanceR")
-#' file_list <- list.files(path = system.file("extdata", package = "dataProcessor"),
+#'
+#' # Generate list of files
+#' file_list <- list.files(path = system.file("extdata", package = "rainDanceR"),
 #'                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
-#' my_file <- import_file(file.list[1])
+#'
+#' # Read file into R
+#' my_file <- import_file(file_list[1])
+#'
+#' # Extract data from file
 #' get_data(my_file)
 #' }
 #'
@@ -49,10 +55,9 @@ get_data <- function(my_file){
   my_logger = get_product(my_file)
 
   if(my_file$file_info$col_n != 10){
-    dat = my_file$raw_file %>%
-      dplyr::select('RID', 'DateTime', 'Value') %>%
-      dplyr::mutate('DateTime' = lubridate::mdy_hms(DateTime,
-                                                    tz = "America/Denver"),
+    dat = my_file$raw_file |>
+      dplyr::select('RID', 'DateTime', 'Value') |>
+      dplyr::mutate('DateTime' = lubridate::mdy_hms(DateTime),
                     'FileName' = basename(my_file$file_info$filename),
                     'PlotID' = my_file$file_info$plotid,
                     'Element' = my_logger$Element,
@@ -62,20 +67,19 @@ get_data <- function(my_file){
                                        stringr::str_detect(my_logger$Units,
                                                            "F"),
                                      Value - 32 * 5/9,
-                                     Value)) %>%
+                                     Value)) |>
       dplyr::select('RID', 'FileName', 'PlotID', 'DateTime', 'Element', 'Value')
 
   } else if(my_file$file_info$col_n == 10){
-    dat = my_file$raw_file %>%
-      dplyr::select('RID', 'DateTime', 'Temp', 'RH') %>%
-      dplyr::rename('TEMP' = Temp) %>%
-      tidyr::gather(key = 'Element', value = 'Value', TEMP:RH) %>%
-      dplyr::mutate('DateTime' = lubridate::mdy_hms(DateTime,
-                                                    tz = "America/Denver"),
+    dat = my_file$raw_file |>
+      dplyr::select('RID', 'DateTime', 'Temp', 'RH') |>
+      dplyr::rename('TEMP' = Temp) |>
+      tidyr::gather(key = 'Element', value = 'Value', TEMP:RH) |>
+      dplyr::mutate('DateTime' = lubridate::mdy_hms(DateTime),
                     'FileName' = basename(my_file$file_info$filename),
                     'PlotID' = my_file$file_info$plotid,
                     'RID' = paste(as.numeric(DateTime), PlotID, Element,
-                                  sep = ".")) %>%
+                                  sep = ".")) |>
       dplyr::select('RID', 'FileName', 'PlotID', 'DateTime', 'Element', 'Value')
 
   } else(message(paste0("Something is wrong. Check file: ",
@@ -90,14 +94,14 @@ get_product <- function(my_file){
   # DESCRIPTION
   # This function extracts the Onset product name from the Details column of the
   # raw file. It uses the list produced from import_file().
-  my_logger = my_file$raw_file %>%
-    dplyr::select('Details') %>%
+  my_logger = my_file$raw_file |>
+    dplyr::select('Details') |>
     tidyr::separate('Details', into = c("Var", "Product"), sep = ":",
-                    remove = T, extra = "merge", fill = "right") %>%
-    dplyr::filter(Var == "Product") %>%
-    dplyr::distinct() %>%
+                    remove = T, extra = "merge", fill = "right") |>
+    dplyr::filter(Var == "Product") |>
+    dplyr::distinct() |>
     dplyr::mutate('Product' = trimws(Product, 'left'),
-                  'Units' = suppressWarnings(get_units(my_file))) %>%
+                  'Units' = suppressWarnings(get_units(my_file))) |>
     dplyr::left_join(onset_loggers)
   return(my_logger)
 }
@@ -110,14 +114,14 @@ get_units <- function(my_file){
 
   # Strip units from raw_file
   units = if(my_file$file_info$col_n == 4){
-    dplyr::select(my_file$raw_file, 'Details') %>%
-      tidyr::separate('Details', into = c("Var", "Val"), sep = ":") %>%
-      dplyr::filter(Var == "Series") %>%
+    dplyr::select(my_file$raw_file, 'Details') |>
+      tidyr::separate('Details', into = c("Var", "Val"), sep = ":") |>
+      dplyr::filter(Var == "Series") |>
       tibble::deframe()
   } else(
-    dplyr::select(my_file$raw_file, 'Units') %>%
-      dplyr::filter(Units != "") %>%
-      tibble::deframe() %>%
+    dplyr::select(my_file$raw_file, 'Units') |>
+      dplyr::filter(Units != "") |>
+      tibble::deframe() |>
       dplyr::first()
   )
 

@@ -51,9 +51,13 @@
 #' @examples
 #' \dontrun{
 #' library("rainDanceR")
-#' file.list <- list.files(path = "./inst/raw_data", pattern = ".csv",
-#'                         full.names = TRUE, recursive = FALSE)
-#' import_file(file.list[1])
+#'
+#' # Generate list of files
+#' file_list <- list.files(path = system.file("extdata", package = "rainDanceR"),
+#'                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
+#'
+#' # Read file into R
+#' import_file(file_list[1])
 #' }
 #'
 import_file <- function(this_file, datestamp_loc = 1, plotid_loc = 2,
@@ -75,7 +79,7 @@ import_file <- function(this_file, datestamp_loc = 1, plotid_loc = 2,
       read.table(this_file, sep = ",", header = F, nrows = 1, fill = T))['V1'],
       "Plot"),
       2, 1)
-  ) %>%
+  ) |>
     # Count the number of columns of data
     dplyr::mutate(col_n = ncol(suppressWarnings(read.table(this_file, sep = ",",
                                                            header = F, fill = T,
@@ -85,31 +89,31 @@ import_file <- function(this_file, datestamp_loc = 1, plotid_loc = 2,
   if(file_info$col_n == 4){
     raw_file =  suppressWarnings(
       read.table(this_file, sep = ",", header = F, fill = T, skip = file_info$skip,
-                 col.names = c("RID", "DateTime", "Value", "Details"))) %>%
-      tidyr::drop_na() %>%
+                 col.names = c("RID", "DateTime", "Value", "Details"))) |>
+      tidyr::drop_na() |>
       tibble::as_tibble()
 
   } else if(file_info$col_n == 5){
     raw_file =  suppressWarnings(
       read.table(this_file, sep = ",", header = F, fill = T, skip = file_info$skip,
-                 col.names = c("RID", "DateTime", "Value", "Details", "Units"))) %>%
-      tidyr::drop_na() %>%
+                 col.names = c("RID", "DateTime", "Value", "Details", "Units"))) |>
+      tidyr::drop_na() |>
       tibble::as_tibble()
 
   } else if(file_info$col_n == 6){
     raw_file =  suppressWarnings(
       read.table(this_file, sep = ",", header = F, fill = T, skip = file_info$skip,
                  col.names = c("RID", "DateTime", "Value", "EndOfFile",
-                               "Details", "Units"))) %>%
-      tidyr::drop_na() %>%
+                               "Details", "Units"))) |>
+      tidyr::drop_na() |>
       tibble::as_tibble()
 
   } else if(file_info$col_n == 7){
     raw_file =  suppressWarnings(
       read.table(this_file, sep = ",", header = F, fill = T, skip = file_info$skip,
                  col.names = c("RID", "DateTime", "Value", "BadBattery",
-                               "EndOfFile", "Details", "Units"))) %>%
-      tidyr::drop_na() %>%
+                               "EndOfFile", "Details", "Units"))) |>
+      tidyr::drop_na() |>
       tibble::as_tibble()
 
   } else if(file_info$col_n == 9){
@@ -117,8 +121,8 @@ import_file <- function(this_file, datestamp_loc = 1, plotid_loc = 2,
       read.table(this_file, sep = ",", header = F, fill = T, skip = file_info$skip,
                  col.names = c("RID", "DateTime", "Value", "Detatched",
                                "Attached", "Connected","EndFile", "Details",
-                               "Units"))) %>%
-      tidyr::drop_na() %>%
+                               "Units"))) |>
+      tidyr::drop_na() |>
       tibble::as_tibble()
 
   } else if(file_info$col_n == 10){
@@ -126,8 +130,8 @@ import_file <- function(this_file, datestamp_loc = 1, plotid_loc = 2,
       read.table(this_file, sep = ",", header = F, fill = T, skip = file_info$skip,
                  col.names = c("RID", "DateTime", "Temp", "RH",
                                "Detatched", "Attached", "Connected",
-                               "EndFile", "Details","Units"))) %>%
-      tidyr::drop_na() %>%
+                               "EndFile", "Details","Units"))) |>
+      tidyr::drop_na() |>
       as_tibble()
 
   } else(message(paste0("Something is wrong. Check file: ", basename(this_file),

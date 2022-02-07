@@ -54,10 +54,18 @@
 #' @examples
 #' \dontrun{
 #' library("rainDanceR")
-#' file.list <- list.files(path = "./inst/raw_data", pattern = ".csv",
-#'                         full.names = TRUE, recursive = FALSE)
-#' my_file <- import_file(file.list[1])
-#' my_data <- get_data(my_file)
+#'
+#' # Generate list of files
+#' file_list <- list.files(path = system.file("extdata", package = "rainDanceR"),
+#'                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
+#'
+#' # Read file into R
+#' my_file <- import_file(file_list[1])
+#'
+#' # Extract data from file
+#' my_data <- get_data(my_file); my_data
+#'
+#' # Extract file details
 #' get_details(my_file, my_data)
 #' }
 #'
@@ -70,21 +78,21 @@ get_details <- function(my_file, my_data){
   my_logger = get_product(my_file)
 
   # Strip Details from raw_file
-  details = my_file$raw_file %>%
-    dplyr::select('Details') %>%
+  details = my_file$raw_file |>
+    dplyr::select('Details') |>
     # Reduce column and remove white space
-    dplyr::distinct() %>%
+    dplyr::distinct() |>
     tidyr::separate('Details', into = c("Var", "Value"), sep = ":", remove = T,
-                    extra = "merge", fill = "right") %>%
-    dplyr::filter(Value != "") %>%
+                    extra = "merge", fill = "right") |>
+    dplyr::filter(Value != "") |>
     dplyr::filter(!Var %in% c("Version Number", "Manufacturer", "Header Created",
-                              "Launch GMT Offset", "Max", "Min", "Avg")) %>%
-    dplyr::filter(!stringr::str_detect(Var, "Std Dev")) %>%
-    dplyr::group_by(Var) %>%
-    dplyr::slice(1) %>%
-    dplyr::ungroup() %>%
-    dplyr::mutate('Value' = trimws(Value, "both")) %>%
-    tidyr::spread(key = Var, value = Value, fill = NA) %>%
+                              "Launch GMT Offset", "Max", "Min", "Avg")) |>
+    dplyr::filter(!stringr::str_detect(Var, "Std Dev")) |>
+    dplyr::group_by(Var) |>
+    dplyr::slice(1) |>
+    dplyr::ungroup() |>
+    dplyr::mutate('Value' = trimws(Value, "both")) |>
+    tidyr::spread(key = Var, value = Value, fill = NA) |>
     dplyr::mutate('Import Date' = as.character(lubridate::today()),
                   'Plot ID' = my_file$file_info$plotid,
                   'Element' = my_logger$Element,
@@ -97,12 +105,12 @@ get_details <- function(my_file, my_data){
                   'ConvertFtoC' = ifelse(Element == "TEMP" &&
                                            stringr::str_detect(my_logger$Units,
                                                                "F"),
-                                         "Yes", "No")) %>%
-    tidyr::gather(key = 'Details', value = 'Value') %>%
-    dplyr::mutate("FileName" =my_file$file_info$filename) %>%
-    dplyr::select('FileName', 'Details', 'Value') %>%
+                                         "Yes", "No")) |>
+    tidyr::gather(key = 'Details', value = 'Value') |>
+    dplyr::mutate("FileName" =my_file$file_info$filename) |>
+    dplyr::select('FileName', 'Details', 'Value') |>
     dplyr::arrange('Details')
-  details = details %>%
+  details = details |>
     dplyr::add_row(tibble::tibble_row("FileName" = my_file$file_info$filename,
                                       "Details" = "QFLAG",
                                       "Value" = qflags(my_logger, details, my_data)))
@@ -115,7 +123,7 @@ qflags <- function(my_logger, my_details, my_data){
     Units = ifelse(my_logger$Units == "Unknown", 2, NA),
     DateTimeNA = ifelse(sum(is.na(my_data$DateTime)) > 0, 3, NA),
     DataNA = ifelse(sum(is.na(my_data$Value)) > 0, 4, NA)
-  ) %>%
+  ) |>
     tidyr::gather("Category", "Flag")
 
   qflags = ifelse(sum(is.na(flags$Flag)) != nrow(flags),

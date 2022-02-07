@@ -15,8 +15,8 @@
 #'     This function srtips the first 5 minutes and last 10 minutes of data to
 #'     account for field proceedures when downloading the event logger. It is
 #'     common practice to trigger an event before downloading and after
-#'     launching the logger. To remove these false events there is a routine to
-#'     stip the first 5 minutes of the data if the "Launch Time" and "First
+#'     launch_timeing the logger. To remove these false events there is a routine to
+#'     stip the first 5 minutes of the data if the "launch_time Time" and "First
 #'     Sample Time" are the same. There is no way to determine if the tipping
 #'     bucket is triggered before downloading the data, so the last 10 minutes
 #'     of every file is stripped before processing.
@@ -48,10 +48,16 @@
 #' @examples
 #' \dontrun{
 #' library("rainDanceR")
-#' file.list <- list.files(path = "./inst/raw_data", pattern = ".csv",
-#'                         full.names = TRUE, recursive = FALSE)
-#' my_wxdat <- import_wxdat(file.list[1])
-#' raindance(my_wxdat)
+#'
+#' # Generate list of files
+#' file_list <- list.files(path = system.file("extdata", package = "rainDanceR"),
+#'                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
+#'
+#' # Read file into R
+#' my_prcp <- import_wxdat(file_list[1])
+#'
+#' # Process precipitation data
+#' raindance(my_prcp)
 #' }
 #'
 raindance <- function(my_wxdat){
@@ -61,71 +67,71 @@ raindance <- function(my_wxdat){
     stop("Data are not PRCP. Check data.")
   }
 
-  launch = dplyr::filter(my_wxdat$details, Details == "Launch Time")
+  launch_time = dplyr::filter(my_wxdat$details, Details == "Launch Time")
   first_sample = dplyr::filter(my_wxdat$details, Details == "First Sample Time")
 
   #-- Summarize precipitation data
-  dat <- if(launch$Value == first_sample$Value){
+  dat <- if(launch_time$Value == first_sample$Value){
     dplyr::filter(my_wxdat$data, DateTime > min(DateTime, na.rm = T) + (5*60))
     } else {
       my_wxdat$data
       }
 
-  dat <- dat %>%
-    dplyr::filter(DateTime < max(DateTime, na.rm = T) - (10*60)) %>%
+  dat <- dat |>
+    dplyr::filter(DateTime < max(DateTime, na.rm = T) - (10*60)) |>
     dplyr::mutate(Date = lubridate::date(DateTime),
                   Hour = paste(lubridate::hour(DateTime) + 1, "00", sep = ":"),
                   Hour = ifelse(Hour == "24:00", "0:00", Hour),
-                  Min = lubridate::minute(DateTime)) %>%
+                  Min = lubridate::minute(DateTime)) |>
     dplyr::ungroup()
 
   if(nrow(dat) == 0){
     stop("No valid data. Check file.")
   } else{
     # Calculate hourly precipitation totals
-    hr_tot <- dat %>%
-      dplyr::group_by(Date, Hour) %>%
-      dplyr::summarise(mm.hr = dplyr::n() * 0.254) %>%
+    hr_tot <- dat |>
+      dplyr::group_by(Date, Hour) |>
+      dplyr::summarise(mm.hr = dplyr::n() * 0.254) |>
       dplyr::mutate(Hour = factor(Hour,
                                   levels = c("0:00",
-                                             paste0(seq(1:23), ":00")))) %>%
-      tidyr::spread(Hour, mm.hr, fill = 0) %>%
-      tidyr::gather(Hour, mm.hr, 2:ncol(.)) %>%
-      dplyr::mutate(DateTime = paste(Date, Hour, sep = " ")) %>%
-      dplyr::ungroup() %>%
+                                             paste0(seq(1:23), ":00")))) |>
+      tidyr::spread(Hour, mm.hr, fill = 0) |>
+      tidyr::gather(Hour, mm.hr, 2:25) |>
+      dplyr::mutate(DateTime = paste(Date, Hour, sep = " ")) |>
+      dplyr::ungroup() |>
       dplyr::select(DateTime, mm.hr)
     # Calculate number of tips per hour
-    tips_hr <- dat %>%
-      dplyr::group_by(Date, Hour, Min) %>%
-      dplyr::summarise(tips.min = dplyr::n()) %>%
-      dplyr::group_by(Date, Hour) %>%
-      dplyr::summarise(tips.hr = dplyr::n()) %>%
+    tips_hr <- dat |>
+      dplyr::group_by(Date, Hour, Min) |>
+      dplyr::summarise(tips.min = dplyr::n()) |>
+      dplyr::group_by(Date, Hour) |>
+      dplyr::summarise(tips.hr = dplyr::n()) |>
       dplyr::mutate(Hour = factor(Hour,
                                   levels = c("0:00",
-                                             paste0(seq(1:23), ":00")))) %>%
-      tidyr::spread(Hour, tips.hr, fill = 0) %>%
-      tidyr::gather(Hour, tips.hr, 2:ncol(.)) %>%
-      dplyr::mutate(DateTime = paste(Date, Hour, sep = " ")) %>%
-      dplyr::ungroup() %>%
+                                             paste0(seq(1:23), ":00")))) |>
+      tidyr::spread(Hour, tips.hr, fill = 0) |>
+      tidyr::gather(Hour, tips.hr, 2:25) |>
+      dplyr::mutate(DateTime = paste(Date, Hour, sep = " ")) |>
+      dplyr::ungroup() |>
       dplyr::select(DateTime, tips.hr)
     # Calculate max tips per minute
-    max_tips <- dat %>%
-      dplyr::group_by(Date, Hour, Min) %>%
-      dplyr::summarise(tips.min = dplyr::n()) %>%
-      dplyr::group_by(Date, Hour) %>%
-      dplyr::summarise(max.tips.min = max(tips.min)) %>%
+    max_tips <- dat |>
+      dplyr::group_by(Date, Hour, Min) |>
+      dplyr::summarise(tips.min = dplyr::n()) |>
+      dplyr::group_by(Date, Hour) |>
+      dplyr::summarise(max.tips.min = max(tips.min)) |>
       dplyr::mutate(Hour = factor(Hour,
                                   levels = c("0:00",
-                                             paste0(seq(1:23), ":00")))) %>%
-      tidyr::spread(Hour, max.tips.min, fill = 0) %>%
-      tidyr::gather(Hour, max.tips.min, 2:ncol(.)) %>%
-      dplyr::mutate(DateTime = paste(Date, Hour, sep = " ")) %>%
-      dplyr::ungroup() %>%
+                                             paste0(seq(1:23), ":00")))) |>
+      tidyr::spread(Hour, max.tips.min, fill = 0) |>
+      tidyr::gather(Hour, max.tips.min, 2:25) |>
+      dplyr::mutate(DateTime = paste(Date, Hour, sep = " ")) |>
+      dplyr::ungroup() |>
       dplyr::select(DateTime, max.tips.min)
     # Combine dataframes
-    rain_dat <- suppressMessages(dplyr::full_join(hr_tot, tips_hr)) %>%
-      suppressMessages(dplyr::full_join(max_tips)) %>%
-      dplyr::mutate(DateTime = lubridate::ymd_hm(DateTime)) %>%
+    rain_dat <- suppressMessages(dplyr::full_join(hr_tot, tips_hr)) |>
+      suppressMessages(dplyr::full_join(max_tips)) |>
+      dplyr::mutate(DateTime = lubridate::ymd_hm(DateTime)) |>
       dplyr::arrange(DateTime)
     # Include empty cells for rainless days
     dd <- tibble::tibble(DateTime = lubridate::ymd_hms(seq(min(dat$DateTime),
@@ -134,14 +140,14 @@ raindance <- function(my_wxdat){
                  mm.hr = 0,
                  tips.hr = 0,
                  max.tips.min = 0)
-    rain_dat <- dplyr::bind_rows(rain_dat, dd) %>%
-      dplyr::group_by(DateTime) %>%
+    rain_dat <- dplyr::bind_rows(rain_dat, dd) |>
+      dplyr::group_by(DateTime) |>
       dplyr::summarise(PlotID = my_wxdat$file_info$plotid,
                        PRCP_mm = sum(mm.hr),
                        Tips = sum(tips.hr),
-                       MaxTips_min = max(max.tips.min)) %>%
-      dplyr::mutate(RID = paste0(as.numeric(DateTime), PlotID, sep = ".")) %>%
-      dplyr::select(RID, PlotID, DateTime, PRCP_mm, Tips, MaxTips_min) %>%
+                       MaxTips_min = max(max.tips.min)) |>
+      dplyr::mutate(RID = paste0(as.numeric(DateTime), PlotID, sep = ".")) |>
+      dplyr::select(RID, PlotID, DateTime, PRCP_mm, Tips, MaxTips_min) |>
       dplyr::arrange(DateTime)
   }
 

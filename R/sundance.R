@@ -45,11 +45,15 @@
 #' \dontrun{
 #' library("rainDanceR")
 #'
-#' file.list <- list.files(path = "./inst/raw_data",
-#'                         pattern = ".csv",
-#'                         full.names = TRUE, recursive = FALSE)
-#' my_wxdat <- import_wxdat(file.list[2])
-#' sundance(my_wxdat)
+#' # Generate list of files
+#' file_list <- list.files(path = system.file("extdata", package = "rainDanceR"),
+#'                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
+#'
+#' # Read file into R
+#' my_temp <- import_wxdat(file_list[2])
+#'
+#' # Process precipitation data
+#' sundance(my_temp)
 #' }
 sundance <- function(my_wxdat){
   #-- QA check
@@ -57,30 +61,30 @@ sundance <- function(my_wxdat){
     stop("Data are not PRCP. Check data.")
   }
   #-- Summarize temperature data
-  dat <- raw.dat %>%
-    mutate(Date = date(DateTime)) %>%
-    group_by(PlotID, Date) %>%
+  dat <- raw.dat |>
+    mutate(Date = date(DateTime)) |>
+    group_by(PlotID, Date) |>
     summarize(TEMP_mean = mean(Value, na.rm = T),
               TMIN = min(Value, na.rm = T),
               TMAX = max(Value, na.rm = T),
               n = n())
-  tmin.time <- raw.dat %>%
-    mutate(Date = date(DateTime)) %>%
-    left_join(dat, by = c("PlotID", "Date")) %>%
-    filter(Value == TMIN) %>%
-    group_by(PlotID, Date) %>%
+  tmin.time <- raw.dat |>
+    mutate(Date = date(DateTime)) |>
+    left_join(dat, by = c("PlotID", "Date")) |>
+    filter(Value == TMIN) |>
+    group_by(PlotID, Date) |>
     summarise(TMIN_time = strftime(min(DateTime), format="%H:%M:%S"))
-  tmax.time <- raw.dat %>%
-    mutate(Date = date(DateTime)) %>%
-    left_join(dat, by = c("PlotID", "Date")) %>%
-    filter(Value == TMAX) %>%
-    group_by(PlotID, Date) %>%
+  tmax.time <- raw.dat |>
+    mutate(Date = date(DateTime)) |>
+    left_join(dat, by = c("PlotID", "Date")) |>
+    filter(Value == TMAX) |>
+    group_by(PlotID, Date) |>
     summarise(TMAX_time = strftime(min(DateTime), format="%H:%M:%S"))
-  dat <- left_join(dat, tmin.time) %>%
-    left_join(tmax.time) %>%
-    arrange(PlotID, Date) %>%
+  dat <- left_join(dat, tmin.time) |>
+    left_join(tmax.time) |>
+    arrange(PlotID, Date) |>
     mutate(RID = paste0(PlotID, as.numeric(Date)),
-           Date = as.character(Date)) %>%
+           Date = as.character(Date)) |>
     select(RID, PlotID, Date, TEMP_mean, TMIN, TMAX, n, TMIN_time, TMAX_time)
   return(dat)
 }
