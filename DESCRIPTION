@@ -1,12 +1,28 @@
 Package: RainDanceR
-Title: What the Package Does (One Line, Title Case)
+Title: Import Data from Onset Data Loggers
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+    person(given = "Matthew",
+           family = "Van Scoyoc",
+           role = c("aut", "cre"),
+           email = "matthew_vanscoyoc@nps.gov",
+           comment = c(ORCID = "0000-0001-6821-4476"))
+Description: This package imports data from Onset temperature, relative 
+    humidity, and precipitation data loggers into R. Data collected in the field 
+    using Onset loggers are exported to comma delimited files (*.csv) using the 
+    HOBOware application from Onset. This package imports the *.csv files into R.
+Depends: R (>= 4.0)
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
+Imports: 
+    dplyr,
+    lubridate,
+    stringr,
+    tibble,
+    tidyr
+Suggests: 
+    stringi,
+    readr,
+    janitor
