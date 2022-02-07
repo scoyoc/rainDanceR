@@ -2,4 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
-.../"USGS Software Request"
+/exec
+.Rdata
+.httr-oauth
+.DS_Store
