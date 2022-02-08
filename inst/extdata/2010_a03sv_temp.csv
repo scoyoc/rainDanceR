@@ -1,7 +1,7 @@
 ﻿Plot Title: A3 Salt Valley ,,,,
 #,"Date Time, GMT-06:00","H08 Temp., °F (LGR S/N: 693620)",,
 1,04/13/09 09:11:25 AM,81.54,Details,
-2,04/13/09 10:23:25 AM,57.36,Series: DDDDDD (0.0), Units
+2,04/13/09 10:23:25 AM,57.36,Series: H08 Temp., °F
 3,04/13/09 11:35:25 AM,70.39,Devices,
 4,04/13/09 12:47:25 PM,77.31,Device Info,
 5,04/13/09 01:59:25 PM,71.76,Product: H08 Logger,
@@ -11,7 +11,7 @@
 9,04/13/09 06:47:25 PM,71.08,Device Memory: 32768,
 10,04/13/09 07:59:25 PM,59.41,Header Created: 06/04/18 11:01:44 AM GMT-06:00,
 11,04/13/09 09:11:25 PM,47.53,Deployment Info,
-12,04/13/09 10:23:25 PM,46.09,Full Series Name: DDDDDD (0.0), Units
+12,04/13/09 10:23:25 PM,46.09,Full Series Name: H08 Temperature, °F
 13,04/13/09 11:35:25 PM,43.92,Launch Name: A5 Panorama Point,
 14,04/14/09 12:47:25 AM,42.46,Deployment Number: 10,
 15,04/14/09 01:59:25 AM,44.65,Launch Time: 03/31/09 10:16:03 AM GMT-06:00,

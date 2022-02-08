@@ -50,31 +50,33 @@
 #'                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 #'
 #' # Read file into R
-#' my_temp <- import_wxdat(file_list[4])
+#' my_temp <- import_wxdat(file_list[2])
 #'
 #' # Process precipitation data
 #' sundance(my_temp)
 #' }
 sundance <- function(my_wxdat){
+  # my_wxdat = import_wxdat(file_list[2])
+
   #-- QA check
   if(unique(my_wxdat$data$Element) != "TEMP"){
     stop("Data are not PRCP. Check data.")
   }
   #-- Summarize temperature data
-  dat <- raw.dat |>
+  dat <- my_wxdat$data |>
     dplyr::mutate(Date = lubridate::date(DateTime)) |>
-    group_by(PlotID, Date) |>
+    dplyr::group_by(PlotID, Date) |>
     dplyr::summarize(TEMP_mean = mean(Value, na.rm = T),
-              TMIN = min(Value, na.rm = T),
-              TMAX = max(Value, na.rm = T),
-              dplyr::n = n())
-  tmin.time <- raw.dat |>
+                     TMIN = min(Value, na.rm = T),
+                     TMAX = max(Value, na.rm = T),
+                     n = dplyr::n())
+  tmin.time <- my_wxdat$data |>
     dplyr::mutate(Date = lubridate::date(DateTime)) |>
     dplyr::left_join(dat, by = c("PlotID", "Date")) |>
     dplyr::filter(Value == TMIN) |>
     dplyr::group_by(PlotID, Date) |>
     dplyr::summarise(TMIN_time = strftime(min(DateTime), format="%H:%M:%S"))
-  tmax.time <- raw.dat |>
+  tmax.time <- my_wxdat$data |>
     dplyr::mutate(Date = lubridate::date(DateTime)) |>
     dplyr::left_join(dat, by = c("PlotID", "Date")) |>
     dplyr::filter(Value == TMAX) |>
@@ -85,6 +87,6 @@ sundance <- function(my_wxdat){
     dplyr::arrange(PlotID, Date) |>
     dplyr::mutate(RID = paste0(PlotID, as.numeric(Date)),
                   Date = as.character(Date)) |>
-    select(RID, PlotID, Date, TEMP_mean, TMIN, TMAX, n, TMIN_time, TMAX_time)
+    dplyr::select(RID, PlotID, Date, TEMP_mean, TMIN, TMAX, n, TMIN_time, TMAX_time)
   return(dat)
 }
