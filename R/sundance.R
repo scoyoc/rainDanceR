@@ -1,11 +1,11 @@
 #' Summarize temperature data
 #'
-#' This function summarizes temperature data from Onset Hobo temperature loggers.
+#' This function summarizes temperature data from Onset loggers.
 #'
 #' @param my_wxdat An \code{import_wxdat} object.
 #'
 #' @details
-#' This function summarizes temperature data from Onset Hobo event loggers. It
+#' This function summarizes temperature data from Onset loggers. It
 #'     uses a list produced from \code{\link{import_wxdat}} and returns a data
 #'     frame of summarized temperature data.
 #'
@@ -23,8 +23,8 @@
 #'     \item{\strong{TMIN}}{The minimum daily temperature.}
 #'     \item{\strong{TMAX}}{The maximum daily temperature.}
 #'     \item{\strong{n}}{The number of records for that day.}
-#'     \item{\strong{TMIN_time}}{The time of daily minimum temperature.}
-#'     \item{\strong{TEMP_mean}}{The time of daily maximum temperature.}
+#'     \item{\strong{TMIN_time}}{The time of minimum daily temperature.}
+#'     \item{\strong{TEMP_mean}}{The time of maximum daily temperature.}
 #' }
 #'
 #' @seealso \code{\link{import_wxdat}}
@@ -49,24 +49,24 @@ sundance <- function(my_wxdat){
   # my_wxdat = import_wxdat(file_list[2])
 
   #-- QA check
-  if(unique(my_wxdat$data$Element) != "TEMP"){
-    stop("Data are not PRCP. Check data.")
+  if(!stringr::str_detect(my_wxdat$file_info$Element, "TEMP")){
+    stop("Data are not TEMP. Check data.")
   }
   #-- Summarize temperature data
-  dat <- my_wxdat$data |>
+  dat <- dplyr::filter(my_wxdat$data, Element == "TEMP") |>
     dplyr::mutate(Date = lubridate::date(DateTime)) |>
     dplyr::group_by(PlotID, Date) |>
     dplyr::summarize(TEMP_mean = mean(Value, na.rm = T),
                      TMIN = min(Value, na.rm = T),
                      TMAX = max(Value, na.rm = T),
                      n = dplyr::n())
-  tmin.time <- my_wxdat$data |>
+  tmin.time <- dplyr::filter(my_wxdat$data, Element == "TEMP") |>
     dplyr::mutate(Date = lubridate::date(DateTime)) |>
     dplyr::left_join(dat, by = c("PlotID", "Date")) |>
     dplyr::filter(Value == TMIN) |>
     dplyr::group_by(PlotID, Date) |>
     dplyr::summarise(TMIN_time = strftime(min(DateTime), format="%H:%M:%S"))
-  tmax.time <- my_wxdat$data |>
+  tmax.time <- dplyr::filter(my_wxdat$data, Element == "TEMP") |>
     dplyr::mutate(Date = lubridate::date(DateTime)) |>
     dplyr::left_join(dat, by = c("PlotID", "Date")) |>
     dplyr::filter(Value == TMAX) |>

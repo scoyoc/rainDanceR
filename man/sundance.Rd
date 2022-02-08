@@ -23,15 +23,15 @@ plot.}
 \item{\strong{TMIN}}{The minimum daily temperature.}
 \item{\strong{TMAX}}{The maximum daily temperature.}
 \item{\strong{n}}{The number of records for that day.}
-\item{\strong{TMIN_time}}{The time of daily minimum temperature.}
-\item{\strong{TEMP_mean}}{The time of daily maximum temperature.}
+\item{\strong{TMIN_time}}{The time of minimum daily temperature.}
+\item{\strong{TEMP_mean}}{The time of maximum daily temperature.}
 }
 }
 \description{
-This function summarizes temperature data from Onset Hobo temperature loggers.
+This function summarizes temperature data from Onset loggers.
 }
 \details{
-This function summarizes temperature data from Onset Hobo event loggers. It
+This function summarizes temperature data from Onset loggers. It
 uses a list produced from \code{\link{import_wxdat}} and returns a data
 frame of summarized temperature data.
 }

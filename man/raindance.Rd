@@ -29,19 +29,19 @@ inteded to calculate intensity of precipitation event.}
 }
 }
 \description{
-This function summarizes precipitation data from Onset Hobo event loggers
+This function summarizes precipitation data from Onset event loggers
+used in Onset tipping bucket precipitation gauges.
+}
+\details{
+This function summarizes precipitation data from Onset event loggers
 used in Onset tipping bucket precipitation gauges. It uses a list
 produced from \code{\link{import_wxdat}} and returns a data frame of
 hourly precipitation totals, number of tips per hour, and maximum tips
-per minute.
-}
-\details{
-This function summarizes precipitation data from Onset Hobo event  loggers
-used in Onset tipping bucket precipitation gauges.\preformatted{This function srtips the first 5 minutes and last 10 minutes of data to
-account for field proceedures when downloading the event logger. It is
+per minute.\preformatted{This function strips the first 5 minutes and last 10 minutes of data to
+account for field procedures when downloading the event logger. It is
 common practice to trigger an event before downloading and after
-launch_timeing the logger. To remove these false events there is a routine to
-stip the first 5 minutes of the data if the "launch_time Time" and "First
+launching the logger. To remove these false events there is a routine to
+strip the first 5 minutes of the data if the "launch_time Time" and "First
 Sample Time" are the same. There is no way to determine if the tipping
 bucket is triggered before downloading the data, so the last 10 minutes
 of every file is stripped before processing.

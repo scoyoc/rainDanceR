@@ -1,22 +1,22 @@
 #' Summarize precipitation data
 #'
-#' This function summarizes precipitation data from Onset Hobo event loggers
+#' This function summarizes precipitation data from Onset event loggers
+#'     used in Onset tipping bucket precipitation gauges.
+#'
+#' @param my_wxdat An \code{import_wxdat} object.
+#'
+#' @details
+#' This function summarizes precipitation data from Onset event loggers
 #'     used in Onset tipping bucket precipitation gauges. It uses a list
 #'     produced from \code{\link{import_wxdat}} and returns a data frame of
 #'     hourly precipitation totals, number of tips per hour, and maximum tips
 #'     per minute.
 #'
-#' @param my_wxdat An \code{import_wxdat} object.
-#'
-#' @details
-#' This function summarizes precipitation data from Onset Hobo event  loggers
-#'     used in Onset tipping bucket precipitation gauges.
-#'
-#'     This function srtips the first 5 minutes and last 10 minutes of data to
-#'     account for field proceedures when downloading the event logger. It is
+#'     This function strips the first 5 minutes and last 10 minutes of data to
+#'     account for field procedures when downloading the event logger. It is
 #'     common practice to trigger an event before downloading and after
-#'     launch_timeing the logger. To remove these false events there is a routine to
-#'     stip the first 5 minutes of the data if the "launch_time Time" and "First
+#'     launching the logger. To remove these false events there is a routine to
+#'     strip the first 5 minutes of the data if the "launch_time Time" and "First
 #'     Sample Time" are the same. There is no way to determine if the tipping
 #'     bucket is triggered before downloading the data, so the last 10 minutes
 #'     of every file is stripped before processing.
@@ -60,20 +60,20 @@
 #' }
 #'
 raindance <- function(my_wxdat){
-  # my_wxdat = import_wxdat(file_list[1])
-
-  if(unique(my_wxdat$data$Element) != "PRCP"){
+  # QAQC
+  if(!stringr::str_detect(my_wxdat$file_info$Element, "PRCP")){
     stop("Data are not PRCP. Check data.")
   }
 
+  # Determine if first 5-min need to be removed
   launch_time = dplyr::filter(my_wxdat$details, Details == "Launch Time")
   first_sample = dplyr::filter(my_wxdat$details, Details == "First Sample Time")
-
   #-- Summarize precipitation data
   dat <- if(launch_time$Value == first_sample$Value){
-    dplyr::filter(my_wxdat$data, DateTime > min(DateTime, na.rm = T) + (5*60))
+    dat <- dplyr::filter(my_wxdat$data, Element == "PRCP" &
+                           DateTime > min(DateTime, na.rm = T) + (5*60))
     } else {
-      my_wxdat$data
+      dat <- dplyr::filter(my_wxdat$data, Element == "PRCP")
       }
 
   dat <- dat |>
