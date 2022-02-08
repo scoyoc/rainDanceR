@@ -13,9 +13,9 @@ sundance(my_wxdat)
 This function returns a nine (9) column \code{\link[tibble:tibble]{tibble}}.
 
 \describe{
-\item RID: The unique record ID. The record ID
+\item{\strong{RID}}{The unique record ID. The record ID
 \code{\link[base:paste]{paste}}'s Date and PlotID to  create a unique
-record ID.
+record ID.}
 \item{\strong{PlotID}}{The unique ID number for the long-term monitoring
 plot.}
 \item{\strong{Date}}{The date the data were recorded.}
@@ -28,20 +28,12 @@ plot.}
 }
 }
 \description{
-This function summarizes temperature data from Onset Hobo event loggers. It
-uses a list produced from \code{\link{import_wxdat}} and returns a data
-frame of temperature data.
+This function summarizes temperature data from Onset Hobo temperature loggers.
 }
 \details{
-This function summarizes temperature data from Onset Hobo event  loggers.\preformatted{This function srtips the first 5 minutes and last 10 minutes of data to
-account for field proceedures when downloading the event logger. It is
-common practice to trigger an event before downloading and after
-launching the logger. To remove these false events there is a routine to
-stip the first 5 minutes of the data if the "Launch Time" and "First
-Sample Time" are the same. There is no way to determine if the tipping
-bucket is triggered before downloading the data, so the last 10 minutes
-of every file is stripped before processing.
-}
+This function summarizes temperature data from Onset Hobo event loggers. It
+uses a list produced from \code{\link{import_wxdat}} and returns a data
+frame of summarized temperature data.
 }
 \examples{
 \dontrun{
@@ -59,6 +51,5 @@ sundance(my_temp)
 }
 }
 \seealso{
-\code{\link{import_wxdat}} to import a csv produced by Onset
-HOBOware into R.
+\code{\link{import_wxdat}}
 }

@@ -21,22 +21,22 @@ data. The variables produced by this function include:
 in the "Details" colum of the original file. Calculated variables
 listed below.
 \itemize{
-\item Import Date: A character string of the date the data were
-processed useing lubridate::today().
-\item Plot ID: The unique plot identification number (e.g., A03
-or I06).
-\item Element: The element the data represent. TEMP is
+\item{Import Date: A character string of the date the data were
+processed useing lubridate::today().}
+\item{Plot ID: The unique plot identification number (e.g., A03
+or I06).}
+\item{Element: The element the data represent. TEMP is
 temperature, RH is relative humidity, and PRCP is
-precipitation.
-\item Units: The unit of measurement. Temperature is measured in
+precipitation.}
+\item{Units: The unit of measurement. Temperature is measured in
 F or C, relative humidity is measured in percent, and
 precipitation is measured in tips of the tipping bucket, or
-events.
-\item DateTime (min): The minimum date-time stamp in the data.
-\item DateTime (max): The maximum date-time stamp in the data.
-\item Records (n): The number of records of data.
-\item ConvertFtoC: Logical. Were the temperature data converted
-from F to C? Yes or No.
+events.}
+\item{DateTime (min): The minimum date-time stamp in the data.}
+\item{DateTime (max): The maximum date-time stamp in the data.}
+\item{Records (n): The number of records of data.}
+\item{ConvertFtoC: Logical. Were the temperature data converted
+from F to C? Yes or No.}
 }}
 \item{\strong{Value}}{The value the variable in Details.}
 }
@@ -52,10 +52,6 @@ Some of the values details are extracted from the "Details" column of the csv
 file, some are scraped from the file name, and others are calculated form the
 data.
 }
-\section{Calculated variables}{
-
-}
-
 \examples{
 \dontrun{
 library("rainDanceR")
@@ -76,6 +72,5 @@ get_details(my_file, my_data)
 
 }
 \seealso{
-\code{\link{import_file}} to import a csv produced by HOBOware and
-\\code{\link{get_data}} to extract the data.
+\code{\link{import_file}}, \\code{\link{get_data}}
 }

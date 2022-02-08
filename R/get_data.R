@@ -15,19 +15,18 @@
 #'     data. The variables produced by this function include:
 #'
 #' \itemize{
-#'     \item RID: The unique record ID. The record ID
+#'     \item{\strong{RID}}{The unique record ID. The record ID
 #'         \code{\link[base:paste]{paste}}'s DateTime, PlotID, and Element to
-#'         create a unique record ID.
-#'     \item FileName: The name of the file the data came from.
-#'     \item PlotID: The unique plot identification number (e.g., A03 orI06).
-#'     \item DateTime: The date and time the data were collected at.
-#'     \item Element: The element the data represent. TEMP is temperature, RH is
-#'         relative humidity, and PRCP is precipitation.
-#'     \item Value: The data value recorded by the data logger.
+#'         create a unique record ID.}
+#'     \item{\strong{FileName}}{The name of the file the data came from.}
+#'     \item{\strong{PlotID}}{The unique plot identification number (e.g., A03 orI06).}
+#'     \item{\strong{DateTime}}{The date and time the data were collected at.}
+#'     \item{\strong{Element}}{The element the data represent. TEMP is temperature, RH is
+#'         relative humidity, and PRCP is precipitation.}
+#'     \item{\strong{Value}}{The data value recorded by the data logger.}
 #' }
 #'
-#' @seealso \code{\link{import_file}} to import a csv produced by HOBOware and
-#'    \code{\link{get_details}} to extract the metadata.
+#' @seealso \code{\link{import_file}}, \code{\link{get_details}}
 #'
 #' @export
 #'
@@ -82,7 +81,7 @@ get_data <- function(my_file){
                                   sep = ".")) |>
       dplyr::select('RID', 'FileName', 'PlotID', 'DateTime', 'Element', 'Value')
 
-  } else(message(paste0("Something is wrong. Check file: ",
+  } else(message(paste0("Something is not right here. Check file: ",
                         basename(my_file$file_info$filename),
                         "; ncol = ", my_file$file_info$col_n)))
   return(dat)

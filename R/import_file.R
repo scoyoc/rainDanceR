@@ -30,21 +30,20 @@
 #'    \item{\strong{file_info}}{This component is a vector that contains the
 #'        file name, the date stamp, plot ID, the number of lines to skip to
 #'        properly import the data, and the number of columns of data in the raw
-#'        file. Varibles listed below:
+#'        file. Varibles listed below:}
 #'            \itemize{
-#'                \item filename: The base name of the file being processed.
-#'                \item datestamp: A date stamp. stripped from the file name.
-#'                \item plotid: The plot identification number. Stripped from
-#'                    the file name.
-#'                \item skip:The number of lines to skip to read in the file
-#'                    correctly.
-#'                \item col_n: The number of columns in the raw data file.}}
+#'                \item{filename: The base name of the file being processed.}
+#'                \item{datestamp: A date stamp. stripped from the file name.}
+#'                \item{plotid: The plot identification number. Stripped from
+#'                    the file name.}
+#'                \item{skip:The number of lines to skip to read in the file
+#'                    correctly.}
+#'                \item{col_n: The number of columns in the raw data file.}}
 #'    \item{\strong{raw_file}}{This component is a data frame containing the
 #'        raw data and the "Details" column produced by HOBOware.}
 #' }
 #'
-#' @seealso \code{\link{get_data}} to extract the data and
-#'     \code{\link{get_details}} to extract the metadata.
+#' @seealso \code{\link{get_data}}, \code{\link{get_details}}
 #'
 #' @export
 #'
@@ -132,7 +131,7 @@ import_file <- function(this_file, datestamp_loc = 1, plotid_loc = 2,
                                "Detatched", "Attached", "Connected",
                                "EndFile", "Details","Units"))) |>
       tidyr::drop_na() |>
-      as_tibble()
+      tidyr::as_tibble()
 
   } else(message(paste0("Something is wrong. Check file: ", basename(this_file),
                         "; ncol = ", file_info$col_n)))

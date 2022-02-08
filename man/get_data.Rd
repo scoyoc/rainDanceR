@@ -14,15 +14,15 @@ This function returns a \code{\link[tibble:tibble]{tibble}} of standardized
 data. The variables produced by this function include:
 
 \itemize{
-\item RID: The unique record ID. The record ID
+\item{\strong{RID}}{The unique record ID. The record ID
 \code{\link[base:paste]{paste}}'s DateTime, PlotID, and Element to
-create a unique record ID.
-\item FileName: The name of the file the data came from.
-\item PlotID: The unique plot identification number (e.g., A03 orI06).
-\item DateTime: The date and time the data were collected at.
-\item Element: The element the data represent. TEMP is temperature, RH is
-relative humidity, and PRCP is precipitation.
-\item Value: The data value recorded by the data logger.
+create a unique record ID.}
+\item{\strong{FileName}}{The name of the file the data came from.}
+\item{\strong{PlotID}}{The unique plot identification number (e.g., A03 orI06).}
+\item{\strong{DateTime}}{The date and time the data were collected at.}
+\item{\strong{Element}}{The element the data represent. TEMP is temperature, RH is
+relative humidity, and PRCP is precipitation.}
+\item{\strong{Value}}{The data value recorded by the data logger.}
 }
 }
 \description{
@@ -51,6 +51,5 @@ get_data(my_file)
 
 }
 \seealso{
-\code{\link{import_file}} to import a csv produced by HOBOware and
-\code{\link{get_details}} to extract the metadata.
+\code{\link{import_file}}, \code{\link{get_details}}
 }

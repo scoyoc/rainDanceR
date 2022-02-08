@@ -35,15 +35,15 @@ This function returns a list with two components.
 \item{\strong{file_info}}{This component is a vector that contains the
 file name, the date stamp, plot ID, the number of lines to skip to
 properly import the data, and the number of columns of data in the raw
-file. Varibles listed below:
+file. Varibles listed below:}
 \itemize{
-\item filename: The base name of the file being processed.
-\item datestamp: A date stamp. stripped from the file name.
-\item plotid: The plot identification number. Stripped from
-the file name.
-\item skip:The number of lines to skip to read in the file
-correctly.
-\item col_n: The number of columns in the raw data file.}}
+\item{filename: The base name of the file being processed.}
+\item{datestamp: A date stamp. stripped from the file name.}
+\item{plotid: The plot identification number. Stripped from
+the file name.}
+\item{skip:The number of lines to skip to read in the file
+correctly.}
+\item{col_n: The number of columns in the raw data file.}}
 \item{\strong{raw_file}}{This component is a data frame containing the
 raw data and the "Details" column produced by HOBOware.}
 }
@@ -75,6 +75,5 @@ import_file(file_list[1])
 
 }
 \seealso{
-\code{\link{get_data}} to extract the data and
-\code{\link{get_details}} to extract the metadata.
+\code{\link{get_data}}, \code{\link{get_details}}
 }

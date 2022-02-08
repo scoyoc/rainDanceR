@@ -18,26 +18,24 @@
 #'     \code{\link{get_data}}, and \code{\link{get_details}} process the file.
 #'
 #' @return
-#' This function returns a list with three components.
+#' This function returns a list with four components.
 #'
 #' \describe{
 #'     \item{\strong{file_info}}{This component is a vector that contains the
 #'         file name, the date stamp, plot ID, the number of lines to skip to
-#'         properly import the data, and the number of columns of data in the
-#'         raw file. This comonent is a component of \code{\link{import_file}}.}
-#'     \item{\strong{details}}{This component is a data frame of metadata. See
-#'         \code{\link{get_details}} for more details.}
-#'     \item{\strong{data}}{This component is a data frame containing the
-#'         standardized form of the raw data. See \code{\link{get_data}} for
-#'         more details.}
-#'     \item{\strong{raw_file}}{The raw, unprocessed or standardized file that
-#'         was loaded into R using \code{\link{import_file}}. See
-#'         \code{\link{import_file}} for more details.}
+#'         properly import the data, the number of columns of data in the
+#'         raw file, and the Elements measured. This comonent is the product of
+#'         \code{\link{import_file}}.}
+#'     \item{\strong{details}}{This component is a data frame of metadata from
+#'         \code{\link{get_details}}.}
+#'     \item{\strong{data}}{This component is a data frame from
+#'         \code{\link{get_data}}.}
+#'     \item{\strong{raw_file}}{The raw file that was loaded into R using
+#'         \code{\link{import_file}}.}
 #' }
 #'
-#' @seealso \code{\link{import_file}} to import a csv produced by HOBOware,
-#'     \code{\link{get_data}} to extract the data, and \code{\link{get_details}}
-#'     to extract the metadata.
+#' @seealso \code{\link{import_file}}, \code{\link{get_data}},
+#'     \code{\link{get_details}}
 #'
 #' @export
 #'
@@ -54,6 +52,7 @@
 #' }
 #'
 import_wxdat <- function(this_file, ...){
+  # this_file = file_list[12]
   #-- Import file
   my_file = import_file(this_file, datestamp_loc = 1, plotid_loc = 2,
                         plotid_s = 1, plotid_e = 3)
@@ -61,6 +60,12 @@ import_wxdat <- function(this_file, ...){
   my_data = suppressMessages(suppressWarnings(get_data(my_file)))
   #-- Extract details
   my_details = suppressMessages(get_details(my_file, my_data))
+  #-- Add element to file info
+  if(length(unique(my_data$Element)) == 1){
+    my_file$file_info$Element = unique(my_data$Element)
+    } else if(length(unique(my_data$Element)) > 1){
+      my_file$file_info$Element = paste(unique(my_data$Element), collapse = ";")
+      } else(my_file$file_info$Element == NA)
   # Return list of objects
   return(list('file_info' = my_file$file_info,
               'details' = my_details,
