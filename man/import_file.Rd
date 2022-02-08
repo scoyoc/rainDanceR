@@ -5,7 +5,7 @@
 \title{Import a csv file produced by Onset HOBOware into R}
 \usage{
 import_file(
-  this_file,
+  my_file,
   datestamp_loc = 1,
   plotid_loc = 2,
   plotid_s = 1,
@@ -13,7 +13,7 @@ import_file(
 )
 }
 \arguments{
-\item{this_file}{A character string of the file name. This can include full
+\item{my_file}{A character string of the file name. This can include full
 directory path.}
 
 \item{datestamp_loc}{A number for the location of the date stamp in the file

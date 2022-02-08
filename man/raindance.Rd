@@ -4,10 +4,20 @@
 \alias{raindance}
 \title{Summarize precipitation data}
 \usage{
-raindance(my_wxdat)
+raindance(my_data)
 }
 \arguments{
-\item{my_wxdat}{An \code{import_wxdat} object.}
+\item{my_data}{A data frame with four columns. Typically from
+\code{\link{get_data}}. At a minimum, columns must include the following:
+\describe{
+\item{\strong{Element}}{The element the data represent. TEMP is
+temperature, RH is relative humidity, and PRCP is precipitation.}
+\item{\strong{PlotID}}{The unique plot identification number (e.g.,
+A03 or I06).}
+\item{\strong{DateTime}}{The date-time of the measurement.}
+\item{\strong{Value}}{The data value of the measurement recorded by
+the data logger.}
+}}
 }
 \value{
 This function returns a five column \code{\link[tibble:tibble]{tibble}}.
@@ -34,10 +44,11 @@ used in Onset tipping bucket precipitation gauges.
 }
 \details{
 This function summarizes precipitation data from Onset event loggers
-used in Onset tipping bucket precipitation gauges. It uses a list
-produced from \code{\link{import_wxdat}} and returns a data frame of
+used in Onset tipping bucket precipitation gauges. It uses a data frame
+typically produced from \code{\link{get_data}} and returns a data frame of
 hourly precipitation totals, number of tips per hour, and maximum tips
-per minute.\preformatted{This function strips the first 5 minutes and last 10 minutes of data to
+per minute.\preformatted{Move this section to process_data function with commented code below...
+This function strips the first 5 minutes and last 10 minutes of data to
 account for field procedures when downloading the event logger. It is
 common practice to trigger an event before downloading and after
 launching the logger. To remove these false events there is a routine to
@@ -56,7 +67,7 @@ file_list <- list.files(path = system.file("extdata", package = "rainDanceR"),
                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 
 # Read file into R
-my_prcp <- import_wxdat(file_list[1])
+my_prcp <- import_wxdat(file_list[1])$data
 
 # Process precipitation data
 raindance(my_prcp)

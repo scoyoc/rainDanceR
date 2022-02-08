@@ -4,10 +4,10 @@
 \alias{import_wxdat}
 \title{Process a *.csv file produced by Onset HOBOware}
 \usage{
-import_wxdat(this_file, ...)
+import_wxdat(my_file, ...)
 }
 \arguments{
-\item{this_file}{A character string of the file name. This can include full
+\item{my_file}{A character string of the file name. This can include full
 directory path.}
 
 \item{...}{Other arguments to pass to \code{\link{import_file}}. See

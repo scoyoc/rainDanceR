@@ -4,10 +4,20 @@
 \alias{sundance}
 \title{Summarize temperature data}
 \usage{
-sundance(my_wxdat)
+sundance(my_data)
 }
 \arguments{
-\item{my_wxdat}{An \code{import_wxdat} object.}
+\item{my_data}{A data frame with four columns. Typically from
+\code{\link{get_data}}. At a minimum, columns must include the following:
+\describe{
+\item{\strong{Element}}{The element the data represent. TEMP is
+temperature, RH is relative humidity, and PRCP is precipitation.}
+\item{\strong{PlotID}}{The unique plot identification number (e.g.,
+A03 or I06).}
+\item{\strong{DateTime}}{The date-time of the measurement.}
+\item{\strong{Value}}{The data value of the measurement recorded by
+the data logger.}
+}}
 }
 \value{
 This function returns a nine (9) column \code{\link[tibble:tibble]{tibble}}.
@@ -44,7 +54,7 @@ file_list <- list.files(path = system.file("extdata", package = "rainDanceR"),
                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 
 # Read file into R
-my_temp <- import_wxdat(file_list[2])
+my_temp <- import_wxdat(file_list[2])$data
 
 # Process precipitation data
 sundance(my_temp)

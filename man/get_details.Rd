@@ -64,7 +64,7 @@ file_list <- list.files(path = system.file("extdata", package = "rainDanceR"),
 my_file <- import_file(file_list[1])
 
 # Extract data from file
-my_data <- get_data(my_file); my_data
+my_data <- get_data(my_file)
 
 # Extract file details
 get_details(my_file, my_data)

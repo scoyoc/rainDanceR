@@ -19,11 +19,13 @@
 #'         \code{\link[base:paste]{paste}}'s DateTime, PlotID, and Element to
 #'         create a unique record ID.}
 #'     \item{\strong{FileName}}{The name of the file the data came from.}
-#'     \item{\strong{PlotID}}{The unique plot identification number (e.g., A03 orI06).}
-#'     \item{\strong{DateTime}}{The date and time the data were collected at.}
-#'     \item{\strong{Element}}{The element the data represent. TEMP is temperature, RH is
-#'         relative humidity, and PRCP is precipitation.}
-#'     \item{\strong{Value}}{The data value recorded by the data logger.}
+#'     \item{\strong{PlotID}}{The unique plot identification number (e.g., A03
+#'         or I06).}
+#'     \item{\strong{DateTime}}{The date-time of the measurement.}
+#'     \item{\strong{Element}}{The element the data represent. TEMP is
+#'         temperature, RH is relative humidity, and PRCP is precipitation.}
+#'     \item{\strong{Value}}{The data value of the measurement recorded by the
+#'         data logger.}
 #' }
 #'
 #' @seealso \code{\link{import_file}}, \code{\link{get_details}}
@@ -46,9 +48,7 @@
 #' }
 #'
 get_data <- function(my_file){
-  # DESCRIPTION
-  # Extracts data from the raw file. It uses the list produced in
-  # import_file().
+  # my_file = import_file(file_list[2])
 
   #-- Pull logger type, element, and units from Details
   my_logger = get_product(my_file)
@@ -56,7 +56,7 @@ get_data <- function(my_file){
   if(my_file$file_info$col_n != 10){
     dat = my_file$raw_file |>
       dplyr::select('RID', 'DateTime', 'Value') |>
-      dplyr::mutate('DateTime' = lubridate::mdy_hms(DateTime),
+      dplyr::mutate('DateTime' = lubridate::ymd_hms(DateTime),
                     'FileName' = basename(my_file$file_info$filename),
                     'PlotID' = my_file$file_info$plotid,
                     'Element' = my_logger$Element,

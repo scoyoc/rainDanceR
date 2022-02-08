@@ -3,15 +3,26 @@
 #' This function summarizes precipitation data from Onset event loggers
 #'     used in Onset tipping bucket precipitation gauges.
 #'
-#' @param my_wxdat An \code{import_wxdat} object.
+#' @param my_data A data frame with four columns. Typically from
+#'     \code{\link{get_data}}. At a minimum, columns must include the following:
+#'     \describe{
+#'         \item{\strong{Element}}{The element the data represent. TEMP is
+#'             temperature, RH is relative humidity, and PRCP is precipitation.}
+#'         \item{\strong{PlotID}}{The unique plot identification number (e.g.,
+#'             A03 or I06).}
+#'         \item{\strong{DateTime}}{The date-time of the measurement.}
+#'         \item{\strong{Value}}{The data value of the measurement recorded by
+#'             the data logger.}
+#'     }
 #'
 #' @details
 #' This function summarizes precipitation data from Onset event loggers
-#'     used in Onset tipping bucket precipitation gauges. It uses a list
-#'     produced from \code{\link{import_wxdat}} and returns a data frame of
+#'     used in Onset tipping bucket precipitation gauges. It uses a data frame
+#'     typically produced from \code{\link{get_data}} and returns a data frame of
 #'     hourly precipitation totals, number of tips per hour, and maximum tips
 #'     per minute.
 #'
+#'     Move this section to process_data function with commented code below...
 #'     This function strips the first 5 minutes and last 10 minutes of data to
 #'     account for field procedures when downloading the event logger. It is
 #'     common practice to trigger an event before downloading and after
@@ -53,31 +64,35 @@
 #'                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 #'
 #' # Read file into R
-#' my_prcp <- import_wxdat(file_list[1])
+#' my_prcp <- import_wxdat(file_list[1])$data
 #'
 #' # Process precipitation data
 #' raindance(my_prcp)
 #' }
 #'
-raindance <- function(my_wxdat){
+raindance <- function(my_data){
+  # my_data <- import_wxdat(file_list[1])$data
+
   # QAQC
-  if(!stringr::str_detect(my_wxdat$file_info$Element, "PRCP")){
+  my_elements <- paste(unique(my_data$Element), collapse = ";")
+  if(!stringr::str_detect(my_elements, "PRCP")){
     stop("Data are not PRCP. Check data.")
   }
 
-  # Determine if first 5-min need to be removed
-  launch_time = dplyr::filter(my_wxdat$details, Details == "Launch Time")
-  first_sample = dplyr::filter(my_wxdat$details, Details == "First Sample Time")
-  #-- Summarize precipitation data
-  dat <- if(launch_time$Value == first_sample$Value){
-    dat <- dplyr::filter(my_wxdat$data, Element == "PRCP" &
-                           DateTime > min(DateTime, na.rm = T) + (5*60))
-    } else {
-      dat <- dplyr::filter(my_wxdat$data, Element == "PRCP")
-      }
+  # # Determine if first 5-min need to be removed
+  # launch_time = dplyr::filter(my_wxdat$details, Details == "Launch Time")
+  # first_sample = dplyr::filter(my_wxdat$details, Details == "First Sample Time")
+  #
+  # dat <- if(launch_time$Value == first_sample$Value){
+  #   dat <- dplyr::filter(my_wxdat$data, Element == "PRCP" &
+  #                          DateTime > min(DateTime, na.rm = T) + (5*60))
+  #   } else {
+  #     dat <- dplyr::filter(my_wxdat$data, Element == "PRCP")
+  #     }
+  # dat <- dplyr::filter(DateTime < max(DateTime, na.rm = T) - (10*60))
 
-  dat <- dat |>
-    dplyr::filter(DateTime < max(DateTime, na.rm = T) - (10*60)) |>
+  #-- Summarize precipitation data
+  dat <- my_data |>
     dplyr::mutate(Date = lubridate::date(DateTime),
                   Hour = paste(lubridate::hour(DateTime) + 1, "00", sep = ":"),
                   Hour = ifelse(Hour == "24:00", "0:00", Hour),
@@ -85,53 +100,58 @@ raindance <- function(my_wxdat){
     dplyr::ungroup()
 
   if(nrow(dat) == 0){
-    stop("No valid data. Check file.")
+    stop("Data are not valid. Check file.")
   } else{
     # Calculate hourly precipitation totals
     hr_tot <- dat |>
-      dplyr::group_by(Date, Hour) |>
-      dplyr::summarise(mm.hr = dplyr::n() * 0.254) |>
+      dplyr::group_by(PlotID, Date, Hour) |>
+      dplyr::summarise(mm.hr = dplyr::n() * 0.254,
+                       .groups = "keep") |>
       dplyr::mutate(Hour = factor(Hour,
                                   levels = c("0:00",
                                              paste0(seq(1:23), ":00")))) |>
       tidyr::spread(Hour, mm.hr, fill = 0) |>
-      tidyr::gather(Hour, mm.hr, 2:25) |>
+      tidyr::gather(Hour, mm.hr, 3:26) |>
       dplyr::mutate(DateTime = paste(Date, Hour, sep = " ")) |>
       dplyr::ungroup() |>
-      dplyr::select(DateTime, mm.hr)
+      dplyr::select(PlotID, DateTime, mm.hr)
     # Calculate number of tips per hour
     tips_hr <- dat |>
-      dplyr::group_by(Date, Hour, Min) |>
-      dplyr::summarise(tips.min = dplyr::n()) |>
-      dplyr::group_by(Date, Hour) |>
-      dplyr::summarise(tips.hr = dplyr::n()) |>
+      dplyr::group_by(PlotID, Date, Hour, Min) |>
+      dplyr::summarise(tips.min = dplyr::n(),
+                       .groups = "keep") |>
+      dplyr::group_by(PlotID, Date, Hour) |>
+      dplyr::summarise(tips.hr = dplyr::n(),
+                       .groups = "keep") |>
       dplyr::mutate(Hour = factor(Hour,
                                   levels = c("0:00",
                                              paste0(seq(1:23), ":00")))) |>
       tidyr::spread(Hour, tips.hr, fill = 0) |>
-      tidyr::gather(Hour, tips.hr, 2:25) |>
+      tidyr::gather(Hour, tips.hr, 3:26) |>
       dplyr::mutate(DateTime = paste(Date, Hour, sep = " ")) |>
       dplyr::ungroup() |>
-      dplyr::select(DateTime, tips.hr)
+      dplyr::select(PlotID, DateTime, tips.hr)
     # Calculate max tips per minute
     max_tips <- dat |>
-      dplyr::group_by(Date, Hour, Min) |>
-      dplyr::summarise(tips.min = dplyr::n()) |>
-      dplyr::group_by(Date, Hour) |>
-      dplyr::summarise(max.tips.min = max(tips.min)) |>
+      dplyr::group_by(PlotID, Date, Hour, Min) |>
+      dplyr::summarise(tips.min = dplyr::n(),
+                       .groups = "keep") |>
+      dplyr::group_by(PlotID, Date, Hour) |>
+      dplyr::summarise(max.tips.min = max(tips.min),
+                       .groups = "keep") |>
       dplyr::mutate(Hour = factor(Hour,
                                   levels = c("0:00",
                                              paste0(seq(1:23), ":00")))) |>
       tidyr::spread(Hour, max.tips.min, fill = 0) |>
-      tidyr::gather(Hour, max.tips.min, 2:25) |>
+      tidyr::gather(Hour, max.tips.min, 3:26) |>
       dplyr::mutate(DateTime = paste(Date, Hour, sep = " ")) |>
       dplyr::ungroup() |>
-      dplyr::select(DateTime, max.tips.min)
+      dplyr::select(PlotID, DateTime, max.tips.min)
     # Combine dataframes
     rain_dat <- suppressMessages(dplyr::full_join(hr_tot, tips_hr)) |>
       suppressMessages(dplyr::full_join(max_tips)) |>
       dplyr::mutate(DateTime = lubridate::ymd_hm(DateTime)) |>
-      dplyr::arrange(DateTime)
+      dplyr::arrange(PlotID, DateTime)
     # Include empty cells for rainless days
     dd <- tibble::tibble(DateTime = lubridate::ymd_hms(seq(min(dat$DateTime),
                                                            max(dat$DateTime),
@@ -140,11 +160,11 @@ raindance <- function(my_wxdat){
                  tips.hr = 0,
                  max.tips.min = 0)
     rain_dat <- dplyr::bind_rows(rain_dat, dd) |>
-      dplyr::group_by(DateTime) |>
-      dplyr::summarise(PlotID = my_wxdat$file_info$plotid,
-                       PRCP_mm = sum(mm.hr),
+      dplyr::group_by(PlotID, DateTime) |>
+      dplyr::summarise(PRCP_mm = sum(mm.hr),
                        Tips = sum(tips.hr),
-                       MaxTips_min = max(max.tips.min)) |>
+                       MaxTips_min = max(max.tips.min),
+                       .groups = "keep") |>
       dplyr::mutate(RID = paste0(as.numeric(DateTime), PlotID, sep = ".")) |>
       dplyr::select(RID, PlotID, DateTime, PRCP_mm, Tips, MaxTips_min) |>
       dplyr::arrange(DateTime)

@@ -6,7 +6,7 @@
 #'     a list with three components that contain the file information needed to
 #'     import the csv, the raw data, and associated metadata.
 #'
-#' @param this_file A character string of the file name. This can include full
+#' @param my_file A character string of the file name. This can include full
 #'     directory path.
 #' @param ... Other arguments to pass to \code{\link{import_file}}. See
 #'     \code{\link{import_file}} for more information.
@@ -51,10 +51,10 @@
 #' import_wxdat(file_list[1])
 #' }
 #'
-import_wxdat <- function(this_file, ...){
-  # this_file = file_list[12]
+import_wxdat <- function(my_file, ...){
+  # my_file = file_list[12]
   #-- Import file
-  my_file = import_file(this_file, datestamp_loc = 1, plotid_loc = 2,
+  my_file = import_file(my_file, datestamp_loc = 1, plotid_loc = 2,
                         plotid_s = 1, plotid_e = 3)
   #-- Extract data
   my_data = suppressMessages(suppressWarnings(get_data(my_file)))
