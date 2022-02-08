@@ -33,7 +33,7 @@ was loaded into R using \code{\link{import_file}}. See
 }
 \description{
 This function combines \code{\link{import_file}}, \code{\link{get_data}}, and
-\code{\link{get_details}} to process a comma delimited (csv) file
+\code{\link{get_details}} to process a comma delimited (*.csv) file
 produced by HOBOware. It uses the file name or full path name to produce
 a list with three components that contain the file information needed to
 import the csv, the raw data, and associated metadata.
@@ -46,10 +46,14 @@ raw data. This function uses \code{\link{import_file}},
 }
 \examples{
 \dontrun{
-library("dataProcessor")
-file.list <- list.files(path = "./inst/raw_data", pattern = ".csv",
-                        full.names = TRUE, recursive = FALSE)
-import_wxdat(file.list[1])
+library("rainDanceR")
+
+# Generate list of files
+file_list <- list.files(path = system.file("extdata", package = "rainDanceR"),
+                        pattern = ".csv", full.names = TRUE, recursive = FALSE)
+
+# Import data
+import_wxdat(file_list[1])
 }
 
 }

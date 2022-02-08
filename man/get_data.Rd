@@ -15,8 +15,8 @@ data. The variables produced by this function include:
 
 \itemize{
 \item RID: The unique record ID. The record ID
-\code{\link[base:paste]{paste}}'s DateTime, PlotID, and
-Element to create a unique record ID.
+\code{\link[base:paste]{paste}}'s DateTime, PlotID, and Element to
+create a unique record ID.
 \item FileName: The name of the file the data came from.
 \item PlotID: The unique plot identification number (e.g., A03 orI06).
 \item DateTime: The date and time the data were collected at.
@@ -36,10 +36,16 @@ standardizes the data structure into six columns.
 }
 \examples{
 \dontrun{
-library("dataProcessor")
-file_list <- list.files(path = system.file("extdata", package = "dataProcessor"),
+library("rainDanceR")
+
+# Generate list of files
+file_list <- list.files(path = system.file("extdata", package = "rainDanceR"),
                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
-my_file <- import_file(file.list[1])
+
+# Read file into R
+my_file <- import_file(file_list[1])
+
+# Extract data from file
 get_data(my_file)
 }
 

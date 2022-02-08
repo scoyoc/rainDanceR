@@ -63,10 +63,14 @@ metadata for the sampling event.
 }
 \examples{
 \dontrun{
-library("dataProcessor")
-file.list <- list.files(path = "./inst/raw_data", pattern = ".csv",
-                        full.names = TRUE, recursive = FALSE)
-import_file(file.list[1])
+library("rainDanceR")
+
+# Generate list of files
+file_list <- list.files(path = system.file("extdata", package = "rainDanceR"),
+                        pattern = ".csv", full.names = TRUE, recursive = FALSE)
+
+# Read file into R
+import_file(file_list[1])
 }
 
 }

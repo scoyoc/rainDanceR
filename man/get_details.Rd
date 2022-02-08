@@ -58,11 +58,19 @@ data.
 
 \examples{
 \dontrun{
-library("dataProcessor")
-file.list <- list.files(path = "./inst/raw_data", pattern = ".csv",
-                        full.names = TRUE, recursive = FALSE)
-my_file <- import_file(file.list[1])
-my_data <- get_data(my_file)
+library("rainDanceR")
+
+# Generate list of files
+file_list <- list.files(path = system.file("extdata", package = "rainDanceR"),
+                        pattern = ".csv", full.names = TRUE, recursive = FALSE)
+
+# Read file into R
+my_file <- import_file(file_list[1])
+
+# Extract data from file
+my_data <- get_data(my_file); my_data
+
+# Extract file details
 get_details(my_file, my_data)
 }
 

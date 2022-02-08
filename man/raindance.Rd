@@ -13,6 +13,9 @@ raindance(my_wxdat)
 This function returns a five column \code{\link[tibble:tibble]{tibble}}.
 
 \describe{
+\item RID: The unique record ID. The record ID
+\code{\link[base:paste]{paste}}'s DateTime and PlotID to create a
+unique record ID.
 \item{\strong{DateTime}}{The date and hour of the data. Hours are the from
 0 min 00 sec to 59 min 59 sec. For example 2009-04-15 00:00:00 is
 from 00:00:00 to 00:59:59 on April 15, 2009.}
@@ -37,8 +40,8 @@ This function summarizes precipitation data from Onset Hobo event  loggers
 used in Onset tipping bucket precipitation gauges.\preformatted{This function srtips the first 5 minutes and last 10 minutes of data to
 account for field proceedures when downloading the event logger. It is
 common practice to trigger an event before downloading and after
-launching the logger. To remove these false events there is a routine to
-stip the first 5 minutes of the data if the "Launch Time" and "First
+launch_timeing the logger. To remove these false events there is a routine to
+stip the first 5 minutes of the data if the "launch_time Time" and "First
 Sample Time" are the same. There is no way to determine if the tipping
 bucket is triggered before downloading the data, so the last 10 minutes
 of every file is stripped before processing.
@@ -46,11 +49,17 @@ of every file is stripped before processing.
 }
 \examples{
 \dontrun{
-library("dataProcessor")
-file.list <- list.files(path = "./inst/raw_data", pattern = ".csv",
-                        full.names = TRUE, recursive = FALSE)
-my_wxdat <- import_wxdat(file.list[1])
-raindance(my_wxdat)
+library("rainDanceR")
+
+# Generate list of files
+file_list <- list.files(path = system.file("extdata", package = "rainDanceR"),
+                        pattern = ".csv", full.names = TRUE, recursive = FALSE)
+
+# Read file into R
+my_prcp <- import_wxdat(file_list[1])
+
+# Process precipitation data
+raindance(my_prcp)
 }
 
 }
