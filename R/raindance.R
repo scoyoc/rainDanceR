@@ -111,7 +111,7 @@ raindance <- function(my_data){
                                   levels = c("0:00",
                                              paste0(seq(1:23), ":00")))) |>
       tidyr::spread(Hour, mm.hr, fill = 0) |>
-      tidyr::gather(Hour, mm.hr, 3:26) |>
+      tidyr::gather(Hour, mm.hr, c(-PlotID, -Date)) |>
       dplyr::mutate(DateTime = paste(Date, Hour, sep = " ")) |>
       dplyr::ungroup() |>
       dplyr::select(PlotID, DateTime, mm.hr)
@@ -127,7 +127,7 @@ raindance <- function(my_data){
                                   levels = c("0:00",
                                              paste0(seq(1:23), ":00")))) |>
       tidyr::spread(Hour, tips.hr, fill = 0) |>
-      tidyr::gather(Hour, tips.hr, 3:26) |>
+      tidyr::gather(Hour, tips.hr, c(-PlotID, -Date)) |>
       dplyr::mutate(DateTime = paste(Date, Hour, sep = " ")) |>
       dplyr::ungroup() |>
       dplyr::select(PlotID, DateTime, tips.hr)
@@ -143,7 +143,7 @@ raindance <- function(my_data){
                                   levels = c("0:00",
                                              paste0(seq(1:23), ":00")))) |>
       tidyr::spread(Hour, max.tips.min, fill = 0) |>
-      tidyr::gather(Hour, max.tips.min, 3:26) |>
+      tidyr::gather(Hour, max.tips.min, c(-PlotID, -Date)) |>
       dplyr::mutate(DateTime = paste(Date, Hour, sep = " ")) |>
       dplyr::ungroup() |>
       dplyr::select(PlotID, DateTime, max.tips.min)

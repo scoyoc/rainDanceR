@@ -48,7 +48,7 @@
 #' }
 #'
 get_data <- function(my_file){
-  # my_file = import_file(file_list[2])
+  # my_file = import_file(file_list[12])
 
   #-- Pull logger type, element, and units from Details
   my_logger = get_product(my_file)
@@ -56,13 +56,13 @@ get_data <- function(my_file){
   if(my_file$file_info$col_n != 10){
     dat = my_file$raw_file |>
       dplyr::select('RID', 'DateTime', 'Value') |>
-      dplyr::mutate('DateTime' = lubridate::ymd_hms(DateTime),
-                    'FileName' = basename(my_file$file_info$filename),
+      dplyr::mutate('DateTime' = lubridate::mdy_hms(DateTime),
+                    'FileName' = my_file$file_info$filename,
                     'PlotID' = my_file$file_info$plotid,
                     'Element' = my_logger$Element,
                     'RID' = paste(as.numeric(DateTime), PlotID, Element,
                                   sep = "."),
-                    'Value' = ifelse(Element == "TEMP" &&
+                    'Value' = ifelse(Element == "TEMP" &
                                        stringr::str_detect(my_logger$Units,
                                                            "F"),
                                      Value - 32 * 5/9,
@@ -75,7 +75,7 @@ get_data <- function(my_file){
       dplyr::rename('TEMP' = Temp) |>
       tidyr::gather(key = 'Element', value = 'Value', TEMP:RH) |>
       dplyr::mutate('DateTime' = lubridate::mdy_hms(DateTime),
-                    'FileName' = basename(my_file$file_info$filename),
+                    'FileName' = my_file$file_info$filename,
                     'PlotID' = my_file$file_info$plotid,
                     'RID' = paste(as.numeric(DateTime), PlotID, Element,
                                   sep = ".")) |>
