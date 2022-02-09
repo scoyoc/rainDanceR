@@ -2,7 +2,7 @@
 
 This package imports data from Onset temperature, relative humidity, and precipitation data loggers into R. 
 Data collected in the field using Onset loggers are exported to comma delimited files (*.csv) using the HOBOware application from Onset.
-This package imports the *.csv files into R.
+This package imports the *.csv files into R and sumnmarized the data.
 
 Version: 0.0.1
 
@@ -22,7 +22,7 @@ License: MIT + file [LICENSE](https://github.com/scoyoc/rainDanceR/blob/master/L
 
 URL: [https://github.com/scoyoc/rainDanceR](https://github.com/scoyoc/rainDanceR)
 
-Documentation: Under development.
+Documentation: Help pages for now. A Vignette is planned for future releases.
 
 ## Installation
 
@@ -31,4 +31,16 @@ devtools::install_github("scoyoc/rainDanceR")
 ```
 
 ## Examples
-Under development.
+``` r
+library("rainDanceR")
+
+# Generate list of files
+file_list <- list.files(path = system.file("extdata", package = "rainDanceR"),
+                        pattern = ".csv", full.names = TRUE, recursive = FALSE)
+
+# Import file and summarize data
+my_file <- file_list[1]           # Select file
+dat <- import_wxdat(my_file) |>   # Impote file into R
+  process_hobo()                  # Summarize data
+dat
+```
