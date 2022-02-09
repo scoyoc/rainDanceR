@@ -77,8 +77,8 @@ get_data <- function(my_file){
       dplyr::mutate('DateTime' = lubridate::mdy_hms(DateTime),
                     'FileName' = my_file$file_info$filename,
                     'PlotID' = my_file$file_info$plotid,
-                    'RID' = paste(as.numeric(DateTime), PlotID, Element,
-                                  sep = ".")) |>
+                    'RID' = paste0(as.numeric(DateTime), PlotID, Element,
+                                   sep = ".")) |>
       dplyr::select('RID', 'FileName', 'PlotID', 'DateTime', 'Element', 'Value')
 
   } else(message(paste0("Something is not right here. Check file: ",

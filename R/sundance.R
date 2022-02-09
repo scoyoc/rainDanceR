@@ -63,37 +63,35 @@ sundance <- function(my_data){
   if(!stringr::str_detect(my_elements, "TEMP")){
     stop("Data are not TEMP. Check data.")
   }
+
   #-- Summarize temperature data
-  dat_1 <- dplyr::filter(my_data, Element == "TEMP") |>
-    dplyr::mutate(Date = lubridate::date(DateTime)) |>
+  dat <- dplyr::filter(my_data, Element == "TEMP")|>
+    dplyr::mutate("Date" = lubridate::date(DateTime)) |>
     dplyr::ungroup() |>
-    dplyr::group_by(PlotID, Date) |>
-    dplyr::summarize(TEMP_mean = mean(Value, na.rm = T),
-                     TMIN = min(Value, na.rm = T),
-                     TMAX = max(Value, na.rm = T),
-                     n = dplyr::n(),
+    dplyr::group_by(PlotID, Date)
+  dat_sum <- dat |>
+    dplyr::summarize("Mean" = mean(Value, na.rm = T),
+                     "Max" = min(Value, na.rm = T),
+                     "Min" = max(Value, na.rm = T),
+                     "n" = dplyr::n(),
                      .groups = "keep")
-  tmin_time <- dplyr::filter(my_data, Element == "TEMP") |>
-    dplyr::mutate(Date = lubridate::date(DateTime)) |>
-    dplyr::left_join(dat_1, by = c("PlotID", "Date")) |>
-    dplyr::filter(Value == TMIN) |>
-    dplyr::ungroup() |>
-    dplyr::group_by(PlotID, Date) |>
-    dplyr::summarise(TMIN_time = strftime(min(DateTime), format="%H:%M:%S"),
+  min_time <- dat  |>
+    dplyr::left_join(dat_sum, by = c("PlotID", "Date")) |>
+    dplyr::filter(Value == Min) |>
+    dplyr::summarise("MinTime" = strftime(min(DateTime), format="%H:%M:%S"),
                      .groups = "keep")
-  tmax_time <- dplyr::filter(my_data, Element == "TEMP") |>
-    dplyr::mutate(Date = lubridate::date(DateTime)) |>
-    dplyr::left_join(dat_1, by = c("PlotID", "Date")) |>
-    dplyr::filter(Value == TMAX) |>
-    dplyr::ungroup() |>
-    dplyr::group_by(PlotID, Date) |>
-    dplyr::summarise(TMAX_time = strftime(min(DateTime), format="%H:%M:%S"),
+  max_time <- dat |>
+    # dplyr::mutate("Date" = lubridate::date(DateTime)) |>
+    dplyr::left_join(dat_sum, by = c("PlotID", "Date")) |>
+    dplyr::filter(Value == Max) |>
+    dplyr::summarise("MaxTime" = strftime(min(DateTime), format="%H:%M:%S"),
                      .groups = "keep")
-  dat_2 <- dplyr::left_join(dat_1, tmin_time) |>
-    dplyr::left_join(tmax_time) |>
+  temp_dat <- dplyr::left_join(dat_sum, min_time) |>
+    dplyr::left_join(max_time) |>
     dplyr::arrange(PlotID, Date) |>
-    dplyr::mutate(RID = paste0(PlotID, as.numeric(Date)),
-                  Date = as.character(Date)) |>
-    dplyr::select(RID, PlotID, Date, TEMP_mean, TMIN, TMAX, n, TMIN_time, TMAX_time)
-  suppressMessages(return(dat_2))
+    dplyr::mutate("RID" = paste0(as.numeric(Date), PlotID, sep = "."),
+                  "Element" = "TEMP") |>
+    dplyr::select("RID", "PlotID", "Date", "Element", "Mean", "Min", "Max", "n",
+                  "MinTime", "MaxTime")
+  suppressMessages(return(temp_dat))
 }

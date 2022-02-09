@@ -77,9 +77,7 @@ process_hobo <- function(my_wxdat){
     dat <- dplyr::filter(dat, DateTime < max(DateTime, na.rm = T) - (10*60))
     # Run raindance
     dat <- raindance(dat)
-  }
-
-  if(stringr::str_detect(my_wxdat$file_info$Element, "RH")){
+  } else if(stringr::str_detect(my_wxdat$file_info$Element, "RH")){
     # Process RH data
     dat_rh <- dplyr::filter(my_wxdat$data_raw, Element == "RH")
     dat_rh <- rhdance(dat_rh)
@@ -87,7 +85,7 @@ process_hobo <- function(my_wxdat){
     dat_t <- dplyr::filter(my_wxdat$data_raw, Element == "TEMP")
     dat_t <- sundance(dat_t)
     # Combine
-    dat <- cbind(dat_rh, dat_t)
+    dat <- rbind(dat_rh, dat_t)
   } else{
     dat <- dplyr::filter(my_wxdat$data_raw, Element == "TEMP")
     dat <- sundance(dat)

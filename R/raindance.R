@@ -71,64 +71,64 @@ raindance <- function(my_data){
 
   #-- Summarize precipitation data
   dat <- my_data |>
-    dplyr::mutate(Date = lubridate::date(DateTime),
-                  Hour = paste(lubridate::hour(DateTime) + 1, "00", sep = ":"),
-                  Hour = ifelse(Hour == "24:00", "0:00", Hour),
-                  Min = lubridate::minute(DateTime)) |>
+    dplyr::mutate("Date" = lubridate::date(DateTime),
+                  "Hour" = paste(lubridate::hour(DateTime) + 1, "00", sep = ":"),
+                  "Hour" = ifelse(Hour == "24:00", "0:00", Hour),
+                  "Min" = lubridate::minute(DateTime)) |>
     dplyr::ungroup()
 
   if(nrow(dat) == 0){
-    stop("Data are not valid. Check file.")
+    stop("Data are not valid.")
   } else{
     # Calculate hourly precipitation totals
     hr_tot <- dat |>
       dplyr::group_by(PlotID, Date, Hour) |>
-      dplyr::summarise(mm.hr = dplyr::n() * 0.254,
+      dplyr::summarise("mm.hr" = dplyr::n() * 0.254,
                        .groups = "keep") |>
-      dplyr::mutate(Hour = factor(Hour,
+      dplyr::mutate("Hour" = factor(Hour,
                                   levels = c("0:00",
                                              paste0(seq(1:23), ":00")))) |>
       tidyr::spread(Hour, mm.hr, fill = 0) |>
       tidyr::gather(Hour, mm.hr, c(-PlotID, -Date)) |>
-      dplyr::mutate(DateTime = paste(Date, Hour, sep = " ")) |>
+      dplyr::mutate("DateTime" = paste(Date, Hour, sep = " ")) |>
       dplyr::ungroup() |>
-      dplyr::select(PlotID, DateTime, mm.hr)
+      dplyr::select("PlotID", "DateTime", "mm.hr")
     # Calculate number of tips per hour
     tips_hr <- dat |>
       dplyr::group_by(PlotID, Date, Hour, Min) |>
-      dplyr::summarise(tips.min = dplyr::n(),
+      dplyr::summarise("tips.min" = dplyr::n(),
                        .groups = "keep") |>
       dplyr::group_by(PlotID, Date, Hour) |>
-      dplyr::summarise(tips.hr = dplyr::n(),
+      dplyr::summarise("tips.hr" = dplyr::n(),
                        .groups = "keep") |>
-      dplyr::mutate(Hour = factor(Hour,
+      dplyr::mutate("Hour" = factor(Hour,
                                   levels = c("0:00",
                                              paste0(seq(1:23), ":00")))) |>
       tidyr::spread(Hour, tips.hr, fill = 0) |>
       tidyr::gather(Hour, tips.hr, c(-PlotID, -Date)) |>
-      dplyr::mutate(DateTime = paste(Date, Hour, sep = " ")) |>
+      dplyr::mutate("DateTime" = paste(Date, Hour, sep = " ")) |>
       dplyr::ungroup() |>
-      dplyr::select(PlotID, DateTime, tips.hr)
+      dplyr::select("PlotID", "DateTime", "tips.hr")
     # Calculate max tips per minute
     max_tips <- dat |>
       dplyr::group_by(PlotID, Date, Hour, Min) |>
-      dplyr::summarise(tips.min = dplyr::n(),
+      dplyr::summarise("tips.min" = dplyr::n(),
                        .groups = "keep") |>
       dplyr::group_by(PlotID, Date, Hour) |>
-      dplyr::summarise(max.tips.min = max(tips.min),
+      dplyr::summarise("max.tips.min" = max(tips.min),
                        .groups = "keep") |>
-      dplyr::mutate(Hour = factor(Hour,
+      dplyr::mutate("Hour" = factor(Hour,
                                   levels = c("0:00",
                                              paste0(seq(1:23), ":00")))) |>
       tidyr::spread(Hour, max.tips.min, fill = 0) |>
       tidyr::gather(Hour, max.tips.min, c(-PlotID, -Date)) |>
-      dplyr::mutate(DateTime = paste(Date, Hour, sep = " ")) |>
+      dplyr::mutate("DateTime" = paste(Date, Hour, sep = " ")) |>
       dplyr::ungroup() |>
-      dplyr::select(PlotID, DateTime, max.tips.min)
+      dplyr::select("PlotID", "DateTime", "max.tips.min")
     # Combine dataframes
     rain_dat <- dplyr::full_join(hr_tot, tips_hr) |>
       dplyr::full_join(max_tips) |>
-      dplyr::mutate(DateTime = lubridate::ymd_hm(DateTime)) |>
+      dplyr::mutate("DateTime" = lubridate::ymd_hm(DateTime)) |>
       dplyr::arrange(PlotID, DateTime)
     # Include empty cells for rainless days
     dd <- tibble::tibble(DateTime = lubridate::ymd_hms(seq(min(dat$DateTime),
@@ -139,13 +139,14 @@ raindance <- function(my_data){
                  max.tips.min = 0)
     rain_dat <- dplyr::bind_rows(rain_dat, dd) |>
       dplyr::group_by(PlotID, DateTime) |>
-      dplyr::summarise(PRCP_mm = sum(mm.hr),
-                       Tips = sum(tips.hr),
-                       MaxTips_min = max(max.tips.min),
+      dplyr::summarise("PRCP_mm" = sum(mm.hr),
+                       "Tips" = sum(tips.hr),
+                       "MaxTips_min" = max(max.tips.min),
                        .groups = "keep") |>
-      dplyr::mutate(RID = paste0(as.numeric(DateTime), PlotID, sep = ".")) |>
-      dplyr::select(RID, PlotID, DateTime, PRCP_mm, Tips, MaxTips_min) |>
-      dplyr::arrange(DateTime)
+      dplyr::mutate("RID" = paste0(as.numeric(DateTime), PlotID, sep = ".")) |>
+      dplyr::select("RID", "PlotID", "DateTime", "PRCP_mm", "Tips",
+                    "MaxTips_min") |>
+      dplyr::arrange(PlotID, DateTime)
   }
 
   return(rain_dat)

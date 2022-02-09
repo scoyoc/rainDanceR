@@ -50,13 +50,13 @@
 #'                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 #'
 #' # Read file into R
-#' my_rh <- import_wxdat(file_list[12])$data_raw
+#' my_rh <- import_wxdat(file_list[26])$data_raw
 #'
 #' # Process precipitation data
 #' rhdance(my_rh)
 #' }
 rhdance <- function(my_data){
-  # my_data = import_wxdat(file_list[12])$data_raw
+  # my_data = import_wxdat(file_list[26])$data_raw
 
   #-- QA check
   my_elements <- paste(unique(my_data$Element), collapse = ";")
@@ -65,34 +65,33 @@ rhdance <- function(my_data){
   }
 
   #-- Summarize temperature data
-  dat_1 <- dplyr::filter(my_data, Element == "RH") |>
-    dplyr::mutate(Date = lubridate::date(DateTime)) |>
+  dat <- dplyr::filter(my_data, Element == "RH")|>
+    dplyr::mutate("Date" = lubridate::date(DateTime)) |>
     dplyr::ungroup() |>
-    dplyr::group_by(PlotID, Date) |>
-    dplyr::summarize(RH_mean = mean(Value, na.rm = T),
-                     RHMIN = min(Value, na.rm = T),
-                     RHMAX = max(Value, na.rm = T),
-                     n = dplyr::n())
-  rhmin_time <- dplyr::filter(my_data, Element == "RH") |>
-    dplyr::mutate(Date = lubridate::date(DateTime)) |>
-    dplyr::left_join(dat_1, by = c("PlotID", "Date")) |>
-    dplyr::filter(Value == RHMIN) |>
-    dplyr::ungroup() |>
-    dplyr::group_by(PlotID, Date) |>
-    dplyr::summarise(RHMIN_time = strftime(min(DateTime), format="%H:%M:%S"))
-  rhmax_time <- dplyr::filter(my_data, Element == "RH") |>
-    dplyr::mutate(Date = lubridate::date(DateTime)) |>
-    dplyr::left_join(dat_1, by = c("PlotID", "Date")) |>
-    dplyr::filter(Value == RHMAX) |>
-    dplyr::ungroup() |>
-    dplyr::group_by(PlotID, Date) |>
-    dplyr::summarise(RHMAX_time = strftime(min(DateTime), format="%H:%M:%S"))
-  dat_2 <- dplyr::left_join(dat_1, rhmin_time) |>
-    dplyr::left_join(rhmax_time) |>
+    dplyr::group_by(PlotID, Date)
+  dat_sum <- dat |>
+    dplyr::summarize("Mean" = mean(Value, na.rm = T),
+                     "Max" = min(Value, na.rm = T),
+                     "Min" = max(Value, na.rm = T),
+                     "n" = dplyr::n(),
+                     .groups = "keep")
+  min_time <- dat  |>
+    dplyr::left_join(dat_sum, by = c("PlotID", "Date")) |>
+    dplyr::filter(Value == Min) |>
+    dplyr::summarise("MinTime" = strftime(min(DateTime), format="%H:%M:%S"),
+                     .groups = "keep")
+  max_time <- dat |>
+    # dplyr::mutate("Date" = lubridate::date(DateTime)) |>
+    dplyr::left_join(dat_sum, by = c("PlotID", "Date")) |>
+    dplyr::filter(Value == Max) |>
+    dplyr::summarise("MaxTime" = strftime(min(DateTime), format="%H:%M:%S"),
+                     .groups = "keep")
+  rh_dat <- dplyr::left_join(dat_sum, min_time) |>
+    dplyr::left_join(max_time) |>
     dplyr::arrange(PlotID, Date) |>
-    dplyr::mutate(RID = paste0(PlotID, as.numeric(Date)),
-                  Date = as.character(Date)) |>
-    dplyr::select(RID, PlotID, Date, RH_mean, RHMIN, RHMAX, n, RHMIN_time,
-                  RHMAX_time)
-  suppressMessages(return(dat_2))
+    dplyr::mutate("RID" = paste0(as.numeric(Date), PlotID, sep = "."),
+                  "Element" = "RH") |>
+    dplyr::select("RID", "PlotID", "Date", "Element", "Mean", "Min", "Max", "n",
+                  "MinTime", "MaxTime")
+  suppressMessages(return(rh_dat))
 }
