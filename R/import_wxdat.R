@@ -17,8 +17,7 @@
 #'     raw data. This function uses \code{\link{import_file}},
 #'     \code{\link{get_data}}, and \code{\link{get_details}} process the file.
 #'
-#' @return
-#' This function returns a list with four components.
+#' @return This function returns a list with four (4) components.
 #'
 #' \describe{
 #'     \item{\strong{file_info}}{This component is a vector that contains the
@@ -28,7 +27,7 @@
 #'         \code{\link{import_file}}.}
 #'     \item{\strong{details}}{This component is a data frame of metadata from
 #'         \code{\link{get_details}}.}
-#'     \item{\strong{data}}{This component is a data frame from
+#'     \item{\strong{data_raw}}{This component is a data frame from
 #'         \code{\link{get_data}}.}
 #'     \item{\strong{raw_file}}{The raw file that was loaded into R using
 #'         \code{\link{import_file}}.}
@@ -69,6 +68,6 @@ import_wxdat <- function(my_file, ...){
   # Return list of objects
   return(list('file_info' = my_file$file_info,
               'details' = my_details,
-              'data' = my_data,
+              'data_raw' = my_data,
               'raw_file' = my_file$raw_file))
 }

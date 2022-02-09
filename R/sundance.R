@@ -37,7 +37,7 @@
 #'     \item{\strong{TEMP_mean}}{The time of maximum daily temperature.}
 #' }
 #'
-#' @seealso \code{\link{import_wxdat}}
+#' @seealso \code{\link{get_data}}, \code{\link{import_wxdat}}
 #'
 #' @export
 #'
@@ -50,13 +50,13 @@
 #'                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 #'
 #' # Read file into R
-#' my_temp <- import_wxdat(file_list[2])$data
+#' my_temp <- import_wxdat(file_list[2])$data_raw
 #'
 #' # Process precipitation data
 #' sundance(my_temp)
 #' }
 sundance <- function(my_data){
-  # my_data = import_wxdat(file_list[6])$data
+  # my_data = import_wxdat(file_list[6])$data_raw
 
   #-- QA check
   my_elements <- paste(unique(my_data$Element), collapse = ";")
@@ -67,7 +67,7 @@ sundance <- function(my_data){
   dat_1 <- dplyr::filter(my_data, Element == "TEMP") |>
     dplyr::mutate(Date = lubridate::date(DateTime)) |>
     dplyr::ungroup() |>
-    dplyr::group_by(PlotID, Date, Element) |>
+    dplyr::group_by(PlotID, Date) |>
     dplyr::summarize(TEMP_mean = mean(Value, na.rm = T),
                      TMIN = min(Value, na.rm = T),
                      TMAX = max(Value, na.rm = T),

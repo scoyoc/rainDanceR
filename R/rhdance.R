@@ -1,6 +1,6 @@
-#' Summarize temperature data
+#' Summarize relative humidity data
 #'
-#' This function summarizes relative humidity (RH) data from Onset Hobo loggers.
+#' This function summarizes relative humidity (RH) data from Onset loggers.
 #'
 #' @param my_data A data frame with four columns. Typically from
 #'     \code{\link{get_data}}. At a minimum, columns must include the following:
@@ -37,7 +37,7 @@
 #'     \item{\strong{RHMAX_time}}{The time of maximum daily RH}
 #' }
 #'
-#' @seealso \code{\link{import_wxdat}}
+#' @seealso \code{\link{get_data}}, \code{\link{import_wxdat}}
 #'
 #' @export
 #'
@@ -50,13 +50,13 @@
 #'                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 #'
 #' # Read file into R
-#' my_rh <- import_wxdat(file_list[12])$data
+#' my_rh <- import_wxdat(file_list[12])$data_raw
 #'
 #' # Process precipitation data
 #' rhdance(my_rh)
 #' }
 rhdance <- function(my_data){
-  # my_data = import_wxdat(file_list[12])$data
+  # my_data = import_wxdat(file_list[12])$data_raw
 
   #-- QA check
   my_elements <- paste(unique(my_data$Element), collapse = ";")

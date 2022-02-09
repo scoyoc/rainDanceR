@@ -47,16 +47,7 @@ This function summarizes precipitation data from Onset event loggers
 used in Onset tipping bucket precipitation gauges. It uses a data frame
 typically produced from \code{\link{get_data}} and returns a data frame of
 hourly precipitation totals, number of tips per hour, and maximum tips
-per minute.\preformatted{Move this section to process_data function with commented code below...
-This function strips the first 5 minutes and last 10 minutes of data to
-account for field procedures when downloading the event logger. It is
-common practice to trigger an event before downloading and after
-launching the logger. To remove these false events there is a routine to
-strip the first 5 minutes of the data if the "launch_time Time" and "First
-Sample Time" are the same. There is no way to determine if the tipping
-bucket is triggered before downloading the data, so the last 10 minutes
-of every file is stripped before processing.
-}
+per minute.
 }
 \examples{
 \dontrun{
@@ -67,7 +58,7 @@ file_list <- list.files(path = system.file("extdata", package = "rainDanceR"),
                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 
 # Read file into R
-my_prcp <- import_wxdat(file_list[1])$data
+my_prcp <- import_wxdat(file_list[1])$data_raw
 
 # Process precipitation data
 raindance(my_prcp)
@@ -75,5 +66,5 @@ raindance(my_prcp)
 
 }
 \seealso{
-\code{\link{import_wxdat}}
+\code{\link{get_data}}, \code{\link{import_wxdat}}
 }

@@ -29,7 +29,7 @@ an index. Default is 1.}
 index. Default is 3.}
 }
 \value{
-This function returns a list with two components.
+This function returns a list with two (2) components.
 
 \describe{
 \item{\strong{file_info}}{This component is a vector that contains the

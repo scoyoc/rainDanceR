@@ -23,8 +23,7 @@
 #'     second component is a data frame containing the raw data and the
 #'     metadata for the sampling event.
 #'
-#' @return
-#' This function returns a list with two components.
+#' @return This function returns a list with two (2) components.
 #'
 #' \describe{
 #'    \item{\strong{file_info}}{This component is a vector that contains the

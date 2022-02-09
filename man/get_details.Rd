@@ -12,33 +12,32 @@ get_details(my_file, my_data)
 \item{my_data}{The data frame produced from \code{get_data}.}
 }
 \value{
-This function returns a \code{\link[tibble:tibble]{tibble}} of standardized
-data. The variables produced by this function include:
-
-\describe{
-\item{\strong{FileName}}{The name of the file the data came from.}
-\item{\strong{Details}}{This variable will varry with the data contained
-in the "Details" colum of the original file. Calculated variables
-listed below.
-\itemize{
-\item{Import Date: A character string of the date the data were
-processed useing lubridate::today().}
-\item{Plot ID: The unique plot identification number (e.g., A03
-or I06).}
-\item{Element: The element the data represent. TEMP is
-temperature, RH is relative humidity, and PRCP is
-precipitation.}
-\item{Units: The unit of measurement. Temperature is measured in
-F or C, relative humidity is measured in percent, and
-precipitation is measured in tips of the tipping bucket, or
-events.}
-\item{DateTime (min): The minimum date-time stamp in the data.}
-\item{DateTime (max): The maximum date-time stamp in the data.}
-\item{Records (n): The number of records of data.}
-\item{ConvertFtoC: Logical. Were the temperature data converted
-from F to C? Yes or No.}
-}}
-\item{\strong{Value}}{The value the variable in Details.}
+This function returns a \code{\link[tibble:tibble]{tibble}} of metadata on
+the. The variables produced by this function include:\preformatted{\\describe\{
+    \\item\{\\strong\{FileName\}\}\{The name of the file the data came from.\}
+    \\item\{\\strong\{Details\}\}\{This variable will varry with the data
+        contained in the "Details" colum of the original file. Calculated
+        variables listed below.\}
+        \\itemize\{
+            \\item\{Import Date: A character string of the date the data
+                were processed useing lubridate::today().\}
+            \\item\{Plot ID: The unique plot identification number (e.g.,
+                A03 or I06).\}
+            \\item\{Element: The element the data represent. TEMP is
+                temperature, RH is relative humidity, and PRCP is
+                precipitation.\}
+            \\item\{Units: The unit of measurement. Temperature is measured
+                in F or C, relative humidity is measured in percent, and
+                precipitation is measured in tips of the tipping bucket,
+                or events.\}
+            \\item\{DateTime (min): The minimum date-time stamp in the data.\}
+            \\item\{DateTime (max): The maximum date-time stamp in the data.\}
+            \\item\{Records (n): The number of records of data.\}
+            \\item\{ConvertFtoC: Logical. Were the temperature data
+                converted from F to C? Yes or No.\}
+                \}
+    \\item\{\\strong\{Value\}\}\{The value the variable in Details.\}
+\}
 }
 }
 \description{

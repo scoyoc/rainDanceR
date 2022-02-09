@@ -22,16 +22,6 @@
 #'     hourly precipitation totals, number of tips per hour, and maximum tips
 #'     per minute.
 #'
-#'     Move this section to process_data function with commented code below...
-#'     This function strips the first 5 minutes and last 10 minutes of data to
-#'     account for field procedures when downloading the event logger. It is
-#'     common practice to trigger an event before downloading and after
-#'     launching the logger. To remove these false events there is a routine to
-#'     strip the first 5 minutes of the data if the "launch_time Time" and "First
-#'     Sample Time" are the same. There is no way to determine if the tipping
-#'     bucket is triggered before downloading the data, so the last 10 minutes
-#'     of every file is stripped before processing.
-#'
 #' @return
 #' This function returns a five column \code{\link[tibble:tibble]{tibble}}.
 #'
@@ -51,7 +41,7 @@
 #'         inteded to calculate intensity of precipitation event.}
 #' }
 #'
-#' @seealso \code{\link{import_wxdat}}
+#' @seealso \code{\link{get_data}}, \code{\link{import_wxdat}}
 #'
 #' @export
 #'
@@ -64,32 +54,20 @@
 #'                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 #'
 #' # Read file into R
-#' my_prcp <- import_wxdat(file_list[1])$data
+#' my_prcp <- import_wxdat(file_list[1])$data_raw
 #'
 #' # Process precipitation data
 #' raindance(my_prcp)
 #' }
 #'
 raindance <- function(my_data){
-  # my_data <- import_wxdat(file_list[1])$data
+  # my_data <- import_wxdat(file_list[3])$data_raw
 
   # QAQC
   my_elements <- paste(unique(my_data$Element), collapse = ";")
   if(!stringr::str_detect(my_elements, "PRCP")){
     stop("Data are not PRCP. Check data.")
   }
-
-  # # Determine if first 5-min need to be removed
-  # launch_time = dplyr::filter(my_wxdat$details, Details == "Launch Time")
-  # first_sample = dplyr::filter(my_wxdat$details, Details == "First Sample Time")
-  #
-  # dat <- if(launch_time$Value == first_sample$Value){
-  #   dat <- dplyr::filter(my_wxdat$data, Element == "PRCP" &
-  #                          DateTime > min(DateTime, na.rm = T) + (5*60))
-  #   } else {
-  #     dat <- dplyr::filter(my_wxdat$data, Element == "PRCP")
-  #     }
-  # dat <- dplyr::filter(DateTime < max(DateTime, na.rm = T) - (10*60))
 
   #-- Summarize precipitation data
   dat <- my_data |>
@@ -148,8 +126,8 @@ raindance <- function(my_data){
       dplyr::ungroup() |>
       dplyr::select(PlotID, DateTime, max.tips.min)
     # Combine dataframes
-    rain_dat <- suppressMessages(dplyr::full_join(hr_tot, tips_hr)) |>
-      suppressMessages(dplyr::full_join(max_tips)) |>
+    rain_dat <- dplyr::full_join(hr_tot, tips_hr) |>
+      dplyr::full_join(max_tips) |>
       dplyr::mutate(DateTime = lubridate::ymd_hm(DateTime)) |>
       dplyr::arrange(PlotID, DateTime)
     # Include empty cells for rainless days

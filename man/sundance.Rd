@@ -61,5 +61,5 @@ sundance(my_temp)
 }
 }
 \seealso{
-\code{\link{import_wxdat}}
+\code{\link{get_data}}, \code{\link{import_wxdat}}
 }
