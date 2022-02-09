@@ -14,7 +14,7 @@ directory path.}
 \code{\link{import_file}} for more information.}
 }
 \value{
-This function returns a list with four components.
+This function returns a list with four (4) components.
 
 \describe{
 \item{\strong{file_info}}{This component is a vector that contains the
@@ -24,7 +24,7 @@ raw file, and the Elements measured. This comonent is the product of
 \code{\link{import_file}}.}
 \item{\strong{details}}{This component is a data frame of metadata from
 \code{\link{get_details}}.}
-\item{\strong{data}}{This component is a data frame from
+\item{\strong{data_raw}}{This component is a data frame from
 \code{\link{get_data}}.}
 \item{\strong{raw_file}}{The raw file that was loaded into R using
 \code{\link{import_file}}.}

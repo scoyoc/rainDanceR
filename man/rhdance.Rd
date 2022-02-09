@@ -2,7 +2,7 @@
 % Please edit documentation in R/rhdance.R
 \name{rhdance}
 \alias{rhdance}
-\title{Summarize temperature data}
+\title{Summarize relative humidity data}
 \usage{
 rhdance(my_data)
 }
@@ -38,7 +38,7 @@ plot.}
 }
 }
 \description{
-This function summarizes relative humidity (RH) data from Onset Hobo loggers.
+This function summarizes relative humidity (RH) data from Onset loggers.
 }
 \details{
 This function summarizes RH data from Onset Hobo loggers. It uses a list
@@ -61,5 +61,5 @@ rhdance(my_rh)
 }
 }
 \seealso{
-\code{\link{import_wxdat}}
+\code{\link{get_data}}, \code{\link{import_wxdat}}
 }
