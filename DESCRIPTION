@@ -1,4 +1,4 @@
-Package: rainDanceR
+Package: raindancer
 Title: Import Data from Onset Data Loggers
 Version: 0.0.1
 Authors@R: 
@@ -7,7 +7,7 @@ Authors@R:
            role = c("aut", "cre"),
            email = "matthew_vanscoyoc@nps.gov",
            comment = c(ORCID = "0000-0001-6821-4476"))
-Description: This package imports data from Onset temperature, relative 
+Description: This R package imports data from Onset temperature, relative 
     humidity, and precipitation data loggers into R. Data collected in the field 
     using Onset loggers are exported to comma delimited files (*.csv) using the 
     HOBOware application from Onset. This package imports the *.csv files into R.
