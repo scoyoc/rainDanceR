@@ -35,7 +35,7 @@
 #'         millimeters.}
 #'     \item{\strong{Tips}}{ The number of tips recorded for that hour.}
 #'     \item{\strong{MaxTips_min}}{ The maximum tips per minute recorded. This is
-#'         inteded to calculate intensity of precipitation event.}
+#'         intended to calculate intensity of precipitation event.}
 #' }
 #'
 #' @seealso \code{\link{get_data}}, \code{\link{import_wxdat}}
@@ -69,9 +69,12 @@ raindance <- function(my_data){
   #-- Summarize precipitation data
   dat <- my_data |>
     dplyr::mutate("Date" = lubridate::date(DateTime),
-                  "Hour" = paste(lubridate::hour(DateTime) + 1, "00", sep = ":"),
+                  "Hour" = paste(lubridate::hour(DateTime), "00", sep = ":"),
                   "Hour" = ifelse(Hour == "24:00", "0:00", Hour),
-                  "Min" = lubridate::minute(DateTime)) |>
+                  "Min" = lubridate::minute(DateTime),
+                  "DateTime_new" = paste(Date, Hour, sep = " "),
+                  "DateTime_new" = lubridate::parse_date_time(DateTime_new,
+                                                              orders =  "%Y-%m-%d %H:%M")) |>
     dplyr::ungroup()
 
   if(nrow(dat) == 0){
@@ -128,9 +131,9 @@ raindance <- function(my_data){
       dplyr::mutate("DateTime" = lubridate::ymd_hm(DateTime)) |>
       dplyr::arrange(PlotID, DateTime)
     # Include empty cells for rainless days
-    dd <- tibble::tibble(DateTime = lubridate::ymd_hms(seq(min(dat$DateTime,
+    dd <- tibble::tibble(DateTime = lubridate::ymd_hms(seq(min(dat$DateTime_new,
                                                                na.rm = TRUE),
-                                                           max(dat$DateTime,
+                                                           max(dat$DateTime_new,
                                                                na.rm = TRUE),
                                                            'hour')),
                  mm.hr = 0,
