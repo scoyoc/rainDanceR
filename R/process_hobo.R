@@ -46,14 +46,14 @@
 #'
 #' @examples
 #' \dontrun{
-#' library("rainDanceR")
+#' library("raindancer")
 #'
 #' # Generate list of files
-#' file_list <- list.files(path = system.file("extdata", package = "rainDanceR"),
+#' file_list <- list.files(path = system.file("extdata", package = "raindancer"),
 #'                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 #'
 #' # Import data
-#' my_file <- import_wxdat(file_list[1])
+#' my_file <- import_wxdat(file_list[3])
 #'
 #' # Process data
 #' process_hobo(my_file)

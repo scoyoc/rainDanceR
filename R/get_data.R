@@ -15,16 +15,13 @@
 #'     data. The variables produced by this function include:
 #'
 #' \itemize{
-#'     \item{\strong{RID}}{The unique record ID. The record ID
-#'         \code{\link[base:paste]{paste}}'s DateTime, PlotID, and Element to
-#'         create a unique record ID.}
-#'     \item{\strong{FileName}}{The name of the file the data came from.}
-#'     \item{\strong{PlotID}}{The unique plot identification number (e.g., A03
+#'     \item{\strong{FileName}}{ The name of the file the data came from.}
+#'     \item{\strong{PlotID}}{ The unique plot identification number (e.g., A03
 #'         or I06).}
-#'     \item{\strong{DateTime}}{The date-time of the measurement.}
-#'     \item{\strong{Element}}{The element the data represent. TEMP is
+#'     \item{\strong{DateTime}}{ The date-time of the measurement.}
+#'     \item{\strong{Element}}{ The element the data represent. TEMP is
 #'         temperature, RH is relative humidity, and PRCP is precipitation.}
-#'     \item{\strong{Value}}{The data value of the measurement recorded by the
+#'     \item{\strong{Value}}{ The data value of the measurement recorded by the
 #'         data logger.}
 #' }
 #'
@@ -34,14 +31,14 @@
 #'
 #' @examples
 #' \dontrun{
-#' library("rainDanceR")
+#' library("raindancer")
 #'
 #' # Generate list of files
-#' file_list <- list.files(path = system.file("extdata", package = "rainDanceR"),
+#' file_list <- list.files(path = system.file("extdata", package = "raindancer"),
 #'                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 #'
 #' # Read file into R
-#' my_file <- import_file(file_list[1])
+#' my_file <- import_file(file_list[2])
 #'
 #' # Extract data from file
 #' get_data(my_file)
@@ -55,31 +52,27 @@ get_data <- function(my_file){
 
   if(my_file$file_info$col_n != 10){
     dat = my_file$raw_file |>
-      dplyr::select('RID', 'DateTime', 'Value') |>
+      dplyr::select('DateTime', 'Value') |>
       dplyr::mutate('DateTime' = lubridate::mdy_hms(DateTime),
                     'FileName' = my_file$file_info$filename,
                     'PlotID' = my_file$file_info$plotid,
                     'Element' = my_logger$Element,
-                    'RID' = paste(as.numeric(DateTime), PlotID, Element,
-                                  sep = "."),
                     'Value' = ifelse(Element == "TEMP" &
                                        stringr::str_detect(my_logger$Units,
                                                            "F"),
                                      Value - 32 * 5/9,
                                      Value)) |>
-      dplyr::select('RID', 'FileName', 'PlotID', 'DateTime', 'Element', 'Value')
+      dplyr::select('FileName', 'PlotID', 'DateTime', 'Element', 'Value')
 
   } else if(my_file$file_info$col_n == 10){
     dat = my_file$raw_file |>
-      dplyr::select('RID', 'DateTime', 'Temp', 'RH') |>
+      dplyr::select('DateTime', 'Temp', 'RH') |>
       dplyr::rename('TEMP' = Temp) |>
       tidyr::gather(key = 'Element', value = 'Value', TEMP:RH) |>
       dplyr::mutate('DateTime' = lubridate::mdy_hms(DateTime),
                     'FileName' = my_file$file_info$filename,
                     'PlotID' = my_file$file_info$plotid,
-                    'RID' = paste0(as.numeric(DateTime), PlotID, Element,
-                                   sep = ".")) |>
-      dplyr::select('RID', 'FileName', 'PlotID', 'DateTime', 'Element', 'Value')
+      dplyr::select('FileName', 'PlotID', 'DateTime', 'Element', 'Value')
 
   } else(message(paste0("Something is not right here. Check file: ",
                         basename(my_file$file_info$filename),
