@@ -71,9 +71,8 @@ get_data <- function(my_file){
       tidyr::gather(key = 'Element', value = 'Value', TEMP:RH) |>
       dplyr::mutate('DateTime' = lubridate::mdy_hms(DateTime),
                     'FileName' = my_file$file_info$filename,
-                    'PlotID' = my_file$file_info$plotid,
+                    'PlotID' = my_file$file_info$plotid) |>
       dplyr::select('FileName', 'PlotID', 'DateTime', 'Element', 'Value')
-
   } else(message(paste0("Something is not right here. Check file: ",
                         basename(my_file$file_info$filename),
                         "; ncol = ", my_file$file_info$col_n)))
