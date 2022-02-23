@@ -142,7 +142,8 @@ raindance <- function(my_data){
                        "Tips" = sum(tips.hr),
                        "MaxTips_min" = max(max.tips.min),
                        .groups = "keep") |>
-      dplyr::select("PlotID", "DateTime", "PRCP_mm", "Tips",
+      dplyr::mutate("Element" = "PRCP")
+      dplyr::select("PlotID", "DateTime", "Element", "PRCP_mm", "Tips",
                     "MaxTips_min") |>
       dplyr::arrange(PlotID, DateTime)
   }
