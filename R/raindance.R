@@ -60,6 +60,8 @@
 raindance <- function(my_data){
   # my_data <- import_wxdat(file_list[3])$data_raw
 
+  # TODO: write routine to sequence DateTime's across multiple PlotID's
+
   # QAQC
   my_elements <- paste(unique(my_data$Element), collapse = ";")
   if(!stringr::str_detect(my_elements, "PRCP")){
@@ -67,6 +69,7 @@ raindance <- function(my_data){
   }
 
   #-- Summarize precipitation data
+  plotid = unique(my_data$PlotID)
   dat <- my_data |>
     dplyr::mutate("Date" = lubridate::date(DateTime),
                   "Hour" = paste(lubridate::hour(DateTime), "00", sep = ":"),
@@ -126,24 +129,26 @@ raindance <- function(my_data){
       dplyr::ungroup() |>
       dplyr::select(PlotID, DateTime, max.tips.min)
     # Combine dataframes
-    rain_dat <- dplyr::full_join(hr_tot, tips_hr) |>
-      dplyr::full_join(max_tips) |>
+    rain_dat1 <- dplyr::full_join(hr_tot, tips_hr,
+                                 by = c("PlotID", "DateTime")) |>
+      dplyr::full_join(max_tips, by = c("PlotID", "DateTime")) |>
       dplyr::mutate("DateTime" = lubridate::ymd_hm(DateTime)) |>
       dplyr::arrange(PlotID, DateTime)
     # Include empty cells for rainless days
-    dd <- tibble::tibble(DateTime = lubridate::ymd_hms(seq(min(dat$DateTime_new,
+    dd <- tibble::tibble(PlotID = plotid,
+                         DateTime = lubridate::ymd_hms(seq(min(dat$DateTime_new,
                                                                na.rm = TRUE),
                                                            max(dat$DateTime_new,
                                                                na.rm = TRUE),
-                                                           'hour')),
-                 mm.hr = 0,
-                 tips.hr = 0,
-                 max.tips.min = 0)
-    rain_dat <- dplyr::bind_rows(rain_dat, dd) |>
+                                                           'hour')))
+    rain_dat2 <- dplyr::full_join(rain_dat1, dd,
+                                     by = c("PlotID", "DateTime"))
+    rain_dat2[is.na(rain_dat2)] <- 0
+    rain_dat = rain_dat2 |>
       dplyr::group_by(PlotID, DateTime) |>
-      dplyr::summarise("PRCP_mm" = sum(mm.hr),
-                       "Tips" = sum(tips.hr),
-                       "MaxTips_min" = max(max.tips.min),
+      dplyr::summarise("PRCP_mm" = sum(mm.hr, na.rm = TRUE),
+                       "Tips" = sum(tips.hr, na.rm = TRUE),
+                       "MaxTips_min" = max(max.tips.min, na.rm = TRUE),
                        .groups = "keep") |>
       dplyr::mutate("Element" = "PRCP") |>
       dplyr::select(PlotID, DateTime, Element, PRCP_mm, Tips, MaxTips_min) |>
