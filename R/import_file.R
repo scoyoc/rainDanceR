@@ -99,12 +99,26 @@ import_file <- function(my_file, datestamp_loc = 1, plotid_loc = 2,
       tibble::as_tibble()
 
   } else if(file_info$col_n == 6){
-    raw_file =  suppressWarnings(
-      read.table(my_file, sep = ",", header = F, fill = T, skip = file_info$skip,
-                 col.names = c("RID", "DateTime", "Value", "EndOfFile",
-                               "Details", "Units"))) |>
-      tidyr::drop_na() |>
-      tibble::as_tibble()
+    file_colnames <- names(read.table(my_file, sep = ",", header = T, skip = 1))
+    if("Time" %in% file_colnames){
+      raw_file =  suppressWarnings(
+        read.table(my_file, sep = ",", header = F, fill = T, skip = 2,
+                   col.names = c("RID", "Date", "Time", "Value",
+                                 "Details", "Units"))
+        ) |>
+        tidyr::drop_na() |>
+        dplyr::mutate(DateTime = paste(Date, Time, sep = " ")) |>
+        dplyr::select(RID, DateTime, Value, Details, Units) |>
+        tibble::as_tibble()
+      } else(
+        raw_file =  suppressWarnings(
+          read.table(my_file, sep = ",", header = F, fill = T,
+                     skip = file_info$skip,
+                     col.names = c("RID", "DateTime", "Value", "EndOfFile",
+                                 "Details", "Units"))) |>
+          tidyr::drop_na() |>
+          tibble::as_tibble()
+        )
 
   } else if(file_info$col_n == 7){
     raw_file =  suppressWarnings(
