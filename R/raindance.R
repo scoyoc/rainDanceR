@@ -92,7 +92,7 @@ raindance <- function(my_data){
       tidyr::gather(Hour, mm.hr, c(-PlotID, -Date)) |>
       dplyr::mutate("DateTime" = paste(Date, Hour, sep = " ")) |>
       dplyr::ungroup() |>
-      dplyr::select("PlotID", "DateTime", "mm.hr")
+      dplyr::select(PlotID, DateTime, mm.hr)
     # Calculate number of tips per hour
     tips_hr <- dat |>
       dplyr::group_by(PlotID, Date, Hour, Min) |>
@@ -108,7 +108,7 @@ raindance <- function(my_data){
       tidyr::gather(Hour, tips.hr, c(-PlotID, -Date)) |>
       dplyr::mutate("DateTime" = paste(Date, Hour, sep = " ")) |>
       dplyr::ungroup() |>
-      dplyr::select("PlotID", "DateTime", "tips.hr")
+      dplyr::select(PlotID, DateTime, tips.hr)
     # Calculate max tips per minute
     max_tips <- dat |>
       dplyr::group_by(PlotID, Date, Hour, Min) |>
@@ -124,7 +124,7 @@ raindance <- function(my_data){
       tidyr::gather(Hour, max.tips.min, c(-PlotID, -Date)) |>
       dplyr::mutate("DateTime" = paste(Date, Hour, sep = " ")) |>
       dplyr::ungroup() |>
-      dplyr::select("PlotID", "DateTime", "max.tips.min")
+      dplyr::select(PlotID, DateTime, max.tips.min)
     # Combine dataframes
     rain_dat <- dplyr::full_join(hr_tot, tips_hr) |>
       dplyr::full_join(max_tips) |>
@@ -146,8 +146,7 @@ raindance <- function(my_data){
                        "MaxTips_min" = max(max.tips.min),
                        .groups = "keep") |>
       dplyr::mutate("Element" = "PRCP") |>
-      dplyr::select("PlotID", "DateTime", "Element", "PRCP_mm", "Tips",
-                    "MaxTips_min") |>
+      dplyr::select(PlotID, DateTime, Element, PRCP_mm, Tips, MaxTips_min) |>
       dplyr::arrange(PlotID, DateTime)
   }
 

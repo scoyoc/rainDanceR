@@ -2,8 +2,8 @@
 #'
 #' This function extracts data from the file name and comma delimited (csv)
 #'    file produced by HOBOware so the data can be imported into R. This
-#'    function produces a list that will be used in subsequent functions
-#'    including \code{get_data} and \code{get_details}.
+#'    function produces a list that will be used in subsequent functions,
+#'    including \code{get_data} and \code{get_details}, to import data into R.
 #'
 #' @param my_file A character string of the file name. This can include full
 #'     directory path.
@@ -66,11 +66,11 @@ import_file <- function(my_file, datestamp_loc = 1, plotid_loc = 2,
   #-- Pull elements from file
   file_info = data.frame(
     # The file name
-    filename = basename(my_file),
+    FileName = basename(my_file),
     # Strip time stamp from file name
-    datestamp = stringr::str_split(basename(my_file), "_")[[1]][datestamp_loc],
+    DateStamp = stringr::str_split(basename(my_file), "_")[[1]][datestamp_loc],
     # Strip Plot ID from file name
-    plotid = toupper(stringr::str_sub(strsplit(basename(my_file), "_")[[1]][plotid_loc],
+    PlotID = toupper(stringr::str_sub(strsplit(basename(my_file), "_")[[1]][plotid_loc],
                                       plotid_s, plotid_e)),
     # Determine if the first row is to be skipped
     skip = ifelse(stringr::str_detect(suppressWarnings(

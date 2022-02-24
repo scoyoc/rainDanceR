@@ -52,29 +52,29 @@ get_data <- function(my_file){
 
   if(my_file$file_info$col_n != 10){
     dat = my_file$raw_file |>
-      dplyr::select('DateTime', 'Value') |>
+      dplyr::select(DateTime, Value) |>
       dplyr::mutate('DateTime' = lubridate::mdy_hms(DateTime),
-                    'FileName' = my_file$file_info$filename,
-                    'PlotID' = my_file$file_info$plotid,
+                    'FileName' = my_file$file_info$FileName,
+                    'PlotID' = my_file$file_info$PlotID,
                     'Element' = my_logger$Element,
                     'Value' = ifelse(Element == "TEMP" &
                                        stringr::str_detect(my_logger$Units,
                                                            "F"),
                                      Value - 32 * 5/9,
                                      Value)) |>
-      dplyr::select('FileName', 'PlotID', 'DateTime', 'Element', 'Value')
+      dplyr::select(FileName, PlotID, DateTime, Element, Value)
 
   } else if(my_file$file_info$col_n == 10){
     dat = my_file$raw_file |>
-      dplyr::select('DateTime', 'Temp', 'RH') |>
+      dplyr::select(DateTime, Temp, RH) |>
       dplyr::rename('TEMP' = Temp) |>
       tidyr::gather(key = 'Element', value = 'Value', TEMP:RH) |>
       dplyr::mutate('DateTime' = lubridate::mdy_hms(DateTime),
-                    'FileName' = my_file$file_info$filename,
-                    'PlotID' = my_file$file_info$plotid) |>
-      dplyr::select('FileName', 'PlotID', 'DateTime', 'Element', 'Value')
+                    'FileName' = my_file$file_info$FileName,
+                    'PlotID' = my_file$file_info$PlotID) |>
+      dplyr::select(FileName, PlotID, DateTime, Element, Value)
   } else(message(paste0("Something is not right here. Check file: ",
-                        basename(my_file$file_info$filename),
+                        basename(my_file$file_info$FileName),
                         "; ncol = ", my_file$file_info$col_n)))
   return(dat)
 }
@@ -86,7 +86,7 @@ get_product <- function(my_file){
   # This function extracts the Onset product name from the Details column of the
   # raw file. It uses the list produced from import_file().
   my_logger = my_file$raw_file |>
-    dplyr::select('Details') |>
+    dplyr::select(Details) |>
     tidyr::separate('Details', into = c("Var", "Product"), sep = ":",
                     remove = T, extra = "merge", fill = "right") |>
     dplyr::filter(Var == "Product") |>
@@ -105,12 +105,12 @@ get_units <- function(my_file){
 
   # Strip units from raw_file
   units = if(my_file$file_info$col_n == 4){
-    dplyr::select(my_file$raw_file, 'Details') |>
+    dplyr::select(my_file$raw_file, Details) |>
       tidyr::separate('Details', into = c("Var", "Val"), sep = ":") |>
       dplyr::filter(Var == "Series") |>
       tibble::deframe()
   } else(
-    dplyr::select(my_file$raw_file, 'Units') |>
+    dplyr::select(my_file$raw_file, Units) |>
       dplyr::filter(Units != "") |>
       tibble::deframe() |>
       dplyr::first()

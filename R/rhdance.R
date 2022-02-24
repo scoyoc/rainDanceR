@@ -87,7 +87,6 @@ rhdance <- function(my_data){
     dplyr::left_join(max_time) |>
     dplyr::arrange(PlotID, Date) |>
     dplyr::mutate("Element" = "RH") |>
-    dplyr::select("PlotID", "Date", "Element", "Mean", "Min", "Max", "n",
-                  "MinTime", "MaxTime")
+    dplyr::select(PlotID, Date, Element, Mean, Min, Max, n, MinTime, MaxTime)
   suppressMessages(return(rh_dat))
 }

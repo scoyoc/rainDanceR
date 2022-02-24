@@ -90,7 +90,7 @@ get_details <- function(my_file, my_data){
     dplyr::mutate('Value' = trimws(Value, "both")) |>
     tidyr::spread(key = Var, value = Value, fill = NA) |>
     dplyr::mutate('Import Date' = as.character(lubridate::today()),
-                  'Plot ID' = my_file$file_info$plotid,
+                  'Plot ID' = my_file$file_info$PlotID,
                   'Element' = my_logger$Element,
                   'Units' = my_logger$Units,
                   'DateTime (min)' = as.character(min(my_data$DateTime,
@@ -103,11 +103,11 @@ get_details <- function(my_file, my_data){
                                                                "F"),
                                          "Yes", "No")) |>
     tidyr::gather(key = 'Details', value = 'Value') |>
-    dplyr::mutate("FileName" =my_file$file_info$filename) |>
+    dplyr::mutate("FileName" =my_file$file_info$FileName) |>
     dplyr::select('FileName', 'Details', 'Value') |>
     dplyr::arrange('Details')
   details = details |>
-    dplyr::add_row(tibble::tibble_row("FileName" = my_file$file_info$filename,
+    dplyr::add_row(tibble::tibble_row("FileName" = my_file$file_info$FileName,
                                       "Details" = "QFLAG",
                                       "Value" = qflags(my_logger, details, my_data)))
   return(details)
