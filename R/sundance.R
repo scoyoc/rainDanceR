@@ -62,31 +62,32 @@ sundance <- function(my_data){
   }
 
   #-- Summarize temperature data
-  dat <- dplyr::filter(my_data, Element == "TEMP")|>
+  dat <- dplyr::filter(my_data, Element == "TEMP") |>
     dplyr::mutate("Date" = lubridate::date(DateTime)) |>
-    dplyr::ungroup() |>
-    dplyr::group_by(PlotID, Date)
+    dplyr::ungroup()
   dat_sum <- dat |>
-    dplyr::summarize("Mean" = mean(Value, na.rm = T),
-                     "Min" = min(Value, na.rm = T),
-                     "Max" = max(Value, na.rm = T),
+    dplyr::group_by(PlotID, Date) |>
+    dplyr::summarize("Mean" = mean(Value, na.rm = TRUE),
                      "n" = dplyr::n(),
                      .groups = "keep")
   min_time <- dat  |>
-    dplyr::left_join(dat_sum, by = c("PlotID", "Date")) |>
-    dplyr::filter(Value == Min) |>
-    dplyr::summarise("MinTime" = strftime(min(DateTime), format="%H:%M:%S"),
-                     .groups = "keep")
-  max_time <- dat |>
-    # dplyr::mutate("Date" = lubridate::date(DateTime)) |>
-    dplyr::left_join(dat_sum, by = c("PlotID", "Date")) |>
-    dplyr::filter(Value == Max) |>
-    dplyr::summarise("MaxTime" = strftime(max(DateTime), format="%H:%M:%S"),
-                     .groups = "keep")
-  temp_dat <- dplyr::left_join(dat_sum, min_time) |>
-    dplyr::left_join(max_time) |>
+    dplyr::group_by(PlotID, Date) |>
+    dplyr::summarise("Value" = min(Value, na.rm = TRUE), .groups = "keep") |>
+    dplyr::left_join(dat, by = c("PlotID", "Date", "Value")) |>
+    dplyr::mutate("MinTime" = format(DateTime, format = "%H:%M")) |>
+    dplyr::rename("Min" = Value) |>
+    dplyr::select(PlotID, Date, Min, MinTime)
+  max_time <- dat  |>
+    dplyr::group_by(PlotID, Date) |>
+    dplyr::summarise("Value" = max(Value, na.rm = TRUE), .groups = "keep") |>
+    dplyr::left_join(dat, by = c("PlotID", "Date", "Value")) |>
+    dplyr::mutate("MaxTime" = format(DateTime, format = "%H:%M")) |>
+    dplyr::rename("Max" = Value) |>
+    dplyr::select(PlotID, Date, Max, MaxTime)
+  temp_dat <- dplyr::left_join(dat_sum, min_time, by = c("PlotID", "Date")) |>
+    dplyr::left_join(max_time, by = c("PlotID", "Date")) |>
     dplyr::arrange(PlotID, Date) |>
     dplyr::mutate("Element" = "TEMP") |>
     dplyr::select(PlotID, Date, Element, Mean, Min, Max, n, MinTime, MaxTime)
-  suppressMessages(return(temp_dat))
+  return(temp_dat)
 }
