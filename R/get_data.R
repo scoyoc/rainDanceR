@@ -45,8 +45,6 @@
 #' }
 #'
 get_data <- function(my_file){
-  # my_file = import_file(file_list[12])
-
   #-- Pull logger type, element, and units from Details
   my_logger = get_product(my_file)
 
@@ -93,7 +91,7 @@ get_product <- function(my_file){
     dplyr::distinct() |>
     dplyr::mutate('Product' = trimws(Product, 'left'),
                   'Units' = suppressWarnings(get_units(my_file))) |>
-    dplyr::left_join(onset_loggers)
+    dplyr::left_join(onset_loggers, by = "Product")
   return(my_logger)
 }
 
