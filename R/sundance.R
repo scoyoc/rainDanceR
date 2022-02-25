@@ -53,7 +53,7 @@
 #' sundance(my_temp)
 #' }
 sundance <- function(my_data){
-  # my_data = raindancer::import_wxdat(file_list[11])$data_raw
+  # my_data = raindancer::import_wxdat(file_list[2])$data_raw
 
   #-- QA check
   my_elements <- paste(unique(my_data$Element), collapse = ";")
@@ -61,13 +61,17 @@ sundance <- function(my_data){
     stop("Data are not TEMP. Check data.")
   }
 
-  #-- Summarize temperature data
+  # Prep data
   dat <- dplyr::filter(my_data, Element == "TEMP") |>
     dplyr::mutate("Date" = lubridate::date(DateTime),
                   "Time" = format(DateTime, format = "%H:%M")) |>
     dplyr::arrange(PlotID, DateTime) |>
     dplyr::ungroup() |>
     dplyr::group_by(PlotID, Date)
+  # Subset Plot IDs and units of measurement
+  my_units <- dplyr::select(my_data, PlotID, Units) |>
+    dplyr::distinct()
+  # Sumarize temperature data
   dat_sum <- dat |>
     dplyr::summarize("Mean" = mean(Value, na.rm = TRUE),
                      "n" = dplyr::n(),
@@ -86,6 +90,7 @@ sundance <- function(my_data){
     dplyr::left_join(max_time, by = c("PlotID", "Date")) |>
     dplyr::arrange(PlotID, Date) |>
     dplyr::mutate("Element" = "TEMP") |>
-    dplyr::select(PlotID, Date, Element, Mean, Min, Max, n, MinTime, MaxTime)
+    dplyr::select(PlotID, Date, Element, Mean, Min, Max, n, MinTime, MaxTime) |>
+    dplyr::left_join(my_units, by = "PlotID")
   return(temp_dat)
 }

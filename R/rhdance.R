@@ -61,13 +61,18 @@ rhdance <- function(my_data){
     stop("Data are not RH. Check data.")
   }
 
-  #-- Summarize temperature data
+  # Prep data
   dat <- dplyr::filter(my_data, Element == "RH") |>
     dplyr::mutate("Date" = lubridate::date(DateTime),
                   "Time" = format(DateTime, format = "%H:%M")) |>
     dplyr::arrange(PlotID, DateTime) |>
     dplyr::ungroup() |>
     dplyr::group_by(PlotID, Date)
+  # Subset Plot IDs and units of measurement
+  my_units <- dplyr::ungroup(dat) |>
+    dplyr::select(PlotID, Units) |>
+    dplyr::distinct()
+  # Summarize data
   dat_sum <- dat |>
     dplyr::summarize("Mean" = mean(Value, na.rm = TRUE),
                      "n" = dplyr::n(),
@@ -82,10 +87,11 @@ rhdance <- function(my_data){
     dplyr::slice(1) |>
     dplyr::rename("Max" = Value, "MaxTime" = Time) |>
     dplyr::select(PlotID, Date, Max, MaxTime)
-  temp_dat <- dplyr::left_join(dat_sum, min_time, by = c("PlotID", "Date")) |>
+  rh_dat <- dplyr::left_join(dat_sum, min_time, by = c("PlotID", "Date")) |>
     dplyr::left_join(max_time, by = c("PlotID", "Date")) |>
     dplyr::arrange(PlotID, Date) |>
-    dplyr::mutate("Element" = "TEMP") |>
-    dplyr::select(PlotID, Date, Element, Mean, Min, Max, n, MinTime, MaxTime)
+    dplyr::mutate("Element" = "RH") |>
+    dplyr::select(PlotID, Date, Element, Mean, Min, Max, n, MinTime, MaxTime) |>
+    dplyr::left_join(my_units, by = "PlotID")
   return(rh_dat)
 }

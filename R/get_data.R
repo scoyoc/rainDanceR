@@ -45,6 +45,8 @@
 #' }
 #'
 get_data <- function(my_file){
+  # my_file = import_file(file_list[10])
+
   #-- Pull logger type, element, and units from Details
   my_logger = get_product(my_file)
 
@@ -55,12 +57,8 @@ get_data <- function(my_file){
                     'FileName' = my_file$file_info$FileName,
                     'PlotID' = my_file$file_info$PlotID,
                     'Element' = my_logger$Element,
-                    'Value' = ifelse(Element == "TEMP" &
-                                       stringr::str_detect(my_logger$Units,
-                                                           "F"),
-                                     Value - 32 * 5/9,
-                                     Value)) |>
-      dplyr::select(FileName, PlotID, DateTime, Element, Value)
+                    'Units' = my_logger$Units) |>
+      dplyr::select(FileName, PlotID, DateTime, Element, Value, Units)
 
   } else if(my_file$file_info$col_n == 10){
     dat = my_file$raw_file |>
@@ -69,11 +67,11 @@ get_data <- function(my_file){
       tidyr::gather(key = 'Element', value = 'Value', TEMP:RH) |>
       dplyr::mutate('DateTime' = lubridate::mdy_hms(DateTime),
                     'FileName' = my_file$file_info$FileName,
-                    'PlotID' = my_file$file_info$PlotID) |>
-      dplyr::select(FileName, PlotID, DateTime, Element, Value)
+                    'PlotID' = my_file$file_info$PlotID,
+                    'Units' = ifelse(Element == "RH", "%RH", my_logger$Units)) |>
+      dplyr::select(FileName, PlotID, DateTime, Element, Value, Units)
   } else(message(paste0("Something is not right here. Check file: ",
-                        basename(my_file$file_info$FileName),
-                        "; ncol = ", my_file$file_info$col_n)))
+                        basename(my_file$file_info$FileName))))
   return(dat)
 }
 
@@ -104,20 +102,18 @@ get_units <- function(my_file){
   # Strip units from raw_file
   units = if(my_file$file_info$col_n == 4){
     dplyr::select(my_file$raw_file, Details) |>
-      tidyr::separate('Details', into = c("Var", "Val"), sep = ":") |>
-      dplyr::filter(Var == "Series") |>
+      tidyr::separate('Details', into = c("Details", "Units"), sep = ":") |>
+      dplyr::filter(Details == "Series") |>
       tibble::deframe()
-  } else(
-    dplyr::select(my_file$raw_file, Units) |>
-      dplyr::filter(Units != "") |>
-      tibble::deframe() |>
-      dplyr::first()
-  )
+    } else(
+      dplyr::select(my_file$raw_file, Units) |>
+        dplyr::filter(Units != "") |>
+        tibble::deframe() |>
+        dplyr::first()
+      )
 
-  units = if(stringr::str_detect(units, "Event")) {"Event"
-  } else if(stringr::str_detect(units, "F")) {"F"
-  } else if(stringr::str_detect(units, "C")) {"C"
-  } else("Unknown")
+  if(stringr::str_detect(units, "Â°")) units = gsub("Â°", "", units)
+  units = trimws(units)
   return(units)
 }
 
@@ -127,3 +123,14 @@ onset_loggers <- data.frame(
                 "HOBO UA-001-64 Pendant Temp", "HOBO U23-001 Temp/RH", ""),
   'Element' = c("PRCP", "PRCP", "TEMP", "TEMP", "TEMP-RH", "Unknown")
 )
+
+# # Returns the units measured
+# my_units <- function(raw_file){
+#   my_units <- my_file$raw_file |>
+#     dplyr::select(Units) |>
+#     dplyr::mutate(Units = trimws(my_file$raw_file$Units)) |>
+#     dplyr::filter(!Units == "") |>
+#     dplyr::slice(1)
+#   if(stringr::str_detect(my_units, "Â°")) my_units = gsub("Â°", "", my_units)
+#   return(my_units)
+# }

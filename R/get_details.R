@@ -92,7 +92,8 @@ get_details <- function(my_file, my_data){
     dplyr::mutate('Import Date' = as.character(lubridate::today()),
                   'Plot ID' = my_file$file_info$PlotID,
                   'Element' = my_logger$Element,
-                  'Units' = my_logger$Units,
+                  'Units' = paste(my_logger$Units, my_logger$Units,
+                                  sep = ";"),
                   'DateTime (min)' = as.character(min(my_data$DateTime,
                                                       na.rm = T)),
                   'DateTime (max)' = as.character(max(my_data$DateTime,
@@ -106,7 +107,7 @@ get_details <- function(my_file, my_data){
     dplyr::mutate("FileName" =my_file$file_info$FileName) |>
     dplyr::select('FileName', 'Details', 'Value') |>
     dplyr::arrange('Details')
-  details = details |>
+    details = details |>
     dplyr::add_row(tibble::tibble_row("FileName" = my_file$file_info$FileName,
                                       "Details" = "QFLAG",
                                       "Value" = qflags(my_logger, details, my_data)))
