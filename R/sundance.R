@@ -81,7 +81,7 @@ sundance <- function(my_data){
     # dplyr::mutate("Date" = lubridate::date(DateTime)) |>
     dplyr::left_join(dat_sum, by = c("PlotID", "Date")) |>
     dplyr::filter(Value == Max) |>
-    dplyr::summarise("MaxTime" = strftime(min(DateTime), format="%H:%M:%S"),
+    dplyr::summarise("MaxTime" = strftime(max(DateTime), format="%H:%M:%S"),
                      .groups = "keep")
   temp_dat <- dplyr::left_join(dat_sum, min_time) |>
     dplyr::left_join(max_time) |>
