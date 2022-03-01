@@ -8,14 +8,14 @@ raindance(my_data)
 }
 \arguments{
 \item{my_data}{A data frame with four columns. Typically from
-\code{\link{get_data}}. At a minimum, columns must include the following:
+\code{\link{get_data}}. Columns must include the following:
 \describe{
-\item{\strong{Element}}{The element the data represent. TEMP is
+\item{\strong{Element}}{ The element the data represent. TEMP is
 temperature, RH is relative humidity, and PRCP is precipitation.}
-\item{\strong{PlotID}}{The unique plot identification number (e.g.,
+\item{\strong{PlotID}}{ The unique plot identification number (e.g.,
 A03 or I06).}
-\item{\strong{DateTime}}{The date-time of the measurement.}
-\item{\strong{Value}}{The data value of the measurement recorded by
+\item{\strong{DateTime}}{ The date-time of the measurement.}
+\item{\strong{Value}}{ The data value of the measurement recorded by
 the data logger.}
 }}
 }
@@ -23,19 +23,16 @@ the data logger.}
 This function returns a five column \code{\link[tibble:tibble]{tibble}}.
 
 \describe{
-\item{\strong{RID}}{The unique record ID. The record ID
-\code{\link[base:paste]{paste}}'s DateTime and PlotID to create a
-unique record ID.}
-\item{\strong{DateTime}}{The date and hour of the data. Hours are the from
+\item{\strong{DateTime}}{ The date and hour of the data. Hours are the from
 0 min 00 sec to 59 min 59 sec. For example 2009-04-15 00:00:00 is
 from 00:00:00 to 00:59:59 on April 15, 2009.}
-\item{\strong{PlotID}}{The unique ID number for the long-term monitoring
+\item{\strong{PlotID}}{ The unique ID number for the long-term monitoring
 plot.}
-\item{\strong{PRCP_mm}}{The recorded total precipitation for that hour in
+\item{\strong{PRCP_mm}}{ The recorded total precipitation for that hour in
 millimeters.}
-\item{\strong{Tips}}{The number of tips recorded for that hour.}
-\item{\strong{MaxTips_min}}{The maximum tips per minute recorded. This is
-inteded to calculate intensity of precipitation event.}
+\item{\strong{Tips}}{ The number of tips recorded for that hour.}
+\item{\strong{MaxTips_min}}{ The maximum tips per minute recorded. This is
+intended to calculate intensity of precipitation event.}
 }
 }
 \description{
@@ -51,14 +48,14 @@ per minute.
 }
 \examples{
 \dontrun{
-library("rainDanceR")
+library("raindancer")
 
 # Generate list of files
-file_list <- list.files(path = system.file("extdata", package = "rainDanceR"),
+file_list <- list.files(path = system.file("extdata", package = "raindancer"),
                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 
 # Read file into R
-my_prcp <- import_wxdat(file_list[1])$data_raw
+my_prcp <- import_wxdat(file_list[5])$data_raw
 
 # Process precipitation data
 raindance(my_prcp)

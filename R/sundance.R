@@ -10,8 +10,9 @@
 #'         \item{\strong{PlotID}}{ The unique plot identification number (e.g.,
 #'             A03 or I06).}
 #'         \item{\strong{DateTime}}{ The date-time of the measurement.}
-#'         \item{\strong{Value}} The data value of the measurement recorded by
+#'         \item{\strong{Value}}{ The data value of the measurement recorded by
 #'             the data logger.}
+#'         \item{\strong{Units}}{ The unit of the measurement.}
 #'     }
 #'
 #' @details
@@ -32,6 +33,7 @@
 #'     \item{\strong{n}}{ The number of records for that day.}
 #'     \item{\strong{TMIN_time}}{ The time of minimum daily temperature.}
 #'     \item{\strong{TEMP_mean}}{ The time of maximum daily temperature.}
+#'     \item{\strong{Units}}{ The unit of the measurement.}
 #' }
 #'
 #' @seealso \code{\link{get_data}}, \code{\link{import_wxdat}}
@@ -47,29 +49,31 @@
 #'                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 #'
 #' # Read file into R
-#' my_temp <- import_wxdat(file_list[4])$data_raw
+#' my_temp <- import_wxdat(file_list[10])$data_raw
 #'
 #' # Process precipitation data
 #' sundance(my_temp)
 #' }
 sundance <- function(my_data){
-  # my_data = raindancer::import_wxdat(file_list[2])$data_raw
+  # my_data = raindancer::import_wxdat(file_list[10])$data_raw
+  # my_data = raindancer::import_wxdat(file_list[4])$data_raw
 
   #-- QA check
-  my_elements <- paste(unique(my_data$Element), collapse = ";")
-  if(!stringr::str_detect(my_elements, "TEMP")){
-    stop("Data are not TEMP. Check data.")
+  my_elements <- paste(unique(my_data$Element), collapse = "; ")
+  if(!stringr::str_detect(my_elements, "TEMP") &
+     !stringr::str_detect(my_elements, "RH")){
+    stop("Data are not TEMP or RH. Check data.")
   }
 
   # Prep data
-  dat <- dplyr::filter(my_data, Element == "TEMP") |>
+  dat <- dplyr::filter(my_data) |>
     dplyr::mutate("Date" = lubridate::date(DateTime),
                   "Time" = format(DateTime, format = "%H:%M")) |>
-    dplyr::arrange(PlotID, DateTime) |>
+    dplyr::arrange(PlotID, DateTime, Element) |>
     dplyr::ungroup() |>
-    dplyr::group_by(PlotID, Date)
+    dplyr::group_by(PlotID, Date, Element)
   # Subset Plot IDs and units of measurement
-  my_units <- dplyr::select(my_data, PlotID, Units) |>
+  my_units <- dplyr::select(my_data, PlotID, Element, Units) |>
     dplyr::distinct()
   # Sumarize temperature data
   dat_sum <- dat |>
@@ -80,17 +84,17 @@ sundance <- function(my_data){
     dplyr::filter(Value == min(Value)) |>
     dplyr::slice(1) |>
     dplyr::rename("Min" = Value, "MinTime" = Time) |>
-    dplyr::select(PlotID, Date, Min, MinTime)
+    dplyr::select(PlotID, Date, Element, Min, MinTime)
   max_time <- dat  |>
     dplyr::filter(Value == max(Value)) |>
     dplyr::slice(1) |>
     dplyr::rename("Max" = Value, "MaxTime" = Time) |>
-    dplyr::select(PlotID, Date, Max, MaxTime)
-  temp_dat <- dplyr::left_join(dat_sum, min_time, by = c("PlotID", "Date")) |>
-    dplyr::left_join(max_time, by = c("PlotID", "Date")) |>
-    dplyr::arrange(PlotID, Date) |>
-    dplyr::mutate("Element" = "TEMP") |>
+    dplyr::select(PlotID, Date, Element, Max, MaxTime)
+  temp_dat <- dplyr::left_join(dat_sum, min_time,
+                               by = c("PlotID", "Date", "Element")) |>
+    dplyr::left_join(max_time, by = c("PlotID", "Date", "Element")) |>
+    dplyr::arrange(PlotID, Date, Element) |>
     dplyr::select(PlotID, Date, Element, Mean, Min, Max, n, MinTime, MaxTime) |>
-    dplyr::left_join(my_units, by = "PlotID")
+    dplyr::left_join(my_units, by = c("PlotID", "Element"))
   return(temp_dat)
 }

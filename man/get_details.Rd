@@ -14,8 +14,8 @@ get_details(my_file, my_data)
 \value{
 This function returns a \code{\link[tibble:tibble]{tibble}} of metadata on
 the. The variables produced by this function include:\preformatted{\\describe\{
-    \\item\{\\strong\{FileName\}\}\{The name of the file the data came from.\}
-    \\item\{\\strong\{Details\}\}\{This variable will varry with the data
+    \\item\{\\strong\{FileName\}\}\{ The name of the file the data came from.\}
+    \\item\{\\strong\{Details\}\}\{ This variable will varry with the data
         contained in the "Details" colum of the original file. Calculated
         variables listed below.\}
         \\itemize\{
@@ -36,7 +36,7 @@ the. The variables produced by this function include:\preformatted{\\describe\{
             \\item\{ConvertFtoC: Logical. Were the temperature data
                 converted from F to C? Yes or No.\}
                 \}
-    \\item\{\\strong\{Value\}\}\{The value the variable in Details.\}
+    \\item\{\\strong\{Value\}\}\{ The value the variable in Details.\}
 \}
 }
 }
@@ -53,10 +53,10 @@ data.
 }
 \examples{
 \dontrun{
-library("rainDanceR")
+library("raindancer")
 
 # Generate list of files
-file_list <- list.files(path = system.file("extdata", package = "rainDanceR"),
+file_list <- list.files(path = system.file("extdata", package = "raindancer"),
                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 
 # Read file into R

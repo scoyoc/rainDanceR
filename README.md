@@ -39,11 +39,7 @@ file_list <- list.files(path = system.file("extdata", package = "raindancer"),
                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 
 # Import file and summarize data
-my_file <- file_list[1]           # Select file
+my_file <- file_list[1]    # Select file
 import_wxdat(my_file) |>   # Import file into R
-  process_hobo()                  # summarize data
-
-# Import and summarize data
-process_hobo(my_file)
+  process_hobo()           # Summarize data
 ```
-

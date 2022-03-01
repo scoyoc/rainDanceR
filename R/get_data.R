@@ -23,6 +23,7 @@
 #'         temperature, RH is relative humidity, and PRCP is precipitation.}
 #'     \item{\strong{Value}}{ The data value of the measurement recorded by the
 #'         data logger.}
+#'     \item{\strong{Units}}{ The units of the measurement.}
 #' }
 #'
 #' @seealso \code{\link{import_file}}, \code{\link{get_details}}

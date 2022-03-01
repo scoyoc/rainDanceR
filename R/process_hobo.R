@@ -8,8 +8,7 @@
 #' This function processes precipitation, temperature, and relative humidity
 #'     data exported from Onset HOBOware. It uses the list created by
 #'     \code{\link{import_wxdat}} and then processes the data using
-#'     \code{\link{raindance}}, \code{\link{rhdance}}, or
-#'     \code{\link{sundance}}.
+#'     \code{\link{raindance}} or \code{\link{sundance}}.
 #'
 #'     For precipitation data, this function strips the first 5 minutes and last
 #'     10 minutes of data to account for field procedures when downloading the
@@ -33,14 +32,13 @@
 #'     \item{\strong{data_raw}}{This component is a data frame from
 #'         \code{\link{get_data}}.}
 #'     \item{\strong{data}}{This component is a data frame of summarized data
-#'         from \code{\link{raindance}}, \code{\link{rhdance}}, or
-#'         \code{\link{sundance}}.}
+#'         from \code{\link{raindance}} or \code{\link{sundance}}.}
 #'     \item{\strong{raw_file}}{The raw file that was loaded into R using
 #'         \code{\link{import_file}}.}
 #' }
 #'
 #' @seealso \code{\link{import_wxdat}}, \code{\link{raindance}},
-#'     \code{\link{rhdance}}, \code{\link{sundance}}
+#'     \code{\link{sundance}}
 #'
 #' @export
 #'
@@ -52,15 +50,19 @@
 #' file_list <- list.files(path = system.file("extdata", package = "raindancer"),
 #'                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 #'
-#' # Import data
+#' # Precipitation data
 #' my_file <- import_wxdat(file_list[3])
-#'
-#' # Process data
 #' process_hobo(my_file)
+#'
+#' # Temperature and relative humidity data
+#' my_file <- import_wxdat(file_list[14])
+#' process_hobo(my_file)
+#'
 #' }
 #'
 process_hobo <- function(my_wxdat){
-  # my_wxdat = import_wxdat(file_list[26])
+  # my_wxdat = import_wxdat(file_list[3])
+  # my_wxdat = import_wxdat(file_list[10])
 
   if(stringr::str_detect(my_wxdat$file_info$Element, "PRCP")){
     # Determine if first 5-min need to be stripped
@@ -73,23 +75,11 @@ process_hobo <- function(my_wxdat){
       } else {
         dat <- dplyr::filter(my_wxdat$data_raw, Element == "PRCP")
       }
-    # Strip last t0 minues
+    # Strip last 10 minues
     dat <- dplyr::filter(dat, DateTime < max(DateTime, na.rm = T) - (10*60))
     # Run raindance
     dat <- raindance(dat)
-  } else if(stringr::str_detect(my_wxdat$file_info$Element, "RH")){
-    # Process RH data
-    dat_rh <- dplyr::filter(my_wxdat$data_raw, Element == "RH")
-    dat_rh <- rhdance(dat_rh)
-    # Process TEMP data
-    dat_t <- dplyr::filter(my_wxdat$data_raw, Element == "TEMP")
-    dat_t <- sundance(dat_t)
-    # Combine
-    dat <- rbind(dat_rh, dat_t)
-  } else{
-    dat <- dplyr::filter(my_wxdat$data_raw, Element == "TEMP")
-    dat <- sundance(dat)
-  }
+    } else(dat <- sundance(my_wxdat$data_raw))
 
   return(list(file_info = my_wxdat$file_info,
               details = my_wxdat$details,

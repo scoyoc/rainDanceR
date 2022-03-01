@@ -14,17 +14,15 @@ This function returns a \code{\link[tibble:tibble]{tibble}} of standardized
 data. The variables produced by this function include:
 
 \itemize{
-\item{\strong{RID}}{The unique record ID. The record ID
-\code{\link[base:paste]{paste}}'s DateTime, PlotID, and Element to
-create a unique record ID.}
-\item{\strong{FileName}}{The name of the file the data came from.}
-\item{\strong{PlotID}}{The unique plot identification number (e.g., A03
+\item{\strong{FileName}}{ The name of the file the data came from.}
+\item{\strong{PlotID}}{ The unique plot identification number (e.g., A03
 or I06).}
-\item{\strong{DateTime}}{The date-time of the measurement.}
-\item{\strong{Element}}{The element the data represent. TEMP is
+\item{\strong{DateTime}}{ The date-time of the measurement.}
+\item{\strong{Element}}{ The element the data represent. TEMP is
 temperature, RH is relative humidity, and PRCP is precipitation.}
-\item{\strong{Value}}{The data value of the measurement recorded by the
+\item{\strong{Value}}{ The data value of the measurement recorded by the
 data logger.}
+\item{\strong{Units}}{ The units of the measurement.}
 }
 }
 \description{
@@ -38,14 +36,14 @@ standardizes the data structure into six columns.
 }
 \examples{
 \dontrun{
-library("rainDanceR")
+library("raindancer")
 
 # Generate list of files
-file_list <- list.files(path = system.file("extdata", package = "rainDanceR"),
+file_list <- list.files(path = system.file("extdata", package = "raindancer"),
                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 
 # Read file into R
-my_file <- import_file(file_list[1])
+my_file <- import_file(file_list[2])
 
 # Extract data from file
 get_data(my_file)

@@ -23,8 +23,7 @@ raw file, and the Elements measured. This component is the product of
 \item{\strong{data_raw}}{This component is a data frame from
 \code{\link{get_data}}.}
 \item{\strong{data}}{This component is a data frame of summarized data
-from \code{\link{raindance}}, \code{\link{rhdance}}, or
-\code{\link{sundance}}.}
+from \code{\link{raindance}} or \code{\link{sundance}}.}
 \item{\strong{raw_file}}{The raw file that was loaded into R using
 \code{\link{import_file}}.}
 }
@@ -36,8 +35,7 @@ This function processes data from Onset HOBOware.
 This function processes precipitation, temperature, and relative humidity
 data exported from Onset HOBOware. It uses the list created by
 \code{\link{import_wxdat}} and then processes the data using
-\code{\link{raindance}}, \code{\link{rhdance}}, or
-\code{\link{sundance}}.\preformatted{For precipitation data, this function strips the first 5 minutes and last
+\code{\link{raindance}} or \code{\link{sundance}}.\preformatted{For precipitation data, this function strips the first 5 minutes and last
 10 minutes of data to account for field procedures when downloading the
 event logger. It is common practice to trigger an event before
 downloading and after launching the logger. To remove these false events
@@ -49,21 +47,24 @@ data, so the last 10 minutes of every file is stripped before processing.
 }
 \examples{
 \dontrun{
-library("rainDanceR")
+library("raindancer")
 
 # Generate list of files
-file_list <- list.files(path = system.file("extdata", package = "rainDanceR"),
+file_list <- list.files(path = system.file("extdata", package = "raindancer"),
                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 
-# Import data
-my_file <- import_wxdat(file_list[1])
-
-# Process data
+# Precipitation data
+my_file <- import_wxdat(file_list[3])
 process_hobo(my_file)
+
+# Temperature and relative humidity data
+my_file <- import_wxdat(file_list[14])
+process_hobo(my_file)
+
 }
 
 }
 \seealso{
 \code{\link{import_wxdat}}, \code{\link{raindance}},
-\code{\link{rhdance}}, \code{\link{sundance}}
+\code{\link{sundance}}
 }

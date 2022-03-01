@@ -32,7 +32,7 @@ index. Default is 3.}
 This function returns a list with two (2) components.
 
 \describe{
-\item{\strong{file_info}}{This component is a vector that contains the
+\item{\strong{file_info}}{ This component is a vector that contains the
 file name, the date stamp, plot ID, the number of lines to skip to
 properly import the data, and the number of columns of data in the raw
 file. Varibles listed below:}
@@ -44,15 +44,15 @@ the file name.}
 \item{skip:The number of lines to skip to read in the file
 correctly.}
 \item{col_n: The number of columns in the raw data file.}}
-\item{\strong{raw_file}}{This component is a data frame containing the
+\item{\strong{raw_file}}{ This component is a data frame containing the
 raw data and the "Details" column produced by HOBOware.}
 }
 }
 \description{
 This function extracts data from the file name and comma delimited (csv)
 file produced by HOBOware so the data can be imported into R. This
-function produces a list that will be used in subsequent functions
-including \code{get_data} and \code{get_details}.
+function produces a list that will be used in subsequent functions,
+including \code{get_data} and \code{get_details}, to import data into R.
 }
 \details{
 This function extracts variables from the file name and the raw data so the
@@ -63,14 +63,14 @@ metadata for the sampling event.
 }
 \examples{
 \dontrun{
-library("rainDanceR")
+library("raindancer")
 
 # Generate list of files
-file_list <- list.files(path = system.file("extdata", package = "rainDanceR"),
+file_list <- list.files(path = system.file("extdata", package = "raindancer"),
                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 
 # Read file into R
-import_file(file_list[1])
+import_file(file_list[12])
 }
 
 }
