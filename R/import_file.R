@@ -132,7 +132,16 @@ import_file <- function(my_file, datestamp_loc = 1, plotid_loc = 2,
       tidyr::drop_na() |>
       tibble::as_tibble()
 
-  } else if(file_info$col_n == 9){
+  } else if(file_info$col_n == 8){
+    raw_file =  suppressWarnings(
+      read.table(my_file, sep = ",", header = FALSE, fill = TRUE,
+                 skip = file_info$skip,
+                 col.names = c("RID", "DateTime", "Value","Attached",
+                               "Connected","EndFile", "Details","Units"))) |>
+      tidyr::drop_na() |>
+      tibble::as_tibble()
+
+  }else if(file_info$col_n == 9){
     raw_file =  suppressWarnings(
       read.table(my_file, sep = ",", header = FALSE, fill = TRUE,
                  skip = file_info$skip,
