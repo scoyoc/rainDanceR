@@ -43,7 +43,7 @@
 #' }
 #'
 import_hobo_2008 <- function(my_file){
-  # my_file = file_list[12]
+  # my_file = file_list[1]
   #-- Import file
   my_file = import_file(my_file, datestamp_loc = 1, plotid_loc = 2,
                         plotid_s = 1, plotid_e = 3)
@@ -57,8 +57,26 @@ import_hobo_2008 <- function(my_file){
     } else if(length(unique(my_data$Element)) > 1){
       my_file$file_info$Element = paste(unique(my_data$Element), collapse = ";")
       } else(my_file$file_info$Element == NA)
+
+  # Extract file info
+  file_info <- data.frame("FileName" = my_file$file_info$FileName,
+                          "PlotID" = my_file$file_info$PlotID,
+                          "Element" = pull_detail("Element", my_details),
+                          "Product" = pull_detail("Product", my_details),
+                          "SerialNumber" = pull_detail("Serial Number",
+                                                       my_details),
+                          "LaunchName" = pull_detail("Launch Name", my_details),
+                          "DeploymentNumber" = pull_detail("Deployment Number",
+                                                           my_details),
+                          "LaunchTime" = pull_detail("Launch Time",
+                                                     my_details),
+                          "FirstSampleTime" = pull_detail("First Sample Time",
+                                                          my_details),
+                          "LastSampleTime" =  pull_detail("Last Sample Time",
+                                                          my_details))
+
   # Return list of objects
-  return(list('file_info' = my_file$file_info,
+  return(list('file_info' = file_info,
               'details' = my_details,
               'data_raw' = my_data))
 }
@@ -294,6 +312,14 @@ import_file <- function(my_file, datestamp_loc = 1, plotid_loc = 2,
                         "; ncol = ", file_info$col_n)))
 
   return(list("file_info" = file_info, "raw_file" = raw_file))
+}
+
+# Extract value form detail data frame
+pull_detail <- function(var, details_df){
+  x = (dplyr::select(details_df, Details, Value) |>
+         dplyr::filter(Details %in% var) |>
+         dplyr::slice(1))$Value
+  trimws(x)
 }
 
 #-- Internal data frames --
