@@ -3,27 +3,29 @@
 #' This function summarizes precipitation data from Onset event loggers
 #'     used in Onset tipping bucket precipitation gauges.
 #'
-#' @param my_data A data frame with four columns. Typically from
-#'     \code{\link{get_data}}. Columns must include the following:
+#' @param my_data A data frame with from \code{\link{import_hobo_2008}} or
+#'     \code{\link{import_hobo_2020}}. If not from these functions, the columns
+#'     must include the following:
 #'     \describe{
-#'         \item{\strong{Element}}{ The element the data represent. TEMP is
-#'             temperature, RH is relative humidity, and PRCP is precipitation.}
+#'         \item{\strong{Element}}{ The element the data represent. Onset
+#'             tipping bucket evnet loggers record an event when 0.254 mm of
+#'             precipitation tips the bucket.}
 #'         \item{\strong{PlotID}}{ The unique plot identification number (e.g.,
 #'             A03 or I06).}
-#'         \item{\strong{DateTime}}{ The date-time of the measurement.}
-#'         \item{\strong{Value}}{ The data value of the measurement recorded by
-#'             the data logger.}
+#'         \item{\strong{DateTime}}{ The date-time of the precipitation event}
+#'         \item{\strong{Value}}{ Event data value recorded by the data logger.}
 #'     }
 #'
 #' @details
 #' This function summarizes precipitation data from Onset event loggers
-#'     used in Onset tipping bucket precipitation gauges. It uses a data frame
-#'     typically produced from \code{\link{get_data}} and returns a data frame of
-#'     hourly precipitation totals, number of tips per hour, and maximum tips
-#'     per minute.
+#'     used in Onset tipping bucket precipitation gauges. It uses the data_raw
+#'     data frame produced from \code{\link{import_hobo_2008}} or
+#'     \code{\link{import_hobo_2020}} and returns a data frame of hourly
+#'     precipitation totals, number of tips per hour, and maximum tips per
+#'     minute.
 #'
 #' @return
-#' This function returns a five column \code{\link[tibble:tibble]{tibble}}.
+#' This function returns a \code{\link[tibble:tibble]{tibble}}.
 #'
 #' \describe{
 #'     \item{\strong{DateTime}}{ The date and hour of the data. Hours are the from
@@ -38,7 +40,7 @@
 #'         intended to calculate intensity of precipitation event.}
 #' }
 #'
-#' @seealso \code{\link{get_data}}, \code{\link{import_wxdat}}
+#' @seealso \code{\link{import_hobo_2008}}, \code{\link{import_hobo_2020}}
 #'
 #' @export
 #'
@@ -50,8 +52,8 @@
 #' file_list <- list.files(path = system.file("extdata", package = "raindancer"),
 #'                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 #'
-#' # Read file into R
-#' my_prcp <- import_wxdat(file_list[5])$data_raw
+#' # Read data into R
+#' my_prcp <- import_hobo_2008(file_list[5])$data_raw
 #'
 #' # Process precipitation data
 #' raindance(my_prcp)

@@ -7,8 +7,9 @@
 #' @details
 #' This function processes precipitation, temperature, and relative humidity
 #'     data exported from Onset HOBOware. It uses the list created by
-#'     \code{\link{import_hobo_2008}} and then processes the data using
-#'     \code{\link{raindance}} or \code{\link{sundance}}.
+#'     \code{\link{import_hobo_2008}} or \code{\link{import_hobo_2020}} and then
+#'     processes the data using \code{\link{raindance}} or
+#'     \code{\link{sundance}}.
 #'
 #'     For precipitation data, this function strips the first 5 minutes and last
 #'     10 minutes of data to account for field procedures when downloading the
@@ -25,20 +26,16 @@
 #'     \item{\strong{file_info}}{This component is a vector that contains the
 #'         file name, the date stamp, plot ID, the number of lines to skip to
 #'         properly import the data, the number of columns of data in the
-#'         raw file, and the Elements measured. This component is the product of
-#'         \code{\link{import_file}}.}
-#'     \item{\strong{details}}{This component is a data frame of metadata from
-#'         \code{\link{get_details}}.}
-#'     \item{\strong{data_raw}}{This component is a data frame from
-#'         \code{\link{get_data}}.}
+#'         raw file, and the Elements measured.}
+#'     \item{\strong{details}}{This component is a data frame of metadata.}
+#'     \item{\strong{data_raw}}{This component is a data frame.}
 #'     \item{\strong{data}}{This component is a data frame of summarized data
 #'         from \code{\link{raindance}} or \code{\link{sundance}}.}
-#'     \item{\strong{raw_file}}{The raw file that was loaded into R using
-#'         \code{\link{import_file}}.}
+#'     \item{\strong{raw_file}}{The raw file that was loaded into R.}
 #' }
 #'
-#' @seealso \code{\link{import_wxdat}}, \code{\link{raindance}},
-#'     \code{\link{sundance}}
+#' @seealso \code{\link{import_hobo_2008}}, \code{\link{import_hobo_2020}},
+#'     \code{\link{raindance}}, \code{\link{sundance}}
 #'
 #' @export
 #'
@@ -51,13 +48,12 @@
 #'                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 #'
 #' # Precipitation data
-#' my_file <- import_wxdat(file_list[3])
+#' my_file <- import_hobo_2008(file_list[3])
 #' process_hobo(my_file)
 #'
 #' # Temperature and relative humidity data
-#' my_file <- import_wxdat(file_list[14])
+#' my_file <- import_hobo_2008(file_list[14])
 #' process_hobo(my_file)
-#'
 #' }
 #'
 process_hobo <- function(my_wxdat){

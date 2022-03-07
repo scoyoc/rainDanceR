@@ -1,38 +1,32 @@
-#' Process a *.csv file produced by Onset HOBOware
+#' Process a *.csv file produced by Onset HOBOware (2008-2019)
 #'
-#' This function combines \code{\link{import_file}}, \code{\link{get_data}}, and
-#'     \code{\link{get_details}} to process a comma delimited (*.csv) file
-#'     produced by HOBOware. It uses the file name or full path name to produce
-#'     a list with three components that contain the file information needed to
-#'     import the csv, the raw data, and associated metadata.
+#' This function imports a comma delimited (*.csv) file produced by Onset
+#'     HOBOware from Onset data loggers used in NPS Southeast Utah Group parks
+#'     from 2008 to 2019. It uses the file name or full path name to produce
+#'     a list with four components that contain the file information needed to
+#'     import the csv, metadata about the logger and sampling time, and the raw
+#'     data.
 #'
-#' @param my_file A character string of the file name. This can include full
+#' @param my_file A character string of the file name. This should include the
 #'     directory path.
 #'
 #' @details
 #' This function imports the data from a csv file into R and retuns a list
 #'     containing the data used to import the file, the metadata, and the
-#'     raw data. This function uses \code{\link{import_file}},
-#'     \code{\link{get_data}}, and \code{\link{get_details}} process the file.
+#'     raw data.
 #'
-#' @return This function returns a list with four (4) components.
+#' @return This function returns a list with three (3) components.
 #'
 #' \describe{
 #'     \item{\strong{file_info}}{This component is a vector that contains the
 #'         file name, the date stamp, plot ID, the number of lines to skip to
 #'         properly import the data, the number of columns of data in the
-#'         raw file, and the Elements measured. This comonent is the product of
-#'         \code{\link{import_file}}.}
-#'     \item{\strong{details}}{This component is a data frame of metadata from
-#'         \code{\link{get_details}}.}
-#'     \item{\strong{data_raw}}{This component is a data frame from
-#'         \code{\link{get_data}}.}
-#'     \item{\strong{raw_file}}{The raw file that was loaded into R using
-#'         \code{\link{import_file}}.}
+#'         raw file, and the Elements measured..}
+#'     \item{\strong{details}}{This component is a data frame of metadata.}
+#'     \item{\strong{data_raw}}{This component is a data frame.}
 #' }
 #'
-#' @seealso \code{\link{import_file}}, \code{\link{get_data}},
-#'     \code{\link{get_details}}
+#' @seealso \code{\link{import_hobo_2020}}
 #'
 #' @export
 #'
@@ -45,10 +39,10 @@
 #'                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 #'
 #' # Import data
-#' import_wxdat(file_list[10])
+#' import_hobo_2008(file_list[10])
 #' }
 #'
-import_wxdat <- function(my_file){
+import_hobo_2008 <- function(my_file){
   # my_file = file_list[12]
   #-- Import file
   my_file = import_file(my_file, datestamp_loc = 1, plotid_loc = 2,
@@ -66,8 +60,7 @@ import_wxdat <- function(my_file){
   # Return list of objects
   return(list('file_info' = my_file$file_info,
               'details' = my_details,
-              'data_raw' = my_data,
-              'raw_file' = my_file$raw_file))
+              'data_raw' = my_data))
 }
 
 #-- Internal functions --

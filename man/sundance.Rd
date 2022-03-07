@@ -7,11 +7,12 @@
 sundance(my_data)
 }
 \arguments{
-\item{my_data}{A data frame with four columns. Typically from
-\code{\link{get_data}}. Columns must include the following:
+\item{my_data}{A data frame with from \code{\link{import_hobo_2008}} or
+\code{\link{import_hobo_2020}}. If not from these functions, the columns
+must include the following:
 \describe{
 \item{\strong{Element}}{ The element the data represent. TEMP is
-temperature, RH is relative humidity, and PRCP is precipitation.}
+temperature or RH is relative humidity.}
 \item{\strong{PlotID}}{ The unique plot identification number (e.g.,
 A03 or I06).}
 \item{\strong{DateTime}}{ The date-time of the measurement.}
@@ -21,7 +22,7 @@ the data logger.}
 }}
 }
 \value{
-This function returns a nine (9) column \code{\link[tibble:tibble]{tibble}}.
+This function returns a \code{\link[tibble:tibble]{tibble}}.
 
 \describe{
 \item{\strong{PlotID}}{ The unique ID number for the long-term monitoring
@@ -37,12 +38,14 @@ plot.}
 }
 }
 \description{
-This function summarizes temperature data from Onset loggers.
+This function summarizes temperature and relative humidity data from Onset
+data loggers.
 }
 \details{
-This function summarizes temperature data from Onset loggers. It
-uses a list produced from \code{\link{import_wxdat}} and returns a data
-frame of summarized temperature data.
+This function summarizes temperature and relative humidity data from Onset
+loggers. It uses the data_raw data frame produced from
+\code{\link{import_hobo_2008}} ro \code{\link{import_hobo_2020}} and
+returns a data frame of summarized temperature or relative humidity data.
 }
 \examples{
 \dontrun{
@@ -53,12 +56,12 @@ file_list <- list.files(path = system.file("extdata", package = "raindancer"),
                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 
 # Read file into R
-my_temp <- import_wxdat(file_list[10])$data_raw
+my_temp <- import_hobo_2008(file_list[10])$data_raw
 
 # Process precipitation data
 sundance(my_temp)
 }
 }
 \seealso{
-\code{\link{get_data}}, \code{\link{import_wxdat}}
+\code{\link{import_hobo_2008}}, \code{\link{import_hobo_2020}}
 }
