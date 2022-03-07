@@ -47,7 +47,7 @@
 #'                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 #'
 #' # Import data
-#' import_hobo_2008(file_list[10])
+#' import_hobo_2020(file_list[11])
 #' }
 #'
 import_hobo_2020 <- function(my_file, datestamp_loc = 1, plotid_loc = 2,

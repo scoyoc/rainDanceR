@@ -44,7 +44,7 @@ file_list <- list.files(path = system.file("extdata", package = "raindancer"),
                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 
 # Import data
-import_hobo_2008(file_list[10])
+import_hobo_2008(file_list[1])
 }
 
 }

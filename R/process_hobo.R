@@ -20,7 +20,7 @@
 #'     to determine if the tipping bucket is triggered before downloading the
 #'     data, so the last 10 minutes of every file is stripped before processing.
 #'
-#' @return This function returns a five (5) object list.
+#' @return This function returns a four (4) object list.
 #'
 #' \describe{
 #'     \item{\strong{file_info}}{This component is a vector that contains the
@@ -31,7 +31,6 @@
 #'     \item{\strong{data_raw}}{This component is a data frame.}
 #'     \item{\strong{data}}{This component is a data frame of summarized data
 #'         from \code{\link{raindance}} or \code{\link{sundance}}.}
-#'     \item{\strong{raw_file}}{The raw file that was loaded into R.}
 #' }
 #'
 #' @seealso \code{\link{import_hobo_2008}}, \code{\link{import_hobo_2020}},
@@ -48,11 +47,11 @@
 #'                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 #'
 #' # Precipitation data
-#' my_file <- import_hobo_2008(file_list[3])
+#' my_file <- import_hobo_2008(file_list[5])
 #' process_hobo(my_file)
 #'
 #' # Temperature and relative humidity data
-#' my_file <- import_hobo_2008(file_list[14])
+#' my_file <- import_hobo_2020(file_list[12])
 #' process_hobo(my_file)
 #' }
 #'
@@ -77,6 +76,5 @@ process_hobo <- function(my_wxdat){
   return(list(file_info = my_wxdat$file_info,
               details = my_wxdat$details,
               data_raw = my_wxdat$data_raw,
-              data = dat,
-              raw_file = my_wxdat$raw_file))
+              data = dat))
 }

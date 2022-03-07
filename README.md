@@ -39,7 +39,11 @@ file_list <- list.files(path = system.file("extdata", package = "raindancer"),
                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 
 # Import file and summarize data
-my_file <- file_list[1]    # Select file
-import_hobo_2008(my_file) |>   # Import file into R
-  process_hobo_2008()           # Summarize data
+my_file <- file_list[1]        # Select file
+import_hobo_2008(my_file) |>   # Import data from logger used from 2008 to 2019
+  process_hobo_2008()          # Summarize data
+  
+my_file <- file_list[10]       # Select file
+import_hobo_2020(my_file) |>   # Import data from logger used from 2020 to present
+  process_hobo_2008()          # Summarize data
 ```

@@ -55,11 +55,13 @@ library("raindancer")
 file_list <- list.files(path = system.file("extdata", package = "raindancer"),
                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 
-# Read file into R
-my_temp <- import_hobo_2008(file_list[10])$data_raw
-
-# Process precipitation data
+# Temperature data
+my_temp <- import_hobo_2008(file_list[4])$data_raw
 sundance(my_temp)
+
+# Relative humidity data
+my_rh <- import_hobo_2020(file_list[10])$data_raw
+sundance(my_rh)
 }
 }
 \seealso{

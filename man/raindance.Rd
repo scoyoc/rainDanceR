@@ -57,7 +57,7 @@ file_list <- list.files(path = system.file("extdata", package = "raindancer"),
                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 
 # Read data into R
-my_prcp <- import_hobo_2008(file_list[5])$data_raw
+my_prcp <- import_hobo_2008(file_list[3])$data_raw
 
 # Process precipitation data
 raindance(my_prcp)
