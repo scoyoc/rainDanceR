@@ -40,6 +40,6 @@ file_list <- list.files(path = system.file("extdata", package = "raindancer"),
 
 # Import file and summarize data
 my_file <- file_list[1]    # Select file
-import_wxdat(my_file) |>   # Import file into R
-  process_hobo()           # Summarize data
+import_hobo_2008(my_file) |>   # Import file into R
+  process_hobo_2008()           # Summarize data
 ```

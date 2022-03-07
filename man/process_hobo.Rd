@@ -7,7 +7,7 @@
 process_hobo(my_wxdat)
 }
 \arguments{
-\item{my_wxdat}{List from \code{\link{import_wxdat}}.}
+\item{my_wxdat}{List from \code{\link{import_hobo_2008}}.}
 }
 \value{
 This function returns a five (5) object list.
@@ -34,7 +34,7 @@ This function processes data from Onset HOBOware.
 \details{
 This function processes precipitation, temperature, and relative humidity
 data exported from Onset HOBOware. It uses the list created by
-\code{\link{import_wxdat}} and then processes the data using
+\code{\link{import_hobo_2008}} and then processes the data using
 \code{\link{raindance}} or \code{\link{sundance}}.\preformatted{For precipitation data, this function strips the first 5 minutes and last
 10 minutes of data to account for field procedures when downloading the
 event logger. It is common practice to trigger an event before

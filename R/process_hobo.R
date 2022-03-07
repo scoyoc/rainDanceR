@@ -2,12 +2,12 @@
 #'
 #' This function processes data from Onset HOBOware.
 #'
-#' @param my_wxdat List from \code{\link{import_wxdat}}.
+#' @param my_wxdat List from \code{\link{import_hobo_2008}}.
 #'
 #' @details
 #' This function processes precipitation, temperature, and relative humidity
 #'     data exported from Onset HOBOware. It uses the list created by
-#'     \code{\link{import_wxdat}} and then processes the data using
+#'     \code{\link{import_hobo_2008}} and then processes the data using
 #'     \code{\link{raindance}} or \code{\link{sundance}}.
 #'
 #'     For precipitation data, this function strips the first 5 minutes and last
@@ -61,9 +61,6 @@
 #' }
 #'
 process_hobo <- function(my_wxdat){
-  # my_wxdat = import_wxdat(file_list[3])
-  # my_wxdat = import_wxdat(file_list[10])
-
   if(stringr::str_detect(my_wxdat$file_info$Element, "PRCP")){
     # Determine if first 5-min need to be stripped
     launch_time = dplyr::filter(my_wxdat$details, Details == "Launch Time")
@@ -77,7 +74,7 @@ process_hobo <- function(my_wxdat){
       }
     # Strip last 10 minues
     dat <- dplyr::filter(dat, DateTime < max(DateTime, na.rm = T) - (10*60))
-    # Run raindance
+    # Run raindance.R
     dat <- raindance(dat)
     } else(dat <- sundance(my_wxdat$data_raw))
 
