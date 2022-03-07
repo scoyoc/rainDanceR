@@ -143,7 +143,7 @@ import_hobo_2020 <- function(my_file, datestamp_loc = 1, plotid_loc = 2,
         dplyr::distinct()
 
 
-          # Extract file info
+      # Extract file info
       file_info <- data.frame("FileName" = basename(my_file),
                               "PlotID" = PlotID,
                               "Element" = my_units$Element,
