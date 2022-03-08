@@ -8,7 +8,7 @@ raindance(my_data)
 }
 \arguments{
 \item{my_data}{A data frame with from \code{\link{import_hobo_2008}} or
-\code{\link{import_hobo_2020}}. If not from these functions, the columns
+\code{\link{import_hobo}}. If not from these functions, the columns
 must include the following:
 \describe{
 \item{\strong{Element}}{ The element the data represent. Onset
@@ -44,7 +44,7 @@ used in Onset tipping bucket precipitation gauges.
 This function summarizes precipitation data from Onset event loggers
 used in Onset tipping bucket precipitation gauges. It uses the data_raw
 data frame produced from \code{\link{import_hobo_2008}} or
-\code{\link{import_hobo_2020}} and returns a data frame of hourly
+\code{\link{import_hobo}} and returns a data frame of hourly
 precipitation totals, number of tips per hour, and maximum tips per
 minute.
 }
@@ -65,5 +65,5 @@ raindance(my_prcp)
 
 }
 \seealso{
-\code{\link{import_hobo_2008}}, \code{\link{import_hobo_2020}}
+\code{\link{import_hobo_2008}}, \code{\link{import_hobo}}
 }

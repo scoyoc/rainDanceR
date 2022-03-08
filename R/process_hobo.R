@@ -2,12 +2,13 @@
 #'
 #' This function processes data from Onset HOBOware.
 #'
-#' @param my_wxdat List from \code{\link{import_hobo_2008}}.
+#' @param my_wxdat List from \code{\link{import_hobo_2008}} or
+#'     \code{\link{import_hobo}}.
 #'
 #' @details
 #' This function processes precipitation, temperature, and relative humidity
 #'     data exported from Onset HOBOware. It uses the list created by
-#'     \code{\link{import_hobo_2008}} or \code{\link{import_hobo_2020}} and then
+#'     \code{\link{import_hobo_2008}} or \code{\link{import_hobo}} and then
 #'     processes the data using \code{\link{raindance}} or
 #'     \code{\link{sundance}}.
 #'
@@ -33,7 +34,7 @@
 #'         from \code{\link{raindance}} or \code{\link{sundance}}.}
 #' }
 #'
-#' @seealso \code{\link{import_hobo_2008}}, \code{\link{import_hobo_2020}},
+#' @seealso \code{\link{import_hobo_2008}}, \code{\link{import_hobo}},
 #'     \code{\link{raindance}}, \code{\link{sundance}}
 #'
 #' @export
@@ -51,7 +52,7 @@
 #' process_hobo(my_file)
 #'
 #' # Temperature and relative humidity data
-#' my_file <- import_hobo_2020(file_list[12])
+#' my_file <- import_hobo(file_list[12])
 #' process_hobo(my_file)
 #' }
 #'

@@ -1,7 +1,7 @@
 #' Import Onset Hobo data into Access Database
 #'
-#' This function processes data from Onset HOBOware and exports them to a
-#'     Microsoft Access Database.
+#' This function processes data from Onset HOBOware used from 2008-2019 and
+#'     exports them to a Microsoft Access Database.
 #'
 #' @param my_file A character string of the complete file path of your *.csv
 #'     file.
@@ -16,7 +16,14 @@
 #'     table.
 #' @param verbose Logical. Default is TRUE. If FALSE, messages are suppressed.
 #'
+#' @details
+#'
+#'
 #' @return Data is written to database tables. Objects are not returned.
+#'
+#' @seealso \code{\link{import_hobo_2008}}, \code{\link{raindance}},
+#'     \code{\link{sundance}}, \code{\link{process_hobo}},
+#'     \code{\link{export_hobo}}
 #'
 #' @export
 #'
@@ -35,14 +42,14 @@
 #' my_file <- file_list[10]
 #'
 #' # Process file and save to database
-#' import_hobo_2008_to_db(my_file = my_file, my_db = my_db,
-#'                        import_table = "tbl_import_log",
-#'                        raw_data_table = "tbl_raw_data",
-#'                        prcp_data_table = "tbl_prcp_data",
-#'                        temp_rh_data_table = "tbl_temp_rh_data",
-#'                        details_table = "tbl_logger_details")
+#' export_hobo_2008(my_file = my_file, my_db = my_db,
+#'                  import_table = "tbl_import_log",
+#'                  raw_data_table = "tbl_raw_data",
+#'                  prcp_data_table = "tbl_prcp_data",
+#'                  temp_rh_data_table = "tbl_temp_rh_data",
+#'                  details_table = "tbl_logger_details")
 #' }
-import_hobo_2008_to_db <- function(my_file, my_db, import_table, raw_data_table,
+export_hobo_2008 <- function(my_file, my_db, import_table, raw_data_table,
                               prcp_data_table, temp_rh_data_table,
                               details_table, verbose = TRUE){
 

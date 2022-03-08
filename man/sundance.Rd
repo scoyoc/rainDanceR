@@ -8,7 +8,7 @@ sundance(my_data)
 }
 \arguments{
 \item{my_data}{A data frame with from \code{\link{import_hobo_2008}} or
-\code{\link{import_hobo_2020}}. If not from these functions, the columns
+\code{\link{import_hobo}}. If not from these functions, the columns
 must include the following:
 \describe{
 \item{\strong{Element}}{ The element the data represent. TEMP is
@@ -44,7 +44,7 @@ data loggers.
 \details{
 This function summarizes temperature and relative humidity data from Onset
 loggers. It uses the data_raw data frame produced from
-\code{\link{import_hobo_2008}} ro \code{\link{import_hobo_2020}} and
+\code{\link{import_hobo_2008}} ro \code{\link{import_hobo}} and
 returns a data frame of summarized temperature or relative humidity data.
 }
 \examples{
@@ -60,10 +60,10 @@ my_temp <- import_hobo_2008(file_list[4])$data_raw
 sundance(my_temp)
 
 # Relative humidity data
-my_rh <- import_hobo_2020(file_list[10])$data_raw
+my_rh <- import_hobo(file_list[10])$data_raw
 sundance(my_rh)
 }
 }
 \seealso{
-\code{\link{import_hobo_2008}}, \code{\link{import_hobo_2020}}
+\code{\link{import_hobo_2008}}, \code{\link{import_hobo}}
 }

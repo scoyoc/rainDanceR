@@ -50,7 +50,7 @@
 #' import_hobo_2020(file_list[11])
 #' }
 #'
-import_hobo_2020 <- function(my_file, datestamp_loc = 1, plotid_loc = 2,
+import_hobo <- function(my_file, datestamp_loc = 1, plotid_loc = 2,
                              plotid_s = 1, plotid_e = 3){
   #Testing: my_file = file_list[10]
 

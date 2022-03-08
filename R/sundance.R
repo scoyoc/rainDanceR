@@ -4,7 +4,7 @@
 #'     data loggers.
 #'
 #' @param my_data A data frame with from \code{\link{import_hobo_2008}} or
-#'     \code{\link{import_hobo_2020}}. If not from these functions, the columns
+#'     \code{\link{import_hobo}}. If not from these functions, the columns
 #'     must include the following:
 #'     \describe{
 #'         \item{\strong{Element}}{ The element the data represent. TEMP is
@@ -20,7 +20,7 @@
 #' @details
 #' This function summarizes temperature and relative humidity data from Onset
 #'     loggers. It uses the data_raw data frame produced from
-#'     \code{\link{import_hobo_2008}} ro \code{\link{import_hobo_2020}} and
+#'     \code{\link{import_hobo_2008}} ro \code{\link{import_hobo}} and
 #'     returns a data frame of summarized temperature or relative humidity data.
 #'
 #' @return
@@ -39,7 +39,7 @@
 #'     \item{\strong{Units}}{ The unit of the measurement.}
 #' }
 #'
-#' @seealso \code{\link{import_hobo_2008}}, \code{\link{import_hobo_2020}}
+#' @seealso \code{\link{import_hobo_2008}}, \code{\link{import_hobo}}
 #'
 #' @export
 #'
@@ -56,7 +56,7 @@
 #' sundance(my_temp)
 #'
 #' # Relative humidity data
-#' my_rh <- import_hobo_2020(file_list[10])$data_raw
+#' my_rh <- import_hobo(file_list[10])$data_raw
 #' sundance(my_rh)
 #' }
 sundance <- function(my_data){

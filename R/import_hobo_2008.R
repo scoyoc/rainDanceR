@@ -11,7 +11,7 @@
 #'     directory path.
 #'
 #' @details
-#' This function imports the data from a csv file into R and retuns a list
+#' This function imports the data from a csv file into R and returns a list
 #'     containing the data used to import the file, the metadata, and the
 #'     raw data.
 #'
@@ -26,7 +26,7 @@
 #'     \item{\strong{data_raw}}{This component is a data frame.}
 #' }
 #'
-#' @seealso \code{\link{import_hobo_2020}}
+#' @seealso \code{\link{import_hobo}}
 #'
 #' @export
 #'

@@ -31,7 +31,7 @@ import the csv, metadata about the logger and sampling time, and the raw
 data.
 }
 \details{
-This function imports the data from a csv file into R and retuns a list
+This function imports the data from a csv file into R and returns a list
 containing the data used to import the file, the metadata, and the
 raw data.
 }
@@ -49,5 +49,5 @@ import_hobo_2008(file_list[1])
 
 }
 \seealso{
-\code{\link{import_hobo_2020}}
+\code{\link{import_hobo}}
 }
