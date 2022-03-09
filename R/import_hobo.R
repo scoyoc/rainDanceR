@@ -88,7 +88,9 @@ import_hobo <- function(my_file, datestamp_loc = 1, plotid_loc = 2,
                     "PlotID" = PlotID,
                     "DateTime" = lubridate::parse_date_time(DateTime,
                                                             c("%m%d%y %H%M%S",
-                                                              "%y%m%d %H%M%S")),
+                                                              "%y%m%d %H%M%S",
+                                                              "%m%d%y %H%M",
+                                                              "%y%m%d %H%M")),
                     "Element" = my_units$Element,
                     "Units" = my_units$Unit) |>
       dplyr::select(FileName, PlotID, DateTime, Element, Value, Units) |>
@@ -171,7 +173,9 @@ import_hobo <- function(my_file, datestamp_loc = 1, plotid_loc = 2,
                       "PlotID" = PlotID,
                       "DateTime" = lubridate::parse_date_time(DateTime,
                                                               c("%m%d%y %H%M%S",
-                                                                "%y%m%d %H%M%S")),
+                                                                "%y%m%d %H%M%S",
+                                                                "%m%d%y %H%M",
+                                                                "%y%m%d %H%M")),
                       "Element" = my_units$Element,
                       "Units" = my_units$Units) |>
         dplyr::select(FileName, PlotID, DateTime, Element, Value, Units)
@@ -189,7 +193,9 @@ import_hobo <- function(my_file, datestamp_loc = 1, plotid_loc = 2,
                       "PlotID" = PlotID,
                       "DateTime" = lubridate::parse_date_time(DateTime,
                                                               c("%m%d%y %H%M%S",
-                                                                "%y%m%d %H%M%S"))) |>
+                                                                "%y%m%d %H%M%S",
+                                                                "%m%d%y %H%M",
+                                                                "%y%m%d %H%M"))) |>
         dplyr::left_join(my_units, by = "Element") |>
         dplyr::select(FileName, PlotID, DateTime, Element, Value, Units) |>
         dplyr::arrange(PlotID, DateTime, Element)
