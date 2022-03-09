@@ -91,7 +91,9 @@ get_data <- function(my_file){
   if(my_file$file_info$col_n != 10){
     dat = my_file$raw_file |>
       dplyr::select(DateTime, Value) |>
-      dplyr::mutate('DateTime' = lubridate::mdy_hms(DateTime),
+      dplyr::mutate('DateTime' = lubridate::parse_date_time(DateTime,
+                                                            c("%m%d%y %H%M%S",
+                                                              "%y%m%d %H%M%S")),
                     'FileName' = my_file$file_info$FileName,
                     'PlotID' = my_file$file_info$PlotID,
                     'Element' = my_logger$Element,
@@ -103,7 +105,9 @@ get_data <- function(my_file){
       dplyr::select(DateTime, Temp, RH) |>
       dplyr::rename('TEMP' = Temp) |>
       tidyr::gather(key = 'Element', value = 'Value', TEMP:RH) |>
-      dplyr::mutate('DateTime' = lubridate::mdy_hms(DateTime),
+      dplyr::mutate('DateTime' = lubridate::parse_date_time(DateTime,
+                                                            c("%m%d%y %H%M%S",
+                                                              "%y%m%d %H%M%S")),
                     'FileName' = my_file$file_info$FileName,
                     'PlotID' = my_file$file_info$PlotID,
                     'Units' = ifelse(Element == "RH", "%RH", my_logger$Units)) |>
