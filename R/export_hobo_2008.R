@@ -14,16 +14,22 @@
 #'     temperature and relative humidity data table.
 #' @param details_table A character string of the name of the logger details
 #'     table.
-#' @param verbose Logical. Default is TRUE. If FALSE, messages are suppressed.
+#' @param verbose Logical. Show messages showing progress. Default is TRUE. If
+#'     FALSE, messages are suppressed.
+#' @param view Logical. Prints data to console before writing them to the
+#'     database. Default is TRUE. If FALSE, data are not printed and there is no
+#'     prompt before writing data to the database.
 #'
-#' @details
-#'
+#' @details This function uses \code{\link{import_hobo}} to read Hobo data in into R and
+#'    then uses \code{\link{process_hobo}} to summarise the data. The processed
+#'    data are then exported to a connected database.
 #'
 #' @return Data is written to database tables. Objects are not returned.
 #'
 #' @seealso \code{\link{import_hobo_2008}}, \code{\link{raindance}},
 #'     \code{\link{sundance}}, \code{\link{process_hobo}},
-#'     \code{\link{export_hobo}}
+#'     \code{\link{export_hobo}}, \code{\link[RODBC]{sqlSave}},
+#'     \code{\link[RODBC]{odbcConnectAccess2007}}
 #'
 #' @export
 #'
@@ -51,7 +57,7 @@
 #' }
 export_hobo_2008 <- function(my_file, my_db, import_table, raw_data_table,
                               prcp_data_table, temp_rh_data_table,
-                              details_table, verbose = TRUE){
+                              details_table, verbose = TRUE, view = TRUE){
 
   # Check if file has been processed
   if(import_table %in% RODBC::sqlTables(my_db)$TABLE_NAME){
@@ -62,8 +68,11 @@ export_hobo_2008 <- function(my_file, my_db, import_table, raw_data_table,
 
   if(verbose == TRUE) message(glue::glue("Processing {basename(my_file)}"))
   #-- Process hobo file --
-  dat <- import_hobo_2008(my_file) |>
-      process_hobo()
+  dat <- import_hobo_2008(my_file) |> process_hobo()
+  if(view == TRUE){
+    print(dat)
+    readline(prompt = "Press [enter] to export data to database.")
+    }
 
   #-- Import Record --
   # Prep data

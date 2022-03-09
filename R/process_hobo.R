@@ -57,10 +57,13 @@
 #' }
 #'
 process_hobo <- function(my_wxdat){
-  if(stringr::str_detect(my_wxdat$file_info$Element, "PRCP")){
+  # my_wxdat = import_hobo(file_list[10]) ; 20200416_A08_TEMP_RH.csv
+  if(TRUE %in% stringr::str_detect(my_wxdat$file_info$Element, "PRCP")){
     # Determine if first 5-min need to be stripped
     launch_time = dplyr::filter(my_wxdat$details, Details == "Launch Time")
-    first_sample = dplyr::filter(my_wxdat$details, Details == "First Sample Time")
+    first_sample = dplyr::filter(my_wxdat$details,
+                                 Details == "First Sample Time") |>
+      dplyr::slice(1)
 
     dat <- if(launch_time$Value == first_sample$Value){
       dat <- dplyr::filter(my_wxdat$data_raw, Element == "PRCP" &

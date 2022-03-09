@@ -12,7 +12,8 @@ export_hobo_2008(
   prcp_data_table,
   temp_rh_data_table,
   details_table,
-  verbose = TRUE
+  verbose = TRUE,
+  view = TRUE
 )
 }
 \arguments{
@@ -34,7 +35,12 @@ temperature and relative humidity data table.}
 \item{details_table}{A character string of the name of the logger details
 table.}
 
-\item{verbose}{Logical. Default is TRUE. If FALSE, messages are suppressed.}
+\item{verbose}{Logical. Show messages showing progress. Default is TRUE. If
+FALSE, messages are suppressed.}
+
+\item{view}{Logical. Prints data to console before writing them to the
+database. Default is TRUE. If FALSE, data are not printed and there is no
+prompt before writing data to the database.}
 }
 \value{
 Data is written to database tables. Objects are not returned.
@@ -44,7 +50,9 @@ This function processes data from Onset HOBOware used from 2008-2019 and
 exports them to a Microsoft Access Database.
 }
 \details{
-
+This function uses \code{\link{import_hobo}} to read Hobo data in into R and
+then uses \code{\link{process_hobo}} to summarise the data. The processed
+data are then exported to a connected database.
 }
 \examples{
 \dontrun{
@@ -72,5 +80,6 @@ export_hobo_2008(my_file = my_file, my_db = my_db,
 \seealso{
 \code{\link{import_hobo_2008}}, \code{\link{raindance}},
 \code{\link{sundance}}, \code{\link{process_hobo}},
-\code{\link{export_hobo}}
+\code{\link{export_hobo}}, \code{\link[RODBC]{sqlSave}},
+\code{\link[RODBC]{odbcConnectAccess2007}}
 }

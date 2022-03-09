@@ -1,7 +1,7 @@
 #' Import Onset Hobo data into Access Database
 #'
-#' This function processes data from Onset HOBOware used from 202 to present and
-#'     exports them to a Microsoft Access Database.
+#' This function processes data from Onset HOBOware used from 2020 to present
+#'     and exports them to a Microsoft Access Database.
 #'
 #' @param my_file A character string of the complete file path of your *.csv
 #'     file.
@@ -14,10 +14,15 @@
 #'     temperature and relative humidity data table.
 #' @param details_table A character string of the name of the logger details
 #'     table.
-#' @param verbose Logical. Default is TRUE. If FALSE, messages are suppressed.
+#' @param verbose Logical. Show messages showing progress. Default is TRUE. If
+#'     FALSE, messages are suppressed.
+#' @param view Logical. Prints data to console before writing them to the
+#'     database. Default is TRUE. If FALSE, data are not printed and there is no
+#'     prompt before writing data to the database.
 #'
-#' @details
-#'
+#' @details This function uses \code{\link{import_hobo}} to read Hobo data in into R and
+#'    then uses \code{\link{process_hobo}} to summarise the data. The processed
+#'    data are then exported to a connected database.
 #'
 #' @return Data is written to database tables. Objects are not returned.
 #'
@@ -25,7 +30,8 @@
 #'
 #' @seealso \code{\link{import_hobo}}, \code{\link{raindance}},
 #'     \code{\link{sundance}}, \code{\link{process_hobo}},
-#'     \code{\link{export_hobo_2008}}
+#'     \code{\link{export_hobo_2008}}, \code{\link[RODBC]{sqlSave}},
+#'     \code{\link[RODBC]{odbcConnectAccess2007}}
 #'
 #' @examples
 #' \dontrun{
@@ -51,7 +57,9 @@
 #' }
 export_hobo <- function(my_file, my_db, import_table, raw_data_table,
                               prcp_data_table, temp_rh_data_table,
-                              details_table, verbose = TRUE){
+                              details_table, verbose = TRUE, view = TRUE){
+
+  # my_file = file_list[2]
 
   # Check if file has been processed
   if(import_table %in% RODBC::sqlTables(my_db)$TABLE_NAME){
@@ -62,8 +70,11 @@ export_hobo <- function(my_file, my_db, import_table, raw_data_table,
 
   if(verbose == TRUE) message(glue::glue("Processing {basename(my_file)}"))
   #-- Process hobo file --
-  dat <- import_hobo(my_file) |>
-      suppressWarnings(process_hobo())
+  dat <- import_hobo(my_file) |> process_hobo()
+  if(view == TRUE){
+    print(dat)
+    readline(prompt = "Press [enter] to export data to database.")
+  }
 
   #-- Import Record --
   # Prep data
@@ -91,8 +102,7 @@ export_hobo <- function(my_file, my_db, import_table, raw_data_table,
   if(verbose == TRUE) message("- Writing processed data to database")
   if(file_info$Element == "PRCP"){
     prcp_dat <- dat$data |>
-      dplyr::mutate("PlotID" = file_info$PlotID,
-                    "DateTime" = as.character(DateTime,
+      dplyr::mutate("DateTime" = as.character(DateTime,
                                               format = "%Y-%m-%d %H:%M:%S"))
     # Export to DB
     if(!prcp_data_table %in% RODBC::sqlTables(my_db)$TABLE_NAME){
@@ -106,8 +116,7 @@ export_hobo <- function(my_file, my_db, import_table, raw_data_table,
         })
     } else({
       tr_dat <- dat$data |>
-        dplyr::mutate("PlotID" = file_info$PlotID,
-                      "Date" = as.character(Date,
+        dplyr::mutate("Date" = as.character(Date,
                                             format = "%Y-%m-%d %H:%M:%S"))
       # Export to DB
       if(!temp_rh_data_table %in% RODBC::sqlTables(my_db)$TABLE_NAME){
