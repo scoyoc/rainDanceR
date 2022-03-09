@@ -63,7 +63,7 @@ export_hobo <- function(my_file, my_db, import_table, raw_data_table,
   if(verbose == TRUE) message(glue::glue("Processing {basename(my_file)}"))
   #-- Process hobo file --
   dat <- import_hobo(my_file) |>
-      process_hobo()
+      suppressWarnings(process_hobo())
 
   #-- Import Record --
   # Prep data
