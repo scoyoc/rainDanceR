@@ -87,70 +87,62 @@ export_hobo <- function(my_file, my_db, import_table, raw_data_table,
     dplyr::mutate("DateTime" = as.character(DateTime))
   # Export to DB
   if(verbose == TRUE) message("- Writing raw data to database")
-  if(!raw_data_table %in% RODBC::sqlTables(my_db)$TABLE_NAME){
-    RODBC::sqlSave(my_db, data_raw, tablename = raw_data_table,
-                   append = FALSE, rownames = FALSE, colnames = FALSE,
-                   safer = FALSE, addPK = TRUE, fast = TRUE)
-    } else(
-      RODBC::sqlSave(my_db, data_raw, tablename = raw_data_table,
-                     append = TRUE, rownames = FALSE, colnames = FALSE,
-                     addPK = TRUE, fast = TRUE)
-      )
+  export_table(my_db, my_df = data_raw, my_table = raw_data_table)
 
   #-- Data --
   # Prep data
   if(verbose == TRUE) message("- Writing processed data to database")
-  if(file_info$Element == "PRCP"){
+  if(TRUE %in% (file_info$Element == "PRCP")){
+    if(nrow(file_info) == 1){
     prcp_dat <- dat$data |>
       dplyr::mutate("DateTime" = as.character(DateTime,
                                               format = "%Y-%m-%d %H:%M:%S"))
     # Export to DB
-    if(!prcp_data_table %in% RODBC::sqlTables(my_db)$TABLE_NAME){
-      RODBC::sqlSave(my_db, prcp_dat, tablename = prcp_data_table,
-                     append = FALSE, rownames = FALSE, colnames = FALSE,
-                     safer = FALSE, addPK = TRUE, fast = TRUE)
-      } else({
-        RODBC::sqlSave(my_db, prcp_dat, tablename = prcp_data_table,
-                     append = TRUE, rownames = FALSE, colnames = FALSE,
-                     addPK = TRUE, fast = TRUE)
+    export_table(my_db, my_df = prcp_dat, my_table = prcp_data_table)
+
+    } else({
+      # PRCP Data
+      prcp_dat <- dat$data$prcp_dat |>
+        dplyr::mutate("DateTime" = as.character(DateTime,
+                                                format = "%Y-%m-%d %H:%M:%S"))
+      # Export to DB
+      export_table(my_db, my_df = prcp_dat, my_table = prcp_data_table)
+
+      # TEMP Data
+        temp_dat <- dat$data$temp_dat |>
+          dplyr::mutate("Date" = as.character(Date,
+                                              format = "%Y-%m-%d %H:%M:%S"))
+        # Export to DB
+        export_table(my_db, my_df = temp_dat, my_table = temp_rh_data_table)
+
         })
     } else({
-      tr_dat <- dat$data |>
-        dplyr::mutate("Date" = as.character(Date,
-                                            format = "%Y-%m-%d %H:%M:%S"))
-      # Export to DB
-      if(!temp_rh_data_table %in% RODBC::sqlTables(my_db)$TABLE_NAME){
-        RODBC::sqlSave(my_db, tr_dat, tablename = temp_rh_data_table,
-                       append = FALSE, rownames = FALSE, colnames = FALSE,
-                       safer = FALSE, addPK = TRUE, fast = TRUE)
-        } else({
-          RODBC::sqlSave(my_db, tr_dat, tablename = temp_rh_data_table,
-                       append = TRUE, rownames = FALSE, colnames = FALSE,
-                       addPK = TRUE, fast = TRUE)
-          })
-  })
+        tr_dat <- dat$data |>
+          dplyr::mutate("Date" = as.character(Date,
+                                              format = "%Y-%m-%d %H:%M:%S"))
+        # Export to DB
+        export_table(my_db, my_df = tr_dat, my_table = temp_rh_data_table)
+        })
 
   #-- Details --
   # Export to DB
   if(verbose == TRUE) message("- Writing logger details to database")
-  if(!details_table %in% RODBC::sqlTables(my_db)$TABLE_NAME){
-    RODBC::sqlSave(my_db, dat$details, tablename = details_table,
-                   append = FALSE, rownames = FALSE, colnames = FALSE,
-                   safer = FALSE, addPK = TRUE, fast = TRUE)
-    } else(
-      RODBC::sqlSave(my_db, dat$details, tablename = details_table,
-                     append = TRUE, rownames = FALSE, colnames = FALSE,
-                     addPK = TRUE, fast = TRUE)
-      )
+  export_table(my_db, my_df = dat$details, my_table = details_table)
 
   # Export Import Record to DB
   if(verbose == TRUE) message("- Writing import log to database")
-  if(!import_table %in% RODBC::sqlTables(my_db)$TABLE_NAME){
-    RODBC::sqlSave(my_db, file_info, tablename = import_table,
+  export_table(my_db, my_df = file_info, my_table = import_table)
+}
+
+export_table <- function(my_db, my_df, my_table){
+  # my_df = dat$file_info; my_table = "tblWxImportLog2"
+  if(my_table %in% RODBC::sqlTables(my_db)$my_table){
+    RODBC::sqlSave(my_db, my_df, tablename = my_table,
+                   append = TRUE, rownames = FALSE, colnames = FALSE,
+                   safer = TRUE, addPK = TRUE, fast = TRUE)
+  } else({
+    RODBC::sqlSave(my_db, my_df, tablename = my_table,
                    append = FALSE, rownames = FALSE, colnames = FALSE,
-                   safer = FALSE, addPK = TRUE, fast = TRUE)
-    } else(RODBC::sqlSave(my_db, file_info, tablename = import_table,
-                     append = TRUE, rownames = FALSE, colnames = FALSE,
-                     addPK = TRUE, fast = TRUE)
-      )
+                   safer = TRUE, addPK = TRUE, fast = TRUE)
+  })
 }

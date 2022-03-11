@@ -65,12 +65,13 @@ import_hobo <- function(my_file, datestamp_loc = 1, plotid_loc = 2,
     tidyr::gather(key = "Element", value = "Check") |>
     dplyr::filter(Check == TRUE) |>
     dplyr::select(-Check) |>
-    dplyr::mutate(Units = ifelse(Element == "TEMP", {
-      if(TRUE %in% stringr::str_detect(cols, "C")){ "C"
-        } else if(TRUE %in% stringr::str_detect(cols, "F")){ "F"
-          }
-      }, ifelse(Element == "RH", "%RH",
-                ifelse(Element == "PRCP", "Event", "Unknown"))))
+    dplyr::mutate(Units =  ifelse(Element == "PRCP", "Event",
+                                  ifelse(Element == "RH", "%RH",
+                                         ifelse(Element == "TEMP" &
+                                                  TRUE %in%
+                                                  stringr::str_detect(cols, "F"),
+                                                "F", "C") ))
+                                         )
 
   # Strip Datestamp and Plot ID from file name
   DateStamp = stringr::str_split(basename(my_file), "_")[[1]][datestamp_loc]
@@ -98,14 +99,15 @@ import_hobo <- function(my_file, datestamp_loc = 1, plotid_loc = 2,
 
     #-- Recreate file_info
     sn_string <- unlist(stringr::str_split(gsub(",", "", cols[3]), " "))
+    launchname <- as.character(read.table(my_file, header = F, nrows = 1)[3]) |>
+      stringr::str_replace("\"", "")
 
     file_info <- data.frame("FileName" = basename(my_file),
                             "PlotID" = PlotID,
                             "Element" = my_units$Element,
                             "Product" = NA,
                             "SerialNumber" = sn_string[5],
-                            "LaunchName" = read.table(my_file, header = F,
-                                                      nrows = 1)[3],
+                            "LaunchName" = launchname,
                             "DeploymentNumber" = NA,
                             "LaunchTime" = NA,
                             "FirstSampleTime" = as.character(min(dat_raw$DateTime,
@@ -188,14 +190,16 @@ import_hobo <- function(my_file, datestamp_loc = 1, plotid_loc = 2,
                         col_names = c("RID", "DateTime", my_col1, my_col2),
                         show_col_types = FALSE)
         )) |>
-        tidyr::gather(key = "Element", value = "Value", TEMP:RH) |>
+        tidyr::gather(key = "Element", value = "Value", 3:4) |>
         dplyr::mutate("FileName" = basename(my_file),
                       "PlotID" = PlotID,
                       "DateTime" = lubridate::parse_date_time(DateTime,
                                                               c("%m%d%y %H%M%S",
                                                                 "%y%m%d %H%M%S",
                                                                 "%m%d%y %H%M",
-                                                                "%y%m%d %H%M"))) |>
+                                                                "%y%m%d %H%M")),
+                      "Element" = ifelse(Element == "EVENT", "PRCP", Element)) |>
+        dplyr::filter(!is.na(Value)) |>
         dplyr::left_join(my_units, by = "Element") |>
         dplyr::select(FileName, PlotID, DateTime, Element, Value, Units) |>
         dplyr::arrange(PlotID, DateTime, Element)
@@ -232,8 +236,8 @@ pull_element <- function(my_list, cols){
 pull_units <- function(element, cols){
   unit <- if(element == "PRCP"){ "Event"
   } else if(element == "RH"){ "%RH"
-    } else if(TRUE %in% stringr::str_detect(cols, "C")){ "C"
-      } else if(TRUE %in% stringr::str_detect(cols, "F")){ "F"
+    } else if(TRUE %in% stringr::str_detect(cols, "F")){ "F"
+      } else if(TRUE %in% stringr::str_detect(cols, "C")){ "C"
         } else("NA")
   return(unit)
 }

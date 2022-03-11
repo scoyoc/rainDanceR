@@ -57,24 +57,51 @@
 #' }
 #'
 process_hobo <- function(my_wxdat){
-  # my_wxdat = import_hobo(file_list[10]) ; 20200416_A08_TEMP_RH.csv
+  # my_wxdat = import_hobo(file_list[1])
   if(TRUE %in% stringr::str_detect(my_wxdat$file_info$Element, "PRCP")){
-    # Determine if first 5-min need to be stripped
-    launch_time = dplyr::filter(my_wxdat$details, Details == "Launch Time")
-    first_sample = dplyr::filter(my_wxdat$details,
-                                 Details == "First Sample Time") |>
-      dplyr::slice(1)
+    if(nrow(my_wxdat$file_info) == 1){
+      launch_time <- my_wxdat$file_info$LaunchTime
+      first_sample <- my_wxdat$file_info$FirstSampleTime
+      # Determine if first 5-min need to be stripped
+      if(launch_time == first_sample | is.na(launch_time == first_sample)){
+        prcp_dat <- my_wxdat$data_raw |>
+          dplyr::filter(Element == "PRCP" &
+                          DateTime > min(DateTime, na.rm = T) + (5*60))
+        } else({
+          prcp_dat <- dplyr::filter(my_wxdat$data_raw, Element == "PRCP")
+          })
+      # Strip last 10 minutes & process data
+      dat <- dplyr::filter(prcp_dat,
+                           DateTime < max(DateTime, na.rm = T) - (10*60)) |>
+        raindance()
 
-    dat <- if(launch_time$Value == first_sample$Value){
-      dat <- dplyr::filter(my_wxdat$data_raw, Element == "PRCP" &
-                             DateTime > min(DateTime, na.rm = T) + (5*60))
-      } else {
-        dat <- dplyr::filter(my_wxdat$data_raw, Element == "PRCP")
-      }
-    # Strip last 10 minues
-    dat <- dplyr::filter(dat, DateTime < max(DateTime, na.rm = T) - (10*60))
-    # Run raindance.R
-    dat <- raindance(dat)
+    } else({
+      # Process PRPC Data
+      pcrp_info <- dplyr::filter(my_wxdat$file_info, Element == "PRCP")
+      launch_time <- pcrp_info$LaunchTime
+      first_sample <- pcrp_info$FirstSampleTime
+      # Determine if first 5-min need to be stripped
+      if(launch_time == first_sample | is.na(launch_time == first_sample)){
+        prcp_dat <- my_wxdat$data_raw |>
+          dplyr::filter(Element == "PRCP" &
+                          DateTime > min(DateTime, na.rm = T) + (5*60))
+        } else{
+          prcp_dat <- dplyr::filter(my_wxdat$data_raw, Element == "PRCP")
+        }
+      # Strip last 10 minutes & process data
+      prcp_dat <- dplyr::filter(prcp_dat,
+                                DateTime < max(DateTime, na.rm = T) - (10*60)) |>
+        raindance()
+
+      # Process TEMP Data
+      temp_dat <- my_wxdat$data_raw |>
+        dplyr::filter(Element == "TEMP") |>
+        sundance()
+
+      # Combine datasets
+      dat <- list(prcp_dat = prcp_dat,
+                  temp_dat = temp_dat)
+      })
     } else(dat <- sundance(my_wxdat$data_raw))
 
   return(list(file_info = my_wxdat$file_info,
