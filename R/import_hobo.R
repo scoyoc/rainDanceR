@@ -127,7 +127,7 @@ import_hobo <- function(my_file, datestamp_loc = 1, plotid_loc = 2,
       # Extract logger details
       if(length(cols) == 10){
         details <- suppressMessages(suppressWarnings(
-          readr::read_csv(my_file, skip = 3, col_select = 9:10,
+          readr::read_csv(my_file, skip = 3, col_select = 11:12,
                           show_col_types = FALSE)
         ))
       } else(details <- suppressMessages(suppressWarnings(
@@ -248,5 +248,3 @@ prcp_list <- c("Event", "EvenHD", "Event (PRCP)", "Events", "Rain", "Units",
                "units", "units (PRCP)", "EXT. LINE EVENT", "EVENT")
 # temp_list <- c("C", "°C", "C (TEMP)", "C (Temp_C)", "°C (TEMP)", "F", "°F")
 # rh_list <- "%RH"
-
-
