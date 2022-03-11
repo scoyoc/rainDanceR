@@ -198,7 +198,8 @@ import_hobo <- function(my_file, datestamp_loc = 1, plotid_loc = 2,
                                                                 "%y%m%d %H%M%S",
                                                                 "%m%d%y %H%M",
                                                                 "%y%m%d %H%M")),
-                      "Element" = ifelse(Element == "EVENT", "PRCP", Element)) |>
+                      "Element" = ifelse(Element %in% prcp_list, "PRCP",
+                                         Element)) |>
         dplyr::filter(!is.na(Value)) |>
         dplyr::left_join(my_units, by = "Element") |>
         dplyr::select(FileName, PlotID, DateTime, Element, Value, Units) |>
@@ -244,7 +245,7 @@ pull_units <- function(element, cols){
 
 # List of measurements
 prcp_list <- c("Event", "EvenHD", "Event (PRCP)", "Events", "Rain", "Units",
-               "units", "units (PRCP)")
+               "units", "units (PRCP)", "EXT. LINE EVENT")
 # temp_list <- c("C", "°C", "C (TEMP)", "C (Temp_C)", "°C (TEMP)", "F", "°F")
 # rh_list <- "%RH"
 
