@@ -52,7 +52,8 @@
 #'
 import_hobo <- function(my_file, datestamp_loc = 1, plotid_loc = 2,
                              plotid_s = 1, plotid_e = 3){
-  #Testing: my_file = file_list[10]
+  # Testing: my_file = file_list[10]
+  # Testing: datestamp_loc = 1; plotid_loc = 2; plotid_s = 1; plotid_e = 3
 
   # Find number of columns to determind how to process file
   cols = colnames(suppressMessages(suppressWarnings(
@@ -137,6 +138,13 @@ import_hobo <- function(my_file, datestamp_loc = 1, plotid_loc = 2,
         ))
       )
 
+      if(length(details[!is.na(details)]) == 2){
+        details <- suppressMessages(suppressWarnings(
+          readr::read_csv(my_file, skip = 3,
+                          col_select = (length(cols) + 1):(length(cols) + 2),
+                          show_col_types = FALSE)
+        ))
+      }
 
       names(details) <- c("Details", "Units")
       details <- details |>
