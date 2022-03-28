@@ -127,7 +127,7 @@ import_hobo <- function(my_file, datestamp_loc = 1, plotid_loc = 2,
       # Extract logger details
       if(length(cols) == 10){
         details <- suppressMessages(suppressWarnings(
-          readr::read_csv(my_file, skip = 3, col_select = 11:12,
+          readr::read_csv(my_file, skip = 3, col_select = 09:10,
                           show_col_types = FALSE)
         ))
       } else(details <- suppressMessages(suppressWarnings(
