@@ -138,7 +138,7 @@ import_hobo <- function(my_file, datestamp_loc = 1, plotid_loc = 2,
         ))
       )
 
-      if(length(details[!is.na(details)]) == 2){
+      if("Logged" %in% details[!is.na(details)]){
         details <- suppressMessages(suppressWarnings(
           readr::read_csv(my_file, skip = 3,
                           col_select = (length(cols) + 1):(length(cols) + 2),
