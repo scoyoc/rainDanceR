@@ -23,8 +23,8 @@ Imports:
     RODBC,
     stringr,
     tibble,
-    tidyr
+    tidyr,
+    utils
 Suggests: 
-    stringi,
     readr,
     janitor

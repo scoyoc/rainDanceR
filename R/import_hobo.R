@@ -100,7 +100,8 @@ import_hobo <- function(my_file, datestamp_loc = 1, plotid_loc = 2,
 
     #-- Recreate file_info
     sn_string <- unlist(stringr::str_split(gsub(",", "", cols[3]), " "))
-    launchname <- as.character(read.table(my_file, header = F, nrows = 1)[3]) |>
+    launchname <- as.character(utils::read.table(my_file, header = F,
+                                                 nrows = 1)[3]) |>
       stringr::str_replace("\"", "")
 
     file_info <- data.frame("FileName" = basename(my_file),

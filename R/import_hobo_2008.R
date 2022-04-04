@@ -226,43 +226,44 @@ import_file <- function(my_file, datestamp_loc = 1, plotid_loc = 2,
                                       plotid_s, plotid_e)),
     # Determine if the first row is to be skipped
     skip = ifelse(stringr::str_detect(suppressWarnings(
-      read.table(my_file, sep = ",", header = FALSE, nrows = 1, fill = TRUE))['V1'],
+      utils::read.table(my_file, sep = ",", header = FALSE, nrows = 1, fill = TRUE))['V1'],
       "Plot"),
       2, 1)
   ) |>
     # Count the number of columns of data
-    dplyr::mutate(col_n = ncol(suppressWarnings(read.table(my_file, sep = ",",
-                                                           header = FALSE,
-                                                           fill = TRUE,
-                                                           skip = skip))))
+    dplyr::mutate(col_n = ncol(suppressWarnings(
+      utils::read.table(my_file, sep = ",", header = FALSE, fill = TRUE,
+                        skip = skip))
+      ))
 
   #-- Import raw file
   if(file_info$col_n == 4){
     raw_file =  suppressWarnings(
-      read.table(my_file, sep = ",", header = FALSE, fill = TRUE,
-                 skip = file_info$skip,
-                 col.names = c("RID", "DateTime", "Value", "Details"))) |>
+      utils::read.table(my_file, sep = ",", header = FALSE, fill = TRUE,
+                        skip = file_info$skip,
+                        col.names = c("RID", "DateTime", "Value", "Details"))) |>
       tidyr::drop_na() |>
       tibble::as_tibble()
 
   } else if(file_info$col_n == 5){
     raw_file =  suppressWarnings(
-      read.table(my_file, sep = ",", header = FALSE, fill = TRUE,
-                 skip = file_info$skip,
-                 col.names = c("RID", "DateTime", "Value", "Details",
-                               "Units"))) |>
+      utils::read.table(my_file, sep = ",", header = FALSE, fill = TRUE,
+                        skip = file_info$skip,
+                        col.names = c("RID", "DateTime", "Value", "Details",
+                                      "Units"))) |>
       tidyr::drop_na() |>
       tibble::as_tibble()
 
   } else if(file_info$col_n == 6){
-    file_colnames <- names(read.table(my_file, sep = ",", header = TRUE,
-                                      skip = 1, comment.char = "$"))
+    file_colnames <- names(utils::read.table(my_file, sep = ",", header = TRUE,
+                                             skip = 1, comment.char = "$"))
     if("Time" %in% file_colnames){
       raw_file =  suppressWarnings(
-        read.table(my_file, sep = ",", header = FALSE, fill = TRUE, skip = 2,
-                   col.names = c("RID", "Date", "Time", "Value",
-                                 "Details", "Units"),
-                   comment.char = "$")
+        utils::read.table(my_file, sep = ",", header = FALSE, fill = TRUE,
+                          skip = 2,
+                          col.names = c("RID", "Date", "Time", "Value",
+                                        "Details", "Units"),
+                          comment.char = "$")
       ) |>
         tidyr::drop_na() |>
         dplyr::mutate(DateTime = paste(Date, Time, sep = " ")) |>
@@ -270,49 +271,50 @@ import_file <- function(my_file, datestamp_loc = 1, plotid_loc = 2,
         tibble::as_tibble()
     } else(
       raw_file =  suppressWarnings(
-        read.table(my_file, sep = ",", header = FALSE, fill = TRUE,
-                   skip = file_info$skip,
-                   col.names = c("RID", "DateTime", "Value", "EndOfFile",
-                                 "Details", "Units"))) |>
+        utils::read.table(my_file, sep = ",", header = FALSE, fill = TRUE,
+                          skip = file_info$skip,
+                          col.names = c("RID", "DateTime", "Value", "EndOfFile",
+                                        "Details", "Units"))) |>
         tidyr::drop_na() |>
         tibble::as_tibble()
     )
 
   } else if(file_info$col_n == 7){
     raw_file =  suppressWarnings(
-      read.table(my_file, sep = ",", header = FALSE, fill = TRUE,
-                 skip = file_info$skip,
-                 col.names = c("RID", "DateTime", "Value", "BadBattery",
-                               "EndOfFile", "Details", "Units"))) |>
+      utils::read.table(my_file, sep = ",", header = FALSE, fill = TRUE,
+                        skip = file_info$skip,
+                        col.names = c("RID", "DateTime", "Value", "BadBattery",
+                                      "EndOfFile", "Details", "Units"))) |>
       tidyr::drop_na() |>
       tibble::as_tibble()
 
   } else if(file_info$col_n == 8){
     raw_file =  suppressWarnings(
-      read.table(my_file, sep = ",", header = FALSE, fill = TRUE,
-                 skip = file_info$skip,
-                 col.names = c("RID", "DateTime", "Value","Attached",
-                               "Connected","EndFile", "Details","Units"))) |>
+      utils::read.table(my_file, sep = ",", header = FALSE, fill = TRUE,
+                        skip = file_info$skip,
+                        col.names = c("RID", "DateTime", "Value", "Attached",
+                                      "Connected", "EndFile", "Details",
+                                      "Units"))) |>
       tidyr::drop_na() |>
       tibble::as_tibble()
 
   }else if(file_info$col_n == 9){
     raw_file =  suppressWarnings(
-      read.table(my_file, sep = ",", header = FALSE, fill = TRUE,
-                 skip = file_info$skip,
-                 col.names = c("RID", "DateTime", "Value", "Detatched",
-                               "Attached", "Connected","EndFile", "Details",
-                               "Units"))) |>
+      utils::read.table(my_file, sep = ",", header = FALSE, fill = TRUE,
+                        skip = file_info$skip,
+                        col.names = c("RID", "DateTime", "Value", "Detatched",
+                                      "Attached", "Connected","EndFile",
+                                      "Details", "Units"))) |>
       tidyr::drop_na() |>
       tibble::as_tibble()
 
   } else if(file_info$col_n == 10){
     raw_file =  suppressWarnings(
-      read.table(my_file, sep = ",", header = FALSE, fill = TRUE,
-                 skip = file_info$skip,
-                 col.names = c("RID", "DateTime", "Temp", "RH",
-                               "Detatched", "Attached", "Connected",
-                               "EndFile", "Details","Units"))) |>
+      utils::read.table(my_file, sep = ",", header = FALSE, fill = TRUE,
+                        skip = file_info$skip,
+                        col.names = c("RID", "DateTime", "Temp", "RH",
+                                      "Detatched", "Attached", "Connected",
+                                      "EndFile", "Details","Units"))) |>
       tidyr::drop_na() |>
       tidyr::as_tibble()
 

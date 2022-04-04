@@ -35,7 +35,7 @@ This function returns a list with three (3) components.
 \item{\strong{file_info}}{This component is a vector that contains the
 file name, the date stamp, plot ID, the number of lines to skip to
 properly import the data, the number of columns of data in the
-raw file, and the Elements measured..}
+raw file, and the Elements measured.}
 \item{\strong{details}}{This component is a data frame of metadata.}
 \item{\strong{data_raw}}{This component is a data frame.}
 }
