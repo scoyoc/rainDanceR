@@ -1,0 +1,93 @@
+---
+title: "Import Onset HOBO Logger Data into R"
+author: "Matthew Van Scoyoc, National Park Service"
+date: "5 April, 2022"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{raindancer}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+# Introduction
+This R package imports data from Onset temperature, relative humidity, and precipitation (event) data loggers into R. 
+Data collected in the field using Onset loggers are exported to comma delimited (csv) files using the HOBOware application from Onset.
+This package imports the csv files into R and summarize the data.
+
+The structure of the csv files generated from HOBOware are highly vary wildly. 
+They can have anywhere from 4 to 10 columns and the logger details are usually in two "hidden" columns following the data. 
+This makes data from the temperature, relative humidity, and precipitation loggers very difficult to read into R. 
+Because loggers record several readings throughout the day, they are often not very useful in their raw format and need to be summarized once the data are read into R.
+This package can import data collected by Onset loggers used in the Southeast Utah Group (SEUG) national parks long-term vegetation monitoring program (LTVMP) and then summarize these data.
+This package was written to be used with the dataprocessR package, [https://github.com/scoyoc/dataprocessR](https://github.com/scoyoc/dataprocessR), that exports the raw and summarized data to the SEUG LTVMP database (a Microsoft Access database).
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+library("raindancer")
+```
+
+# Installation
+This package is available on [GitHub](https://github.com/) at [https://github.com/scoyoc/raindancer](https://github.com/scoyoc/raindancer). 
+Dependent packages include dplyr, glue, lubridate, RODBC, stringr, tibble, tidyr, and utils. 
+Suggested pacakges include janitor, knitr, rmarkdown and readr. 
+```{r Setup, eval=FALSE, echo = TRUE}
+if (!"devtools" %in% installed.packages()[, "Package"]) {
+  install.packages("devtools")
+}
+devtools::install_github("scoyoc/raindancer")
+library("raindancer")
+```
+
+# Import Data into R
+There are two function available to import the csv files generated from HOBOware into R, *import_hobo_2008()* and *import_hobo()*. Below is a table of Onset loggers that these functions can import data from.
+```{r logger_table, eval=TRUE, echo=FALSE}
+onset_loggers <- data.frame(
+  'Product' = c("H07 Logger", "HOBO UA-003-64 Pendant Temp/Event",
+                "H08 Logger", "HOBO UA-001-64 Pendant Temp", 
+                "HOBO U23-001 Temp/RH"),
+  'Element' = c("PRCP", "PRCP & TEMP", "TEMP", "TEMP", 
+                "TEMP & RH"),
+  'Years' = c("2008-2019", "2019-present", "2008-2019", 
+                   "2019-present", "2019-present")
+)
+
+knitr::kable(onset_loggers, 
+             col.names = c("Onset Product", "Element Recorded", 
+                           "Years Used"), 
+             caption = "Table. Onset loggers used in the SEUG LTVMP.",
+             format = 'html')
+```
+
+
+Lets start by usgin *list.files()* to bring a list of csv files into R. 
+There are some files included in this package for examples.
+Substitute the *system.file()* argument with the character string of the path to your data when working with your files.
+E.g., list.files(path = "C:/path/to/data", ...).
+
+
+```{r import, eval=TRUE, echo=TRUE, results='markup'}
+file_list <- list.files(path = system.file("extdata", package = "raindancer"),
+                        pattern = ".csv", full.names = TRUE, recursive = FALSE)
+head(file_list)
+```
+
+
+The first four csv files are from 2010 and 2012, so lets start by using *import_hobo_2008()*.
+```{r import_hobo_2008.R, eval=TRUE, echo=TRUE, results='markup'}
+dat <- import_hobo_2008(file_list[1])
+dplyr::glimpse(dat)
+```
+
+
+The functions *import_hobo_2008()* and *import_hobo()* return a list with three objects.  
+1. **file_info** This component is a vector that contains the file name, the date stamp, plot ID, the number of lines to skip to properly import the data, the number of columns of data in the raw file, and the Elements measured.  
+2. **details** This component is a data frame of logger metadata.  
+3. **data_raw** This component is a data frame of raw data in long format.  
+
+
+
+
+
+
+
+
+

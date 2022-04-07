@@ -27,4 +27,7 @@ Imports:
     utils
 Suggests: 
     readr,
-    janitor
+    janitor,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
