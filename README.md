@@ -20,7 +20,7 @@ License: MIT + file [LICENSE](https://github.com/scoyoc/raindancer/blob/master/L
 
 URL: [https://github.com/scoyoc/raindancer](https://github.com/scoyoc/raindancer)
 
-Documentation: See the [raindancer vignette](https://github.com/scoyoc/raindancer/blob/master/doc/raindancer.html) or function help pages.
+Documentation: See the [raindancer vignette](https://github.com/scoyoc/raindancer/blob/master/doc/raindancer.md) or function help pages.
 
 ## Installation
 

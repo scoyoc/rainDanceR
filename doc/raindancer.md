@@ -2,11 +2,6 @@
 title: "Import Onset HOBO Logger Data into R"
 author: "Matthew Van Scoyoc, National Park Service"
 date: "5 April, 2022"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{raindancer}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 # Introduction
 This R package imports data from Onset temperature, relative humidity, and precipitation (event) data loggers into R. 
