@@ -1,7 +1,7 @@
 ---
 title: "Import Onset HOBO Logger Data into R"
 author: "Matthew Van Scoyoc, National Park Service"
-date: "5 April, 2022"
+date: "`r format(as.Date(Sys.Date(), format = '%Y-%m-%d'), '%B %d, %Y')`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{raindancer}

@@ -1,8 +1,7 @@
----
-title: "Import Onset HOBO Logger Data into R"
-author: "Matthew Van Scoyoc, National Park Service"
-date: "5 April, 2022"
----
+# Import Onset HOBO Logger Data into R  
+# Matthew Van Scoyoc, National Park Service  
+# `r format(as.Date(Sys.Date(), format = '%Y-%m-%d'), '%B %d, %Y')`
+
 # Introduction
 This R package imports data from Onset temperature, relative humidity, and precipitation (event) data loggers into R. 
 Data collected in the field using Onset loggers are exported to comma delimited (csv) files using the HOBOware application from Onset.
