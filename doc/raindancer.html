@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Matthew Van Scoyoc, National Park Service" />
+
+
+<title>Import Onset HOBO Logger Data into R</title>
+
+<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Import Onset HOBO Logger Data into R</h1>
+<h4 class="author">Matthew Van Scoyoc, National Park Service</h4>
+<h4 class="date">5 April, 2022</h4>
+
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>This R package imports data from Onset temperature, relative humidity, and precipitation (event) data loggers into R. Data collected in the field using Onset loggers are exported to comma delimited (csv) files using the HOBOware application from Onset. This package imports the csv files into R and summarizes the data.</p>
+<p>The structure of the csv files generated from HOBOware vary wildly. They can have anywhere from 4 to 10 columns and the logger details are usually in two “hidden” columns following the data. This makes data from the temperature, relative humidity, and precipitation loggers difficult to read into R. This package imports data collected by Onset loggers used in the Southeast Utah Group (SEUG) national parks long-term vegetation monitoring program (LTVMP) and then summarize these data. This package was written to be used with the dataprocessR package, <a href="https://github.com/scoyoc/dataprocessR">https://github.com/scoyoc/dataprocessR</a>, that exports the raw and summarized data to the SEUG LTVMP database (a Microsoft Access database).</p>
+</div>
+<div id="installation" class="section level1">
+<h1>Installation</h1>
+<p>This package is available on <a href="https://github.com/">GitHub</a> at <a href="https://github.com/scoyoc/raindancer">https://github.com/scoyoc/raindancer</a>. Dependent packages include dplyr, glue, lubridate, RODBC, stringr, tibble, tidyr, and utils. Suggested pacakges include janitor, knitr, rmarkdown, and readr.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="st">&quot;devtools&quot;</span> <span class="sc">%in%</span> <span class="fu">installed.packages</span>()[, <span class="st">&quot;Package&quot;</span>]) {</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">&quot;devtools&quot;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;scoyoc/raindancer&quot;</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;raindancer&quot;</span>)</span></code></pre></div>
+</div>
+<div id="import-data-into-r" class="section level1">
+<h1>Import Data into R</h1>
+There are two function available to import the csv files generated from HOBOware into R, <em>import_hobo_2008()</em> and <em>import_hobo()</em>. Below is a table of Onset loggers that these functions can import data from.
+<table>
+<caption>
+Table 1. Onset loggers used in the SEUG LTVMP.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Onset Product
+</th>
+<th style="text-align:left;">
+Element Recorded
+</th>
+<th style="text-align:left;">
+Years Used
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+H07 Logger
+</td>
+<td style="text-align:left;">
+PRCP
+</td>
+<td style="text-align:left;">
+2008-2019
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HOBO UA-003-64 Pendant Temp/Event
+</td>
+<td style="text-align:left;">
+PRCP &amp; TEMP
+</td>
+<td style="text-align:left;">
+2019-present
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+H08 Logger
+</td>
+<td style="text-align:left;">
+TEMP
+</td>
+<td style="text-align:left;">
+2008-2019
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HOBO UA-001-64 Pendant Temp
+</td>
+<td style="text-align:left;">
+TEMP
+</td>
+<td style="text-align:left;">
+2019-present
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HOBO U23-001 Temp/RH
+</td>
+<td style="text-align:left;">
+TEMP &amp; RH
+</td>
+<td style="text-align:left;">
+2019-present
+</td>
+</tr>
+</tbody>
+</table>
+<p>The functions <em>import_hobo_2008()</em> and <em>import_hobo()</em> return a list with three components:<br />
+1. <strong>file_info</strong> is a one row data frame that contains information about the file, the logger, and data.<br />
+2. <strong>details</strong> is a data frame of logger and sampling event information.<br />
+3. <strong>data_raw</strong> is a data frame of raw data.</p>
+<p>Lets start by usgin <em>list.files()</em> to bring a list of csv files into R.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>file_list <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">&quot;C:/path/to/data&quot;</span>, <span class="at">pattern =</span> <span class="st">&quot;.csv&quot;</span>, </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">full.names =</span> <span class="cn">TRUE</span>, <span class="at">recursive =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<p>There are some files included in this package for examples, so we’ll use those for the vignette.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>file_list <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="at">package =</span> <span class="st">&quot;raindancer&quot;</span>),</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">pattern =</span> <span class="st">&quot;.csv&quot;</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>, <span class="at">recursive =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(file_list)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/Rtmp40tTHI/temp_libpath4c046ffc187/raindancer/extdata/2010_h01st_prcp.csv&quot;     </span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/Rtmp40tTHI/temp_libpath4c046ffc187/raindancer/extdata/2010_h01st_temp.csv&quot;     </span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/Rtmp40tTHI/temp_libpath4c046ffc187/raindancer/extdata/2012_i01gp_prcp.csv&quot;     </span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/Rtmp40tTHI/temp_libpath4c046ffc187/raindancer/extdata/2012_i01gp_temp.csv&quot;     </span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/Rtmp40tTHI/temp_libpath4c046ffc187/raindancer/extdata/20200416_A03_PRCP.csv&quot;   </span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [6] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/Rtmp40tTHI/temp_libpath4c046ffc187/raindancer/extdata/20200416_A03_TEMP_RH.csv&quot;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [7] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/Rtmp40tTHI/temp_libpath4c046ffc187/raindancer/extdata/20200416_A08_PRCP.csv&quot;   </span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [8] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/Rtmp40tTHI/temp_libpath4c046ffc187/raindancer/extdata/20200416_A08_TEMP_RH.csv&quot;</span></span></code></pre></div>
+<p>The first four csv files are from 2010 and 2012, so lets start by using <em>import_hobo_2008()</em>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dat<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">import_hobo_2008</span>(file_list[<span class="dv">1</span>])</span></code></pre></div>
+<p>Let’s examine the components of the list returned by the <em>import_hobo_2008()</em> function. The first component returns information about the file, the logger, and the data.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(dat<span class="fl">.1</span><span class="sc">$</span>file_info)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Rows: 1</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: 10</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ FileName         &lt;chr&gt; &quot;2010_h01st_prcp.csv&quot;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ PlotID           &lt;chr&gt; &quot;H01&quot;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ Element          &lt;chr&gt; &quot;PRCP&quot;</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ Product          &lt;chr&gt; &quot;H07 Logger&quot;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ SerialNumber     &lt;chr&gt; &quot;707910&quot;</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ LaunchName       &lt;chr&gt; &quot;H1 Square Tower&quot;</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ DeploymentNumber &lt;chr&gt; &quot;10&quot;</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ LaunchTime       &lt;chr&gt; &quot;05/06/09 11:04:53 AM GMT-06:00&quot;</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ FirstSampleTime  &lt;chr&gt; &quot;05/06/09 11:04:53 AM GMT-06:00&quot;</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ LastSampleTime   &lt;chr&gt; &quot;04/08/10 06:20:45 PM GMT-06:00&quot;</span></span></code></pre></div>
+<p>The second component returns a three (3) column data frame with information about the logger and sampling event.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dat<span class="fl">.1</span><span class="sc">$</span>details</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 21 x 3</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    FileName            Details           Value                         </span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;               &lt;chr&gt;             &lt;chr&gt;                         </span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 2010_h01st_prcp.csv Battery at Launch Unknown                       </span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 2010_h01st_prcp.csv Deployment Number 10                            </span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 2010_h01st_prcp.csv Device Memory     32768                         </span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 2010_h01st_prcp.csv First Sample Time 05/06/09 11:04:53 AM GMT-06:00</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 2010_h01st_prcp.csv Full Series Name  Events                        </span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 2010_h01st_prcp.csv Last Sample Time  04/08/10 06:20:45 PM GMT-06:00</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 2010_h01st_prcp.csv Launch Name       H1 Square Tower               </span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 2010_h01st_prcp.csv Launch Time       05/06/09 11:04:53 AM GMT-06:00</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 2010_h01st_prcp.csv Product           H07 Logger                    </span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 2010_h01st_prcp.csv Samples           1                             </span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ... with 11 more rows</span></span></code></pre></div>
+<p>And the third component returns a data frame of raw data.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(dat<span class="fl">.1</span><span class="sc">$</span>data_raw)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Rows: 1,458</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: 6</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ FileName &lt;chr&gt; &quot;2010_h01st_prcp.csv&quot;, &quot;2010_h01st_prcp.csv&quot;, &quot;2010_h01st_prc~</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ PlotID   &lt;chr&gt; &quot;H01&quot;, &quot;H01&quot;, &quot;H01&quot;, &quot;H01&quot;, &quot;H01&quot;, &quot;H01&quot;, &quot;H01&quot;, &quot;H01&quot;, &quot;H01&quot;~</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ DateTime &lt;dttm&gt; 2009-05-06 11:04:53, 2009-05-06 11:04:54, 2009-05-06 11:04:5~</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ Element  &lt;chr&gt; &quot;PRCP&quot;, &quot;PRCP&quot;, &quot;PRCP&quot;, &quot;PRCP&quot;, &quot;PRCP&quot;, &quot;PRCP&quot;, &quot;PRCP&quot;, &quot;PRCP~</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ Value    &lt;dbl&gt; 79569, 79570, 79571, 79572, 79573, 79574, 79575, 79576, 79577~</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ Units    &lt;chr&gt; &quot;Events&quot;, &quot;Events&quot;, &quot;Events&quot;, &quot;Events&quot;, &quot;Events&quot;, &quot;Events&quot;, &quot;~</span></span></code></pre></div>
+<p>In 2019 SEUG resource staff upgraded the loggers in hopes of preventing logger failure and mainaining the weather data set for the LTVMP. The new loggers had a different file structure that the older loggers, requiring a new function to import data into R. Files five (5) though eight (8) are examples from the new loggers. Let’s use <em>import_hobo()</em> to bring data from one of these files into R and examine the information and data.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>dat<span class="fl">.6</span> <span class="ot">&lt;-</span> <span class="fu">import_hobo</span>(file_list[<span class="dv">6</span>])</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dat<span class="fl">.6</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; List of 3</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ file_info:&#39;data.frame&#39;:   2 obs. of  10 variables:</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ FileName        : chr [1:2] &quot;20200416_A03_TEMP_RH.csv&quot; &quot;20200416_A03_TEMP_RH.csv&quot;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ PlotID          : chr [1:2] &quot;A03&quot; &quot;A03&quot;</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ Element         : chr [1:2] &quot;TEMP&quot; &quot;RH&quot;</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ Product         : chr [1:2] &quot;HOBO U23-001 Temp/RH&quot; &quot;HOBO U23-001 Temp/RH&quot;</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ SerialNumber    : chr [1:2] &quot;20547370&quot; &quot;20547370&quot;</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ LaunchName      : chr [1:2] &quot;A03_RH&quot; &quot;A03_RH&quot;</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ DeploymentNumber: chr [1:2] &quot;1&quot; &quot;1&quot;</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ LaunchTime      : chr [1:2] &quot;03/26/19 08:15:04 AM GMT-06:00&quot; &quot;03/26/19 08:15:04 AM GMT-06:00&quot;</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ FirstSampleTime : chr [1:2] &quot;03/26/19 05:00:00 PM GMT-06:00&quot; &quot;03/26/19 05:00:00 PM GMT-06:00&quot;</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ LastSampleTime  : chr [1:2] &quot;04/16/20 03:00:00 PM GMT-06:00&quot; &quot;04/16/20 03:00:00 PM GMT-06:00&quot;</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ details  : tibble [46 x 3] (S3: tbl_df/tbl/data.frame)</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ FileName: chr [1:46] &quot;20200416_A03_TEMP_RH.csv&quot; &quot;20200416_A03_TEMP_RH.csv&quot; &quot;20200416_A03_TEMP_RH.csv&quot; &quot;20200416_A03_TEMP_RH.csv&quot; ...</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ Details : chr [1:46] &quot;Product&quot; &quot;Serial Number&quot; &quot;Version Number&quot; &quot;Manufacturer&quot; ...</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ Value   : chr [1:46] &quot;HOBO U23-001 Temp/RH&quot; &quot;20547370&quot; &quot;1.10&quot; &quot;Onset Computer Corporation&quot; ...</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ data_raw : tibble [37,146 x 6] (S3: tbl_df/tbl/data.frame)</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ FileName: chr [1:37146] &quot;20200416_A03_TEMP_RH.csv&quot; &quot;20200416_A03_TEMP_RH.csv&quot; &quot;20200416_A03_TEMP_RH.csv&quot; &quot;20200416_A03_TEMP_RH.csv&quot; ...</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ PlotID  : chr [1:37146] &quot;A03&quot; &quot;A03&quot; &quot;A03&quot; &quot;A03&quot; ...</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ DateTime: POSIXct[1:37146], format: &quot;2001-01-20 00:00:00&quot; &quot;2001-01-20 00:00:00&quot; ...</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ Element : chr [1:37146] &quot;RH&quot; &quot;TEMP&quot; &quot;RH&quot; &quot;TEMP&quot; ...</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ Value   : num [1:37146] 88.1 -13.4 90.5 -14.1 90.8 ...</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ Units   : chr [1:37146] &quot;%RH&quot; &quot;F&quot; &quot;%RH&quot; &quot;F&quot; ...</span></span></code></pre></div>
+</div>
+<div id="summarize-data" class="section level1">
+<h1>Summarize Data</h1>
+<p>The that we have data read into R are either event data for precipitation or recorded at set intervals through out the day for temperature and relative humidity data. Let’s summarize them up to daily values.</p>
+<div id="precipitation-event-data-with-raindance" class="section level2">
+<h2>Precipitation (Event) Data with <em>raindance()</em></h2>
+<p>The precipitation loggers record an event every time the bucket inside the rain gauge fills with 0.254 mm of water and tips to trigger an event. The data recorded is simply an event (e.g., event 1, event 2, event 3, and so on). The <em>raindance()</em> function calculates hourly precipitation, provides the number of tips per hour, and provides an estimate of intensity with maximum tips per minute in a given hour. This function requires the <em>data_raw</em> component from <em>import_hobo()</em> or <em>import_hobo_2008()</em> functions and returns a data frame of hourly data.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">raindance</span>(dat<span class="fl">.1</span><span class="sc">$</span>data_raw)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 8,100 x 6</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Groups:   PlotID, DateTime [8,100]</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    PlotID DateTime            Element PRCP_mm  Tips MaxTips_min</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;  &lt;dttm&gt;              &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 H01    2009-05-06 01:00:00 PRCP          0     0           0</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 H01    2009-05-06 02:00:00 PRCP          0     0           0</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 H01    2009-05-06 03:00:00 PRCP          0     0           0</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 H01    2009-05-06 04:00:00 PRCP          0     0           0</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 H01    2009-05-06 05:00:00 PRCP          0     0           0</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 H01    2009-05-06 06:00:00 PRCP          0     0           0</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 H01    2009-05-06 07:00:00 PRCP          0     0           0</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 H01    2009-05-06 08:00:00 PRCP          0     0           0</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 H01    2009-05-06 09:00:00 PRCP          0     0           0</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 H01    2009-05-06 10:00:00 PRCP          0     0           0</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ... with 8,090 more rows</span></span></code></pre></div>
+</div>
+<div id="temperature-and-relative-humidity-data-with-sundance" class="section level2">
+<h2>Temperature and Relative Humidity Data with <em>sundance()</em></h2>
+<p>Temperature and relative humidity loggers record data at set intervals through out the day. The <em>sundance()</em> function summarizes these data to the daily data, providing mean, minimum, maximum, and the number of measurements (n) for a given day. This function also returns the time that the minimum and maximum were recorded. This function requires the <em>data_raw</em> component from <em>import_hobo()</em> or <em>import_hobo_2008()</em> functions and returns a data frame of daily data.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sundance</span>(dat<span class="fl">.6</span><span class="sc">$</span>data_raw)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 776 x 10</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Groups:   PlotID, Date, Element [776]</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    PlotID Date       Element  Mean    Min     Max     n MinTime MaxTime Units</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;  &lt;date&gt;     &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 A03    2001-01-20 RH      90.6   80.3   96.8      48 15:00   07:00   %RH  </span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 A03    2001-01-20 TEMP    -8.18 -15.3   -3.01     48 05:00   15:30   F    </span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 A03    2001-02-20 RH      94.2   86.2   98.2      48 14:30   00:00   %RH  </span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 A03    2001-02-20 TEMP    -4.78  -6.20  -2.33     48 00:00   16:30   F    </span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 A03    2001-03-20 RH      92.3   76.3   97.5      48 15:00   04:00   %RH  </span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 A03    2001-03-20 TEMP    -5.98 -12.4   -0.591    48 23:30   15:30   F    </span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 A03    2001-04-20 RH      96.2   84.7   99.7      48 14:30   23:30   %RH  </span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 A03    2001-04-20 TEMP    -5.75 -12.6   -2.04     48 00:30   14:00   F    </span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 A03    2001-05-20 RH      98.3   95.2  100        48 15:30   01:00   %RH  </span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 A03    2001-05-20 TEMP    -5.46  -6.80  -3.81     48 08:30   12:30   F    </span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ... with 766 more rows</span></span></code></pre></div>
+</div>
+</div>
+<div id="processing-hobo-files" class="section level1">
+<h1>Processing HOBO files</h1>
+<p>The <em>process_hobo()</em> function was developed to summarize all the csv files in a data directory. This function requires an object returned form the <em>import_hobo()</em> or <em>import_hobo_2008()</em>. It evaluates the elements of the data from the <em>file_info</em> component and uses <em>raindance()</em> or <em>sundance()</em> to summarize the data. It add the summarized data to the original list and returns a four (4) component list. An effective way to use this function is with <em>lapply()</em>.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(file_list[<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>], <span class="cf">function</span>(this_file){</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  dat <span class="ot">&lt;-</span> <span class="fu">import_hobo_2008</span>(this_file) <span class="sc">|&gt;</span> <span class="fu">process_hobo</span>()</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">basename</span>(this_file))</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">data.class</span>(dat)); <span class="fu">print</span>(<span class="fu">names</span>(dat))</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  dat<span class="sc">$</span>data</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;2010_h01st_temp.csv&quot;</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;list&quot;</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;file_info&quot; &quot;details&quot;   &quot;data_raw&quot;  &quot;data&quot;     </span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;2012_i01gp_prcp.csv&quot;</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;list&quot;</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;file_info&quot; &quot;details&quot;   &quot;data_raw&quot;  &quot;data&quot;     </span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;2012_i01gp_temp.csv&quot;</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;list&quot;</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;file_info&quot; &quot;details&quot;   &quot;data_raw&quot;  &quot;data&quot;</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 338 x 10</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Groups:   PlotID, Date, Element [338]</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    PlotID Date       Element  Mean   Min   Max     n MinTime MaxTime Units</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;  &lt;date&gt;     &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 H01    2009-05-06 TEMP     76.4  53.9  86.6    11 11:11   03:59   F    </span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 H01    2009-05-07 TEMP     67.8  42.5  88.0    20 06:23   03:59   F    </span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 H01    2009-05-08 TEMP     67.1  45.4  83.0    20 06:23   03:59   F    </span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 H01    2009-05-09 TEMP     67.3  46.1  83.7    20 06:23   03:59   F    </span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 H01    2009-05-10 TEMP     67.1  46.1  85.8    20 06:23   03:59   F    </span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 H01    2009-05-11 TEMP     67.9  45.4  88.0    20 06:23   03:59   F    </span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 H01    2009-05-12 TEMP     70.0  46.8  88.0    20 06:23   03:59   F    </span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 H01    2009-05-13 TEMP     67.0  46.1  85.1    20 06:23   03:59   F    </span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 H01    2009-05-14 TEMP     65.6  41.0  85.1    20 06:23   05:11   F    </span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 H01    2009-05-15 TEMP     68.3  48.2  85.1    20 05:11   05:11   F    </span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ... with 328 more rows</span></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 8,988 x 6</span></span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Groups:   PlotID, DateTime [8,988]</span></span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    PlotID DateTime            Element PRCP_mm  Tips MaxTips_min</span></span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;  &lt;dttm&gt;              &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;</span></span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 I01    2011-04-18 01:00:00 PRCP      0         0           0</span></span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 I01    2011-04-18 02:00:00 PRCP      0         0           0</span></span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 I01    2011-04-18 03:00:00 PRCP      0         0           0</span></span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 I01    2011-04-18 04:00:00 PRCP      0         0           0</span></span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 I01    2011-04-18 05:00:00 PRCP      0         0           0</span></span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 I01    2011-04-18 06:00:00 PRCP      2.29      8           2</span></span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 I01    2011-04-18 07:00:00 PRCP      4.32     17           1</span></span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 I01    2011-04-18 08:00:00 PRCP      2.79     11           1</span></span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 I01    2011-04-18 09:00:00 PRCP      0.508     2           1</span></span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 I01    2011-04-18 10:00:00 PRCP      0         0           0</span></span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ... with 8,978 more rows</span></span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[3]]</span></span>
+<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 398 x 10</span></span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Groups:   PlotID, Date, Element [398]</span></span>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    PlotID Date       Element  Mean   Min   Max     n MinTime MaxTime Units</span></span>
+<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;  &lt;date&gt;     &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;</span></span>
+<span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 I01    2011-04-06 TEMP     48.7  41.0  71.8    11 10:22   11:34   F    </span></span>
+<span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 I01    2011-04-07 TEMP     47.9  38.0  59.4    20 05:34   03:10   F    </span></span>
+<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 I01    2011-04-08 TEMP     45.0  30.9  53.2    20 10:22   11:34   F    </span></span>
+<span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 I01    2011-04-09 TEMP     40.0  31.7  47.5    20 10:22   03:10   F    </span></span>
+<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 I01    2011-04-10 TEMP     37.5  13.0  54.6    20 05:34   03:10   F    </span></span>
+<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 I01    2011-04-11 TEMP     40.1  16.9  63.5    20 05:34   03:10   F    </span></span>
+<span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 I01    2011-04-12 TEMP     46.8  23.3  67.7    20 12:46   03:10   F    </span></span>
+<span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 I01    2011-04-13 TEMP     50.3  25.1  67.7    20 05:34   03:10   F    </span></span>
+<span id="cb11-63"><a href="#cb11-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 I01    2011-04-14 TEMP     43.8  34.9  56.7    20 05:34   03:10   F    </span></span>
+<span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 I01    2011-04-15 TEMP     40.2  14.0  62.2    20 05:34   04:22   F    </span></span>
+<span id="cb11-65"><a href="#cb11-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ... with 388 more rows</span></span></code></pre></div>
+</div>
+<div id="conclusion" class="section level1">
+<h1>Conclusion</h1>
+<p>The <em>raindancer</em> package eficiently processes and summarized data from the Onset HOBO loggers listed in Table 1 and used in the SEUG LTVMP from 2008-2021. The data from 2021 were mostly formatted the same as data from 2020, with a few exceptions. There is a likely that some future csv file will have anomolies that will require improvements to the <em>import_hobo()</em> function. Please submit the problem on the Issues page of the GitHub repository, <a href="https://github.com/scoyoc/raindancer/issues">https://github.com/scoyoc/raindancer/issues</a>, or contact the author of the package if this happens.</p>
+<p>This package was designed to work with the <a href="https://github.com/scoyoc/dataprocessR">dataprocessR package</a>. See the dataprocessR vignette for how to export these data to the SEUG LTVMP database.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
