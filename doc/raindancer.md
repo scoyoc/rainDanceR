@@ -1,6 +1,6 @@
 # Import Onset HOBO Logger Data into R  
 # Matthew Van Scoyoc, National Park Service  
-# `r format(as.Date(Sys.Date(), format = '%Y-%m-%d'), '%B %d, %Y')`
+# 14 April, 2022
 
 # Introduction
 This R package imports data from Onset temperature, relative humidity, and precipitation (event) data loggers into R. 
