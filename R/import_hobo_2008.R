@@ -45,42 +45,43 @@
 #' }
 #'
 import_hobo_2008 <- function(my_file){
-  # my_file = file_list[1]
+  # testign: my_file = file_list[1]
+
   #-- Import file
   my_file = import_file(my_file, datestamp_loc = 1, plotid_loc = 2,
                         plotid_s = 1, plotid_e = 3)
   #-- Extract data
-  my_data = suppressMessages(suppressWarnings(get_data(my_file)))
+  data_raw = suppressMessages(suppressWarnings(get_data(my_file)))
   #-- Extract details
-  my_details = suppressMessages(get_details(my_file, my_data))
+  details = suppressMessages(get_details(my_file, data_raw))
   #-- Add element to file info
-  if(length(unique(my_data$Element)) == 1){
-    my_file$file_info$Element = unique(my_data$Element)
-    } else if(length(unique(my_data$Element)) > 1){
-      my_file$file_info$Element = paste(unique(my_data$Element), collapse = ";")
+  if(length(unique(data_raw$Element)) == 1){
+    my_file$file_info$Element = unique(data_raw$Element)
+    } else if(length(unique(data_raw$Element)) > 1){
+      my_file$file_info$Element = paste(unique(data_raw$Element), collapse = ";")
       } else(my_file$file_info$Element == NA)
 
   # Extract file info
   file_info <- data.frame("FileName" = my_file$file_info$FileName,
                           "PlotID" = my_file$file_info$PlotID,
-                          "Element" = pull_detail("Element", my_details),
-                          "Product" = pull_detail("Product", my_details),
+                          "Element" = pull_detail("Element", details),
+                          "Product" = pull_detail("Product", details),
                           "SerialNumber" = pull_detail("Serial Number",
-                                                       my_details),
-                          "LaunchName" = pull_detail("Launch Name", my_details),
+                                                       details),
+                          "LaunchName" = pull_detail("Launch Name", details),
                           "DeploymentNumber" = pull_detail("Deployment Number",
-                                                           my_details),
+                                                           details),
                           "LaunchTime" = pull_detail("Launch Time",
-                                                     my_details),
+                                                     details),
                           "FirstSampleTime" = pull_detail("First Sample Time",
-                                                          my_details),
+                                                          details),
                           "LastSampleTime" =  pull_detail("Last Sample Time",
-                                                          my_details))
+                                                          details))
 
   # Return list of objects
   return(list('file_info' = file_info,
-              'details' = my_details,
-              'data_raw' = my_data))
+              'details' = details,
+              'data_raw' = tibble::tibble(data.frame(data_raw))))
 }
 
 #-- Internal functions --
@@ -124,7 +125,7 @@ get_data <- function(my_file){
 }
 
 #-- Pull logger details from raw file
-get_details <- function(my_file, my_data){
+get_details <- function(my_file, data_raw){
   # DESCRIPTION
   # This function pulls details from the raw file. It uses the list produced
   # from import_file().
@@ -153,11 +154,11 @@ get_details <- function(my_file, my_data){
                   'Element' = my_logger$Element,
                   'Units' = paste(my_logger$Units, my_logger$Units,
                                   sep = ";"),
-                  'DateTime (min)' = as.character(min(my_data$DateTime,
+                  'DateTime (min)' = as.character(min(data_raw$DateTime,
                                                       na.rm = T)),
-                  'DateTime (max)' = as.character(max(my_data$DateTime,
+                  'DateTime (max)' = as.character(max(data_raw$DateTime,
                                                       na.rm = T)),
-                  'Records (n)' = nrow(my_data),
+                  'Records (n)' = nrow(data_raw),
                   'ConvertFtoC' = ifelse(Element == "TEMP" &&
                                            stringr::str_detect(my_logger$Units,
                                                                "F"),
@@ -169,7 +170,7 @@ get_details <- function(my_file, my_data){
   details = details |>
     dplyr::add_row(tibble::tibble_row("FileName" = my_file$file_info$FileName,
                                       "Details" = "QFLAG",
-                                      "Value" = qflags(my_logger, details, my_data)))
+                                      "Value" = qflags(my_logger, details, data_raw)))
   return(details)
 }
 
@@ -343,12 +344,12 @@ onset_loggers <- data.frame(
 )
 
 # QAQC flags
-qflags <- function(my_logger, my_details, my_data){
+qflags <- function(my_logger, details, data_raw){
   flags = data.frame(
     Logger = ifelse(my_logger$Element == "Unknown", 1, NA),
     Units = ifelse(my_logger$Units == "Unknown", 2, NA),
-    DateTimeNA = ifelse(sum(is.na(my_data$DateTime)) > 0, 3, NA),
-    DataNA = ifelse(sum(is.na(my_data$Value)) > 0, 4, NA)
+    DateTimeNA = ifelse(sum(is.na(data_raw$DateTime)) > 0, 3, NA),
+    DataNA = ifelse(sum(is.na(data_raw$Value)) > 0, 4, NA)
   ) |>
     tidyr::gather("Category", "Flag")
 
