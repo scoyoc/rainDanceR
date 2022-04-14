@@ -1,6 +1,6 @@
 # raindancer
 
-This R package imports data from Onset temperature, relative humidity, and precipitation data loggers into R. 
+This R package imports data from Onset temperature, relative humidity, and precipitation (event) data loggers into R. 
 Data collected in the field using Onset loggers are exported to comma delimited files (*.csv) using the HOBOware application from Onset.
 This package imports the *.csv files into R and summarize the data.
 
@@ -20,7 +20,7 @@ License: MIT + file [LICENSE](https://github.com/scoyoc/raindancer/blob/master/L
 
 URL: [https://github.com/scoyoc/raindancer](https://github.com/scoyoc/raindancer)
 
-Documentation: See the [raindancer vignette](https://github.com/scoyoc/raindancer/blob/master/doc/raindancer.md) or function help pages.
+Documentation: See the [raindancer vignette](https://github.com/scoyoc/raindancer/blob/master/doc/raindancer.md) and function help pages.
 
 ## Installation
 
@@ -37,10 +37,6 @@ file_list <- list.files(path = "C:/path/to/data", pattern = ".csv",
                         full.names = TRUE, recursive = FALSE)
 
 # Import file and summarize data
-my_file <- file_list[x]        # Select file
-import_hobo_2008(my_file) |>   # Import data from logger used from 2008 to 2019
-  process_hobo()               # Summarize data
-  
 my_file <- file_list[x]        # Select file
 import_hobo(my_file) |>        # Import data from logger used from 2020 to present
   process_hobo()               # Summarize data
