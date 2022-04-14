@@ -49,7 +49,7 @@ file_list <- list.files(path = "C:/path/to/data", pattern = ".csv",
                         full.names = TRUE, recursive = FALSE)
 ```
 
-There are some files included in this package for examples, so we'll use those for the vignette. 
+There are some files included in this package for examples, so we'll use these for the vignette. 
 ```{r import, eval=TRUE, echo=TRUE, results='markup'}
 file_list <- list.files(path = system.file("extdata", package = "raindancer"),
                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
