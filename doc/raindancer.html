@@ -148,7 +148,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p>This R package imports data from Onset temperature, relative humidity, and precipitation (event) data loggers into R. Data collected in the field using Onset loggers are exported to comma delimited (csv) files using the HOBOware application from Onset. This package imports the csv files into R and summarizes the data.</p>
+<p>This R package imports data from Onset temperature, relative humidity, and precipitation (event) data loggers into R. Data collected in the field using Onset loggers are exported to comma delimited (csv) files using the Onset HOBOware application. This package imports the csv files into R and summarizes the data.</p>
 <p>The structure of the csv files generated from HOBOware vary wildly. They can have anywhere from 4 to 10 columns and the logger details are usually in two “hidden” columns following the data. This makes data from the temperature, relative humidity, and precipitation loggers difficult to read into R. This package imports data collected by Onset loggers used in the Southeast Utah Group (SEUG) national parks long-term vegetation monitoring program (LTVMP) and then summarize these data. This package was written to be used with the dataprocessR package, <a href="https://github.com/scoyoc/dataprocessR">https://github.com/scoyoc/dataprocessR</a>, that exports the raw and summarized data to the SEUG LTVMP database (a Microsoft Access database).</p>
 </div>
 <div id="installation" class="section level1">
@@ -162,7 +162,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="import-data-into-r" class="section level1">
 <h1>Import Data into R</h1>
-There are two function available to import the csv files generated from HOBOware into R, <em>import_hobo_2008()</em> and <em>import_hobo()</em>. Below is a table of Onset loggers that these functions can import data from.
+There are two functions that import the csv files generated from HOBOware into R, <em>import_hobo_2008()</em> and <em>import_hobo()</em>. Below is a table of Onset loggers that these functions can import data from.
 <table>
 <caption>
 Table 1. Onset loggers used in the SEUG LTVMP.
@@ -249,14 +249,14 @@ TEMP &amp; RH
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>file_list <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="at">package =</span> <span class="st">&quot;raindancer&quot;</span>),</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">pattern =</span> <span class="st">&quot;.csv&quot;</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>, <span class="at">recursive =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(file_list)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/RtmpoPZ62M/temp_libpath2b186dcaacb/raindancer/extdata/2010_h01st_prcp.csv&quot;     </span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/RtmpoPZ62M/temp_libpath2b186dcaacb/raindancer/extdata/2010_h01st_temp.csv&quot;     </span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/RtmpoPZ62M/temp_libpath2b186dcaacb/raindancer/extdata/2012_i01gp_prcp.csv&quot;     </span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/RtmpoPZ62M/temp_libpath2b186dcaacb/raindancer/extdata/2012_i01gp_temp.csv&quot;     </span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/RtmpoPZ62M/temp_libpath2b186dcaacb/raindancer/extdata/20200416_A03_PRCP.csv&quot;   </span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [6] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/RtmpoPZ62M/temp_libpath2b186dcaacb/raindancer/extdata/20200416_A03_TEMP_RH.csv&quot;</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [7] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/RtmpoPZ62M/temp_libpath2b186dcaacb/raindancer/extdata/20200416_A08_PRCP.csv&quot;   </span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [8] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/RtmpoPZ62M/temp_libpath2b186dcaacb/raindancer/extdata/20200416_A08_TEMP_RH.csv&quot;</span></span></code></pre></div>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/RtmpwnRSIT/temp_libpath110811c17e52/raindancer/extdata/2010_h01st_prcp.csv&quot;     </span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/RtmpwnRSIT/temp_libpath110811c17e52/raindancer/extdata/2010_h01st_temp.csv&quot;     </span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/RtmpwnRSIT/temp_libpath110811c17e52/raindancer/extdata/2012_i01gp_prcp.csv&quot;     </span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/RtmpwnRSIT/temp_libpath110811c17e52/raindancer/extdata/2012_i01gp_temp.csv&quot;     </span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/RtmpwnRSIT/temp_libpath110811c17e52/raindancer/extdata/20200416_A03_PRCP.csv&quot;   </span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [6] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/RtmpwnRSIT/temp_libpath110811c17e52/raindancer/extdata/20200416_A03_TEMP_RH.csv&quot;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [7] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/RtmpwnRSIT/temp_libpath110811c17e52/raindancer/extdata/20200416_A08_PRCP.csv&quot;   </span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [8] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/RtmpwnRSIT/temp_libpath110811c17e52/raindancer/extdata/20200416_A08_TEMP_RH.csv&quot;</span></span></code></pre></div>
 <p>The first four csv files are from 2010 and 2012, so lets start by using <em>import_hobo_2008()</em>.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dat<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">import_hobo_2008</span>(file_list[<span class="dv">1</span>])</span></code></pre></div>
 <p>Let’s examine the components of the list returned by the <em>import_hobo_2008()</em> function. The first component returns information about the file, the logger, and the data.</p>
@@ -273,7 +273,7 @@ TEMP &amp; RH
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ LaunchTime       &lt;chr&gt; &quot;05/06/09 11:04:53 AM GMT-06:00&quot;</span></span>
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ FirstSampleTime  &lt;chr&gt; &quot;05/06/09 11:04:53 AM GMT-06:00&quot;</span></span>
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ LastSampleTime   &lt;chr&gt; &quot;04/08/10 06:20:45 PM GMT-06:00&quot;</span></span></code></pre></div>
-<p>The second component returns a three (3) column data frame with information about the logger and sampling event.</p>
+<p>The second component returns a three column data frame with information about the logger and sampling event.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dat<span class="fl">.1</span><span class="sc">$</span>details</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 21 x 3</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    FileName            Details           Value                         </span></span>
@@ -299,7 +299,7 @@ TEMP &amp; RH
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ Element  &lt;chr&gt; &quot;PRCP&quot;, &quot;PRCP&quot;, &quot;PRCP&quot;, &quot;PRCP&quot;, &quot;PRCP&quot;, &quot;PRCP&quot;, &quot;PRCP&quot;, &quot;PRCP~</span></span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ Value    &lt;dbl&gt; 79569, 79570, 79571, 79572, 79573, 79574, 79575, 79576, 79577~</span></span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ Units    &lt;chr&gt; &quot;Events&quot;, &quot;Events&quot;, &quot;Events&quot;, &quot;Events&quot;, &quot;Events&quot;, &quot;Events&quot;, &quot;~</span></span></code></pre></div>
-<p>In 2019 SEUG resource staff upgraded the loggers in hopes of preventing logger failure and mainaining the weather data set for the LTVMP. The new loggers had a different file structure that the older loggers, requiring a new function to import data into R. Files five (5) though eight (8) are examples from the new loggers. Let’s use <em>import_hobo()</em> to bring data from one of these files into R and examine the information and data.</p>
+<p>In 2019 SEUG resource staff upgraded the loggers in hopes of preventing logger failure and maintaining the weather data set for the LTVMP. The new loggers had a different file structure that the older loggers, requiring a new function to import data into R. Files five though eight are examples from the new loggers. Let’s use <em>import_hobo()</em> to bring data from one of these files into R and examine the information and data.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>dat<span class="fl">.6</span> <span class="ot">&lt;-</span> <span class="fu">import_hobo</span>(file_list[<span class="dv">6</span>])</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dat<span class="fl">.6</span>)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; List of 3</span></span>
@@ -328,7 +328,7 @@ TEMP &amp; RH
 </div>
 <div id="summarize-data" class="section level1">
 <h1>Summarize Data</h1>
-<p>The that we have data read into R are either event data for precipitation or recorded at set intervals through out the day for temperature and relative humidity data. Let’s summarize them up to daily values.</p>
+<p>Let’s summarize these data up to daily values now that we have data read into R. The data are either event data from precipitation gauges or recorded at set intervals through out the day for temperature and relative humidity data.</p>
 <div id="precipitation-event-data-with-raindance" class="section level2">
 <h2>Precipitation (Event) Data with <em>raindance()</em></h2>
 <p>The precipitation loggers record an event every time the bucket inside the rain gauge fills with 0.254 mm of water and tips to trigger an event. The data recorded is simply an event (e.g., event 1, event 2, event 3, and so on). The <em>raindance()</em> function calculates hourly precipitation, provides the number of tips per hour, and provides an estimate of intensity with maximum tips per minute in a given hour. This function requires the <em>data_raw</em> component from <em>import_hobo()</em> or <em>import_hobo_2008()</em> functions and returns a data frame of hourly data.</p>
@@ -351,7 +351,7 @@ TEMP &amp; RH
 </div>
 <div id="temperature-and-relative-humidity-data-with-sundance" class="section level2">
 <h2>Temperature and Relative Humidity Data with <em>sundance()</em></h2>
-<p>Temperature and relative humidity loggers record data at set intervals through out the day. The <em>sundance()</em> function summarizes these data to the daily data, providing mean, minimum, maximum, and the number of measurements (n) for a given day. This function also returns the time that the minimum and maximum were recorded. This function requires the <em>data_raw</em> component from <em>import_hobo()</em> or <em>import_hobo_2008()</em> functions and returns a data frame of daily data.</p>
+<p>Temperature and relative humidity loggers record data at set intervals through out the day. The <em>sundance()</em> function summarizes these data to daily values, providing mean, minimum, maximum, and the number of measurements (n) for a given day. This function also returns the time that the minimum and maximum were recorded. This function requires the <em>data_raw</em> component from <em>import_hobo()</em> or <em>import_hobo_2008()</em> functions and returns a data frame of daily data.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sundance</span>(dat<span class="fl">.6</span><span class="sc">$</span>data_raw)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 776 x 10</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Groups:   PlotID, Date, Element [776]</span></span>
@@ -372,7 +372,7 @@ TEMP &amp; RH
 </div>
 <div id="processing-hobo-files" class="section level1">
 <h1>Processing HOBO files</h1>
-<p>The <em>process_hobo()</em> function was developed to summarize all the csv files in a data directory. This function requires an object returned form the <em>import_hobo()</em> or <em>import_hobo_2008()</em>. It evaluates the elements of the data from the <em>file_info</em> component and uses <em>raindance()</em> or <em>sundance()</em> to summarize the data. It add the summarized data to the original list and returns a four (4) component list. An effective way to use this function is with <em>lapply()</em>.</p>
+<p>The <em>process_hobo()</em> function was developed to summarize all the csv files in a directory or folder. It evaluates the elements of the data from the <em>file_info</em> component and uses <em>raindance()</em> or <em>sundance()</em> to summarize the data. This function requires an object returned form <em>import_hobo()</em> or <em>import_hobo_2008()</em> and adds the summarized data to the original list, returning a four component list. An effective way to use this function is with <em>lapply()</em>.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(file_list[<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>], <span class="cf">function</span>(this_file){</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  dat <span class="ot">&lt;-</span> <span class="fu">import_hobo_2008</span>(this_file) <span class="sc">|&gt;</span> <span class="fu">process_hobo</span>()</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">basename</span>(this_file))</span>
@@ -439,10 +439,10 @@ TEMP &amp; RH
 <span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 I01    2011-04-15 TEMP     40.2  14.0  62.2    20 05:34   04:22   F    </span></span>
 <span id="cb11-65"><a href="#cb11-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ... with 388 more rows</span></span></code></pre></div>
 </div>
-<div id="conclusion" class="section level1">
-<h1>Conclusion</h1>
-<p>The <em>raindancer</em> package eficiently processes and summarized data from the Onset HOBO loggers listed in Table 1 and used in the SEUG LTVMP from 2008-2021. The data from 2021 were mostly formatted the same as data from 2020, with a few exceptions. There is a likely that some future csv file will have anomolies that will require improvements to the <em>import_hobo()</em> function. Please submit the problem on the Issues page of the GitHub repository, <a href="https://github.com/scoyoc/raindancer/issues">https://github.com/scoyoc/raindancer/issues</a>, or contact the author of the package if this happens.</p>
-<p>This package was designed to work with the <a href="https://github.com/scoyoc/dataprocessR">dataprocessR package</a>. See the dataprocessR vignette for how to export these data to the SEUG LTVMP database.</p>
+<div id="next-steps" class="section level1">
+<h1>Next Steps</h1>
+<p>The <em>raindancer</em> package processes and summarizes data from the Onset HOBO loggers listed in Table 1 for the SEUG LTVMP from 2008-2021. The data from 2021 were mostly formatted the same as data from 2020, with a few exceptions. There is a likely that some future csv file will have anomolies that will require improvements to the <em>import_hobo()</em> function. Please submit any problems on the Issues page of this GitHub repository, <a href="https://github.com/scoyoc/raindancer/issues">https://github.com/scoyoc/raindancer/issues</a>, or contact the author of the package if this happens.</p>
+<p>This package was designed to work with the <a href="https://github.com/scoyoc/dataprocessR">dataprocessR package</a>. See the dataprocessR vignette (currently in development) for how to export these data to the SEUG LTVMP database.</p>
 </div>
 
 
