@@ -51,12 +51,10 @@ file_list <- list.files(path = system.file("extdata", package = "raindancer"),
                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 
 # Precipitation data
-my_file <- import_hobo_2008(file_list[5])
-process_hobo(my_file)
+import_hobo_2008(file_list[2]) |> process_hobo()
 
 # Temperature and relative humidity data
-my_file <- import_hobo(file_list[12])
-process_hobo(my_file)
+import_hobo(file_list[5]) |> process_hobo()
 }
 
 }

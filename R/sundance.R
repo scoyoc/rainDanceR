@@ -56,7 +56,7 @@
 #' sundance(my_temp)
 #'
 #' # Relative humidity data
-#' my_rh <- import_hobo(file_list[10])$data_raw
+#' my_rh <- import_hobo(file_list[8])$data_raw
 #' sundance(my_rh)
 #' }
 sundance <- function(my_data){

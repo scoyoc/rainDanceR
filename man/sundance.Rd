@@ -33,7 +33,7 @@ plot.}
 \item{\strong{TMAX}}{ The maximum daily temperature.}
 \item{\strong{n}}{ The number of records for that day.}
 \item{\strong{TMIN_time}}{ The time of minimum daily temperature.}
-\item{\strong{TEMP_mean}}{ The time of maximum daily temperature.}
+\item{\strong{TMAX_time}}{ The time of maximum daily temperature.}
 \item{\strong{Units}}{ The unit of the measurement.}
 }
 }
@@ -60,7 +60,7 @@ my_temp <- import_hobo_2008(file_list[4])$data_raw
 sundance(my_temp)
 
 # Relative humidity data
-my_rh <- import_hobo(file_list[10])$data_raw
+my_rh <- import_hobo(file_list[8])$data_raw
 sundance(my_rh)
 }
 }
