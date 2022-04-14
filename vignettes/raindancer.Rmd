@@ -52,7 +52,7 @@ onset_loggers <- data.frame(
 knitr::kable(onset_loggers, 
              col.names = c("Onset Product", "Element Recorded", 
                            "Years Used"), 
-             caption = "Table. Onset loggers used in the SEUG LTVMP.",
+             caption = "Table 1. Onset loggers used in the SEUG LTVMP.",
              format = 'html')
 ```
 
@@ -105,8 +105,45 @@ str(dat.6)
 ```
 
 # Summarize Data
+The that we have data read into R are either event data for precipitation or recorded at set intervals through out the day for temperature and relative humidity data. Let's summarize them up to daily values.
 
+## Precipitation (Event) Data with *raindance()*
+The precipitation loggers record an event every time the bucket inside the rain gauge fills with 0.254 mm of water and tips to trigger an event. 
+The data recorded is simply an event (e.g., event 1, event 2, event 3, and so on). 
+The *raindance()* function calculates hourly precipitation, provides the number of tips per hour, and provides an estimate of intensity with maximum tips per minute in a given hour.
+This function requires the *data_raw* component from *import_hobo()* or *import_hobo_2008()* functions and returns a data frame of hourly data.
+```{r raindance, eval=TRUE, echo=TRUE, results='markup'}
+raindance(dat.1$data_raw)
+```
 
+## Temperature and Relative Humidity Data with *sundance()*
+Temperature and relative humidity loggers record data at set intervals through out the day.
+The *sundance()* function summarizes these data to the daily data, providing mean, minimum, maximum, and the number of measurements (n) for a given day. 
+This function also returns the time that the minimum and maximum were recorded.
+This function requires the *data_raw* component from *import_hobo()* or *import_hobo_2008()* functions and returns a data frame of daily data.
+```{r sundance, eval=TRUE, echo=TRUE, results='markup'}
+sundance(dat.6$data_raw)
+```
 
+# Processing HOBO files
+The *process_hobo()* function was developed to summarize all the csv files in a data directory.
+This function requires an object returned form the *import_hobo()* or *import_hobo_2008()*. 
+It evaluates the elements of the data from the *file_info* component and uses *raindance()* or *sundance()* to summarize the data.
+It add the summarized data to the original list and returns a four (4) component list.
+An effective way to use this function is with *lapply()*.
+```{r process_hobo, eval=TRUE, echo=TRUE, results='markup'}
+lapply(file_list[2:4], function(this_file){
+  dat <- import_hobo_2008(this_file) |> process_hobo()
+  print(basename(this_file))
+  print(data.class(dat)); print(names(dat))
+  dat$data
+})
+```
+# Conclusion
+The *raindancer* package eficiently processes and summarized data from the Onset HOBO loggers listed in Table 1 and used in the SEUG LTVMP from 2008-2021. 
+The data from 2021 were mostly formatted the same as data from 2020, with a few exceptions. 
+There is a likely that some future csv file will have anomolies that will require improvements to the *import_hobo()* function.
+Please submit the problem on the Issues page of the GitHub repository, [https://github.com/scoyoc/raindancer/issues](https://github.com/scoyoc/raindancer/issues), or contact the author of the package if this happens.
 
-
+This package was designed to work with the [dataprocessR package](https://github.com/scoyoc/dataprocessR). 
+See the dataprocessR vignette for how to export these data to the SEUG LTVMP database.

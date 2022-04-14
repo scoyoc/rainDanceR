@@ -8,8 +8,8 @@
 #'     must include the following:
 #'     \describe{
 #'         \item{\strong{Element}}{ The element the data represent. Onset
-#'             tipping bucket evnet loggers record an event when 0.254 mm of
-#'             precipitation tips the bucket.}
+#'             tipping bucket event loggers record an event when 0.254 mm of
+#'             precipitation tips the bucket inside the raingauge.}
 #'         \item{\strong{PlotID}}{ The unique plot identification number (e.g.,
 #'             A03 or I06).}
 #'         \item{\strong{DateTime}}{ The date-time of the precipitation event}

@@ -35,7 +35,7 @@
 #'     \item{\strong{TMAX}}{ The maximum daily temperature.}
 #'     \item{\strong{n}}{ The number of records for that day.}
 #'     \item{\strong{TMIN_time}}{ The time of minimum daily temperature.}
-#'     \item{\strong{TEMP_mean}}{ The time of maximum daily temperature.}
+#'     \item{\strong{TMAX_time}}{ The time of maximum daily temperature.}
 #'     \item{\strong{Units}}{ The unit of the measurement.}
 #' }
 #'
