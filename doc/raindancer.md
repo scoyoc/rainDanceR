@@ -13,11 +13,6 @@ This makes data from the temperature, relative humidity, and precipitation logge
 This package imports data collected by Onset loggers used in the Southeast Utah Group (SEUG) national parks long-term vegetation monitoring program (LTVMP) and then summarize these data.
 This package was written to be used with the dataprocessR package, [https://github.com/scoyoc/dataprocessR](https://github.com/scoyoc/dataprocessR), that exports the raw and summarized data to the SEUG LTVMP database (a Microsoft Access database).
 
-```{r, echo = FALSE}
-knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
-library("raindancer")
-```
-
 # Installation
 This package is available on [GitHub](https://github.com/) at [https://github.com/scoyoc/raindancer](https://github.com/scoyoc/raindancer). 
 Dependent packages include dplyr, glue, lubridate, RODBC, stringr, tibble, tidyr, and utils. 
@@ -33,21 +28,14 @@ library("raindancer")
 # Import Data into R
 There are two function available to import the csv files generated from HOBOware into R, *import_hobo_2008()* and *import_hobo()*. Below is a table of Onset loggers that these functions can import data from.
 ```{r logger_table, eval=TRUE, echo=FALSE}
-onset_loggers <- data.frame(
-  'Product' = c("H07 Logger", "HOBO UA-003-64 Pendant Temp/Event",
-                "H08 Logger", "HOBO UA-001-64 Pendant Temp", 
-                "HOBO U23-001 Temp/RH"),
-  'Element' = c("PRCP", "PRCP & TEMP", "TEMP", "TEMP", 
-                "TEMP & RH"),
-  'Years' = c("2008-2019", "2019-present", "2008-2019", 
-                   "2019-present", "2019-present")
-)
+|Product                          |Element    |Year Used   |
+|---------------------------------|-----------|------------|
+|H07 Logger                       |PRCP       |2008-2019   |
+|HOBO UA-003-64 Pendant Temp/Event|PRCP & TEMP|2019-present|
+|H08 Logger                       |TEMP       |2008-2019   |
+|HOBO UA-001-64 Pendant Temp      |TEMP       |2019-present|
+|HOBO U23-001 Temp/RH             |TEMP & RH  |2019-present|
 
-knitr::kable(onset_loggers, 
-             col.names = c("Onset Product", "Element Recorded", 
-                           "Years Used"), 
-             caption = "Table 1. Onset loggers used in the SEUG LTVMP.",
-             format = 'html')
 ```
 
 The functions *import_hobo_2008()* and *import_hobo()* return a list with three components:  
