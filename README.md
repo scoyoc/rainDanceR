@@ -1,7 +1,7 @@
 # raindancer
 
 This R package imports data from Onset temperature, relative humidity, and precipitation (event) data loggers into R. 
-Data collected in the field using Onset loggers are exported to comma delimited files (*.csv) using the HOBOware application from Onset.
+Data collected in the field using Onset loggers are exported to comma delimited files (*.csv) using the Onset HOBOware application.
 This package imports the *.csv files into R and summarize the data.
 
 Version: 0.3.0
