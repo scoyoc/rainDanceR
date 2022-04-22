@@ -27,7 +27,7 @@ library("raindancer")
 
 # Import Data into R
 There are two functions that import the csv files generated from HOBOware into R, *import_hobo_2008()* and *import_hobo()*. Below is a table of Onset loggers that these functions can import data from.
-```{r logger_table, eval=TRUE, echo=FALSE}
+
 |Product                          |Element    |Year Used   |
 |---------------------------------|-----------|------------|
 |H07 Logger                       |PRCP       |2008-2019   |
@@ -35,8 +35,6 @@ There are two functions that import the csv files generated from HOBOware into R
 |H08 Logger                       |TEMP       |2008-2019   |
 |HOBO UA-001-64 Pendant Temp      |TEMP       |2019-present|
 |HOBO U23-001 Temp/RH             |TEMP & RH  |2019-present|
-
-```
 
 The functions *import_hobo_2008()* and *import_hobo()* return a list with three components:  
 1. **file_info** is a one row data frame that contains information about the file, the logger, and data.  

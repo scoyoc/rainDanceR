@@ -12,7 +12,7 @@
 
 <meta name="author" content="Matthew Van Scoyoc, National Park Service" />
 
-<meta name="date" content="2022-04-14" />
+<meta name="date" content="2022-04-22" />
 
 <title>Import Onset HOBO Logger Data into R</title>
 
@@ -142,7 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Import Onset HOBO Logger Data into R</h1>
 <h4 class="author">Matthew Van Scoyoc, National Park Service</h4>
-<h4 class="date">April 14, 2022</h4>
+<h4 class="date">April 22, 2022</h4>
 
 
 
@@ -162,82 +162,46 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="import-data-into-r" class="section level1">
 <h1>Import Data into R</h1>
-There are two functions that import the csv files generated from HOBOware into R, <em>import_hobo_2008()</em> and <em>import_hobo()</em>. Below is a table of Onset loggers that these functions can import data from.
+<p>There are two functions that import the csv files generated from HOBOware into R, <em>import_hobo_2008()</em> and <em>import_hobo()</em>. Below is a table of Onset loggers that these functions can import data from.</p>
+<p><strong>Table 1.</strong> Onset loggers used in the SEUG LTVMP.</p>
 <table>
-<caption>
-Table 1. Onset loggers used in the SEUG LTVMP.
-</caption>
 <thead>
-<tr>
-<th style="text-align:left;">
-Onset Product
-</th>
-<th style="text-align:left;">
-Element Recorded
-</th>
-<th style="text-align:left;">
-Years Used
-</th>
+<tr class="header">
+<th>Product</th>
+<th>Element</th>
+<th>Year Used</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-H07 Logger
-</td>
-<td style="text-align:left;">
-PRCP
-</td>
-<td style="text-align:left;">
-2008-2019
-</td>
+<tr class="odd">
+<td>H07 Logger</td>
+<td>PRCP</td>
+<td>2008-2019</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-HOBO UA-003-64 Pendant Temp/Event
-</td>
-<td style="text-align:left;">
-PRCP &amp; TEMP
-</td>
-<td style="text-align:left;">
-2019-present
-</td>
+<tr class="even">
+<td>HOBO UA-003-64 Pendant Temp/Event</td>
+<td>PRCP &amp; TEMP</td>
+<td>2019-present</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-H08 Logger
-</td>
-<td style="text-align:left;">
-TEMP
-</td>
-<td style="text-align:left;">
-2008-2019
-</td>
+<tr class="odd">
+<td>H08 Logger</td>
+<td>TEMP</td>
+<td>2008-2019</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-HOBO UA-001-64 Pendant Temp
-</td>
-<td style="text-align:left;">
-TEMP
-</td>
-<td style="text-align:left;">
-2019-present
-</td>
+<tr class="even">
+<td>HOBO UA-001-64 Pendant Temp</td>
+<td>TEMP</td>
+<td>2019-present</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-HOBO U23-001 Temp/RH
-</td>
-<td style="text-align:left;">
-TEMP &amp; RH
-</td>
-<td style="text-align:left;">
-2019-present
-</td>
+<tr class="odd">
+<td>HOBO U23-001 Temp/RH</td>
+<td>TEMP &amp; RH</td>
+<td>2019-present</td>
 </tr>
 </tbody>
 </table>
+<div id="using-import_hobo" class="section level2">
+<h2>Using <em>import_hobo()</em></h2>
 <p>The functions <em>import_hobo_2008()</em> and <em>import_hobo()</em> return a list with three components:<br />
 1. <strong>file_info</strong> is a one row data frame that contains information about the file, the logger, and data.<br />
 2. <strong>details</strong> is a data frame of logger and sampling event information.<br />
@@ -249,14 +213,14 @@ TEMP &amp; RH
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>file_list <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="at">package =</span> <span class="st">&quot;raindancer&quot;</span>),</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">pattern =</span> <span class="st">&quot;.csv&quot;</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>, <span class="at">recursive =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(file_list)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/RtmpMppO0d/temp_libpath136469226043/raindancer/extdata/2010_h01st_prcp.csv&quot;     </span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/RtmpMppO0d/temp_libpath136469226043/raindancer/extdata/2010_h01st_temp.csv&quot;     </span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/RtmpMppO0d/temp_libpath136469226043/raindancer/extdata/2012_i01gp_prcp.csv&quot;     </span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/RtmpMppO0d/temp_libpath136469226043/raindancer/extdata/2012_i01gp_temp.csv&quot;     </span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/RtmpMppO0d/temp_libpath136469226043/raindancer/extdata/20200416_A03_PRCP.csv&quot;   </span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [6] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/RtmpMppO0d/temp_libpath136469226043/raindancer/extdata/20200416_A03_TEMP_RH.csv&quot;</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [7] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/RtmpMppO0d/temp_libpath136469226043/raindancer/extdata/20200416_A08_PRCP.csv&quot;   </span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [8] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/RtmpMppO0d/temp_libpath136469226043/raindancer/extdata/20200416_A08_TEMP_RH.csv&quot;</span></span></code></pre></div>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/1/RtmpWAx87k/temp_libpath3a681bf367af/raindancer/extdata/2010_h01st_prcp.csv&quot;     </span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/1/RtmpWAx87k/temp_libpath3a681bf367af/raindancer/extdata/2010_h01st_temp.csv&quot;     </span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/1/RtmpWAx87k/temp_libpath3a681bf367af/raindancer/extdata/2012_i01gp_prcp.csv&quot;     </span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/1/RtmpWAx87k/temp_libpath3a681bf367af/raindancer/extdata/2012_i01gp_temp.csv&quot;     </span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/1/RtmpWAx87k/temp_libpath3a681bf367af/raindancer/extdata/20200416_A03_PRCP.csv&quot;   </span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [6] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/1/RtmpWAx87k/temp_libpath3a681bf367af/raindancer/extdata/20200416_A03_TEMP_RH.csv&quot;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [7] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/1/RtmpWAx87k/temp_libpath3a681bf367af/raindancer/extdata/20200416_A08_PRCP.csv&quot;   </span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [8] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/1/RtmpWAx87k/temp_libpath3a681bf367af/raindancer/extdata/20200416_A08_TEMP_RH.csv&quot;</span></span></code></pre></div>
 <p>The first four csv files are from 2010 and 2012, so lets start by using <em>import_hobo_2008()</em>.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dat<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">import_hobo_2008</span>(file_list[<span class="dv">1</span>])</span></code></pre></div>
 <p>Let’s examine the components of the list returned by the <em>import_hobo_2008()</em> function. The first component returns information about the file, the logger, and the data.</p>
@@ -325,6 +289,7 @@ TEMP &amp; RH
 <span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ Element : chr [1:37146] &quot;RH&quot; &quot;TEMP&quot; &quot;RH&quot; &quot;TEMP&quot; ...</span></span>
 <span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ Value   : num [1:37146] 88.1 -13.4 90.5 -14.1 90.8 ...</span></span>
 <span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ Units   : chr [1:37146] &quot;%RH&quot; &quot;F&quot; &quot;%RH&quot; &quot;F&quot; ...</span></span></code></pre></div>
+</div>
 </div>
 <div id="summarize-data" class="section level1">
 <h1>Summarize Data</h1>
@@ -439,9 +404,12 @@ TEMP &amp; RH
 <span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 I01    2011-04-15 TEMP     40.2  14.0  62.2    20 05:34   04:22   F    </span></span>
 <span id="cb11-65"><a href="#cb11-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ... with 388 more rows</span></span></code></pre></div>
 </div>
+<div id="reporting-errors-and-issues" class="section level1">
+<h1>Reporting Errors and Issues</h1>
+<p>The data from 2021 were mostly formatted the same as data from 2020, with a few exceptions. There is a likely that some future csv file will have anomolies that will require improvements to the <em>import_hobo()</em> function. Please submit any problems on the Issues page of this GitHub repository, <a href="https://github.com/scoyoc/raindancer/issues">https://github.com/scoyoc/raindancer/issues</a>, or contact the author of the package if this happens.</p>
+</div>
 <div id="next-steps" class="section level1">
 <h1>Next Steps</h1>
-<p>The <em>raindancer</em> package processes and summarizes data from the Onset HOBO loggers listed in Table 1 for the SEUG LTVMP from 2008-2021. The data from 2021 were mostly formatted the same as data from 2020, with a few exceptions. There is a likely that some future csv file will have anomolies that will require improvements to the <em>import_hobo()</em> function. Please submit any problems on the Issues page of this GitHub repository, <a href="https://github.com/scoyoc/raindancer/issues">https://github.com/scoyoc/raindancer/issues</a>, or contact the author of the package if this happens.</p>
 <p>This package was designed to work with the <a href="https://github.com/scoyoc/dataprocessR">dataprocessR package</a>. See the dataprocessR vignette (currently in development) for how to export these data to the SEUG LTVMP database.</p>
 </div>
 

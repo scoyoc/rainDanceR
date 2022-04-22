@@ -2,7 +2,8 @@
 title: "Import Onset HOBO Logger Data into R"
 author: "Matthew Van Scoyoc, National Park Service"
 date: "`r format(as.Date(Sys.Date(), format = '%Y-%m-%d'), '%B %d, %Y')`"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{raindancer}
   %\VignetteEngine{knitr::rmarkdown}
@@ -38,24 +39,18 @@ library("raindancer")
 
 # Import Data into R
 There are two functions that import the csv files generated from HOBOware into R, *import_hobo_2008()* and *import_hobo()*. Below is a table of Onset loggers that these functions can import data from.
-```{r logger_table, eval=TRUE, echo=FALSE}
-onset_loggers <- data.frame(
-  'Product' = c("H07 Logger", "HOBO UA-003-64 Pendant Temp/Event",
-                "H08 Logger", "HOBO UA-001-64 Pendant Temp", 
-                "HOBO U23-001 Temp/RH"),
-  'Element' = c("PRCP", "PRCP & TEMP", "TEMP", "TEMP", 
-                "TEMP & RH"),
-  'Years' = c("2008-2019", "2019-present", "2008-2019", 
-                   "2019-present", "2019-present")
-)
 
-knitr::kable(onset_loggers, 
-             col.names = c("Onset Product", "Element Recorded", 
-                           "Years Used"), 
-             caption = "Table 1. Onset loggers used in the SEUG LTVMP.",
-             format = 'html')
-```
+**Table 1.** Onset loggers used in the SEUG LTVMP.  
 
+|Product                          |Element    |Year Used   |
+|---------------------------------|-----------|------------|
+|H07 Logger                       |PRCP       |2008-2019   |
+|HOBO UA-003-64 Pendant Temp/Event|PRCP & TEMP|2019-present|
+|H08 Logger                       |TEMP       |2008-2019   |
+|HOBO UA-001-64 Pendant Temp      |TEMP       |2019-present|
+|HOBO U23-001 Temp/RH             |TEMP & RH  |2019-present|
+
+## Using *import_hobo()*
 The functions *import_hobo_2008()* and *import_hobo()* return a list with three components:  
 1. **file_info** is a one row data frame that contains information about the file, the logger, and data.  
 2. **details** is a data frame of logger and sampling event information.  
@@ -138,11 +133,12 @@ lapply(file_list[2:4], function(this_file){
   dat$data
 })
 ```
-# Next Steps
-The *raindancer* package processes and summarizes data from the Onset HOBO loggers listed in Table 1 for the SEUG LTVMP from 2008-2021. 
+
+# Reporting Errors and Issues
 The data from 2021 were mostly formatted the same as data from 2020, with a few exceptions. 
 There is a likely that some future csv file will have anomolies that will require improvements to the *import_hobo()* function.
 Please submit any problems on the Issues page of this GitHub repository, [https://github.com/scoyoc/raindancer/issues](https://github.com/scoyoc/raindancer/issues), or contact the author of the package if this happens.
 
+# Next Steps
 This package was designed to work with the [dataprocessR package](https://github.com/scoyoc/dataprocessR). 
 See the dataprocessR vignette (currently in development) for how to export these data to the SEUG LTVMP database.
