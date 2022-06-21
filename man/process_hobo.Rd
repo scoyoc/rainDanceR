@@ -32,7 +32,9 @@ This function processes precipitation, temperature, and relative humidity
 data exported from Onset HOBOware. It uses the list created by
 \code{\link{import_hobo_2008}} or \code{\link{import_hobo}} and then
 processes the data using \code{\link{raindance}} or
-\code{\link{sundance}}.\preformatted{For precipitation data, this function strips the first 5 minutes and last
+\code{\link{sundance}}.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{For precipitation data, this function strips the first 5 minutes and last
 10 minutes of data to account for field procedures when downloading the
 event logger. It is common practice to trigger an event before
 downloading and after launching the logger. To remove these false events
@@ -40,7 +42,7 @@ there is a routine to strip the first 5 minutes of the data if the
 "launch_time Time" and "First Sample Time" are the same. There is no way
 to determine if the tipping bucket is triggered before downloading the
 data, so the last 10 minutes of every file is stripped before processing.
-}
+}\if{html}{\out{</div>}}
 }
 \examples{
 \dontrun{

@@ -10,9 +10,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<meta name="author" content="Matthew Van Scoyoc, National Park Service" />
 
-<meta name="date" content="2022-04-22" />
+<meta name="date" content="2022-06-21" />
 
 <title>Import Onset HOBO Logger Data into R</title>
 
@@ -141,8 +140,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 <h1 class="title toc-ignore">Import Onset HOBO Logger Data into R</h1>
-<h4 class="author">Matthew Van Scoyoc, National Park Service</h4>
-<h4 class="date">April 22, 2022</h4>
+<h4 class="author">Matthew Van Scoyoc</h4>
+<address class="author_afil">
+<div class="line-block">NPS Southeast Utah Group Parks<br />
+2282 Resource Blvd<br />
+Moab, Utah</div><br><h4 class="date">June 21, 2022</h4>
 
 
 
@@ -213,14 +215,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>file_list <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="at">package =</span> <span class="st">&quot;raindancer&quot;</span>),</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">pattern =</span> <span class="st">&quot;.csv&quot;</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>, <span class="at">recursive =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(file_list)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/1/RtmpWAx87k/temp_libpath3a681bf367af/raindancer/extdata/2010_h01st_prcp.csv&quot;     </span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/1/RtmpWAx87k/temp_libpath3a681bf367af/raindancer/extdata/2010_h01st_temp.csv&quot;     </span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/1/RtmpWAx87k/temp_libpath3a681bf367af/raindancer/extdata/2012_i01gp_prcp.csv&quot;     </span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/1/RtmpWAx87k/temp_libpath3a681bf367af/raindancer/extdata/2012_i01gp_temp.csv&quot;     </span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/1/RtmpWAx87k/temp_libpath3a681bf367af/raindancer/extdata/20200416_A03_PRCP.csv&quot;   </span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [6] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/1/RtmpWAx87k/temp_libpath3a681bf367af/raindancer/extdata/20200416_A03_TEMP_RH.csv&quot;</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [7] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/1/RtmpWAx87k/temp_libpath3a681bf367af/raindancer/extdata/20200416_A08_PRCP.csv&quot;   </span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [8] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/1/RtmpWAx87k/temp_libpath3a681bf367af/raindancer/extdata/20200416_A08_TEMP_RH.csv&quot;</span></span></code></pre></div>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/1/RtmpwVkJQF/temp_libpath434843223997/raindancer/extdata/2010_h01st_prcp.csv&quot;     </span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/1/RtmpwVkJQF/temp_libpath434843223997/raindancer/extdata/2010_h01st_temp.csv&quot;     </span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/1/RtmpwVkJQF/temp_libpath434843223997/raindancer/extdata/2012_i01gp_prcp.csv&quot;     </span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/1/RtmpwVkJQF/temp_libpath434843223997/raindancer/extdata/2012_i01gp_temp.csv&quot;     </span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/1/RtmpwVkJQF/temp_libpath434843223997/raindancer/extdata/20200416_A03_PRCP.csv&quot;   </span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [6] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/1/RtmpwVkJQF/temp_libpath434843223997/raindancer/extdata/20200416_A03_TEMP_RH.csv&quot;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [7] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/1/RtmpwVkJQF/temp_libpath434843223997/raindancer/extdata/20200416_A08_PRCP.csv&quot;   </span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [8] &quot;C:/Users/mvanscoyoc/AppData/Local/Temp/1/RtmpwVkJQF/temp_libpath434843223997/raindancer/extdata/20200416_A08_TEMP_RH.csv&quot;</span></span></code></pre></div>
 <p>The first four csv files are from 2010 and 2012, so lets start by using <em>import_hobo_2008()</em>.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dat<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">import_hobo_2008</span>(file_list[<span class="dv">1</span>])</span></code></pre></div>
 <p>Let’s examine the components of the list returned by the <em>import_hobo_2008()</em> function. The first component returns information about the file, the logger, and the data.</p>
