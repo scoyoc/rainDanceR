@@ -1,12 +1,16 @@
+# RStudio and OS files
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
-/exec
 .Rdata
 .httr-oauth
 .DS_Store
 *.Rproj
+
+# Directories
+/exec
 inst/doc
 /Meta/
+# /doc/
 /doc/

@@ -12,6 +12,8 @@ vignette: >
   %\VignetteIndexEntry{raindancer}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+mainfont: Arial
+urlcolor: blue
 ---
 
 # Introduction
@@ -146,4 +148,4 @@ Please submit any problems on the Issues page of this GitHub repository, [https:
 
 # Next Steps
 This package was designed to work with the [dataprocessR package](https://github.com/scoyoc/dataprocessR). 
-See the dataprocessR vignette (currently in development) for how to export these data to the SEUG LTVMP database.
+See the [dataprocessR vignette](https://github.com/scoyoc/dataprocessR/blob/master/doc/dataprocessR_pdf.pdf) for how to export these data to the SEUG LTVMP database.
