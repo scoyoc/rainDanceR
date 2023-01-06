@@ -1,6 +1,6 @@
 Package: raindancer
 Title: Import Data from Onset Data Loggers
-Version: 0.0.1
+Version: 0.9.0
 Authors@R: 
     person(given = "Matthew",
            family = "Van Scoyoc",
